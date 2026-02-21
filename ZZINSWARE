@@ -1,5 +1,175 @@
--- FIXED VERSION: Line numbers bug fixed, Info tab compact layout, smaller Discord button
+-- ZZINSWARE V3: Full Featured Script Hub with Lua Syntax Highlighting
+-- Features: Discord Integration, Auto-Update Stats, Lua Highlighter, Version Badge, Credits
 
+local highlighter = {}
+local keywords = {
+	lua = {
+		"and", "break", "or", "else", "elseif", "if", "then", "until", "repeat", "while", "do", "for", "in", "end",
+		"local", "return", "function", "export"
+	},
+	rbx = {
+		"game", "workspace", "script", "math", "string", "table", "task", "wait", "select", "next", "Enum",
+		"error", "warn", "tick", "assert", "shared", "loadstring", "tonumber", "tostring", "type",
+		"typeof", "unpack", "print", "Instance", "CFrame", "Vector3", "Vector2", "Color3", "UDim", "UDim2", "Ray", "BrickColor",
+		"OverlapParams", "RaycastParams", "Axes", "Random", "Region3", "Rect", "TweenInfo",
+		"collectgarbage", "not", "utf8", "pcall", "xpcall", "_G", "setmetatable", "getmetatable", "os", "pairs", "ipairs"
+	},
+	operators = {
+		"#", "+", "-", "*", "%", "/", "^", "=", "~", "=", "<", ">", ",", ".", "(", ")", "{", "}", "[", "]", ";", ":"
+	}
+}
+
+local colors = {
+	numbers = Color3.fromRGB(255, 198, 0),
+	boolean = Color3.fromRGB(214, 128, 23),
+	operator = Color3.fromRGB(232, 210, 40),
+	lua = Color3.fromRGB(160, 87, 248),
+	rbx = Color3.fromRGB(146, 180, 253),
+	str = Color3.fromRGB(56, 241, 87),
+	comment = Color3.fromRGB(103, 110, 149),
+	null = Color3.fromRGB(79, 79, 79),
+	call = Color3.fromRGB(130, 170, 255),
+	self_call = Color3.fromRGB(227, 201, 141),
+	local_color = Color3.fromRGB(199, 146, 234),
+	function_color = Color3.fromRGB(241, 122, 124),
+	self_color = Color3.fromRGB(146, 134, 234),
+	local_property = Color3.fromRGB(129, 222, 255),
+}
+
+local function createKeywordSet(keywords)
+	local keywordSet = {}
+	for _, keyword in ipairs(keywords) do
+		keywordSet[keyword] = true
+	end
+	return keywordSet
+end
+
+local luaSet = createKeywordSet(keywords.lua)
+local rbxSet = createKeywordSet(keywords.rbx)
+local operatorsSet = createKeywordSet(keywords.operators)
+
+local function getHighlight(tokens, index)
+	local token = tokens[index]
+
+	if colors[token .. "_color"] then
+		return colors[token .. "_color"]
+	end
+
+	if tonumber(token) then
+		return colors.numbers
+	elseif token == "nil" then
+		return colors.null
+	elseif token:sub(1, 2) == "--" then
+		return colors.comment
+	elseif operatorsSet[token] then
+		return colors.operator
+	elseif luaSet[token] then
+		return colors.rbx
+	elseif rbxSet[token] then
+		return colors.lua
+	elseif token:sub(1, 1) == "\"" or token:sub(1, 1) == "\'" then
+		return colors.str
+	elseif token == "true" or token == "false" then
+		return colors.boolean
+	end
+
+	if tokens[index + 1] == "(" then
+		if tokens[index - 1] == ":" then
+			return colors.self_call
+		end
+
+		return colors.call
+	end
+
+	if tokens[index - 1] == "." then
+		if tokens[index - 2] == "Enum" then
+			return colors.rbx
+		end
+
+		return colors.local_property
+	end
+end
+
+function highlighter.run(source)
+	local tokens = {}
+	local currentToken = ""
+	
+	local inString = false
+	local inComment = false
+	local commentPersist = false
+	
+	for i = 1, #source do
+		local character = source:sub(i, i)
+		
+		if inComment then
+			if character == "\n" and not commentPersist then
+				table.insert(tokens, currentToken)
+				table.insert(tokens, character)
+				currentToken = ""
+				
+				inComment = false
+			elseif source:sub(i - 1, i) == "]]" and commentPersist then
+				currentToken = currentToken .. "]"
+				
+				table.insert(tokens, currentToken)
+				currentToken = ""
+				
+				inComment = false
+				commentPersist = false
+			else
+				currentToken = currentToken .. character
+			end
+		elseif inString then
+			if character == inString and source:sub(i-1, i-1) ~= "\\" or character == "\n" then
+				currentToken = currentToken .. character
+				inString = false
+			else
+				currentToken = currentToken .. character
+			end
+		else
+			if source:sub(i, i + 1) == "--" then
+				table.insert(tokens, currentToken)
+				currentToken = "-"
+				inComment = true
+				commentPersist = source:sub(i + 2, i + 3) == "[["
+			elseif character == "\"" or character == "\'" then
+				table.insert(tokens, currentToken)
+				currentToken = character
+				inString = character
+			elseif operatorsSet[character] then
+				table.insert(tokens, currentToken)
+				table.insert(tokens, character)
+				currentToken = ""
+			elseif character:match("[%w_]") then
+				currentToken = currentToken .. character
+			else
+				table.insert(tokens, currentToken)
+				table.insert(tokens, character)
+				currentToken = ""
+			end
+		end
+	end
+	
+	table.insert(tokens, currentToken)
+
+	local highlighted = {}
+	
+	for i, token in ipairs(tokens) do
+		local highlight = getHighlight(tokens, i)
+
+		if highlight then
+			local syntax = string.format("<font color = \"#%s\">%s</font>", highlight:ToHex(), token:gsub("<", "&lt;"):gsub(">", "&gt;"))
+			
+			table.insert(highlighted, syntax)
+		else
+			table.insert(highlighted, token)
+		end
+	end
+
+	return table.concat(highlighted)
+end
+
+-- MAIN UI CREATION
 local Windows11UI = Instance.new("ScreenGui")
 local Topbar = Instance.new("Frame")
 local UICorner = Instance.new("UICorner")
@@ -352,7 +522,7 @@ InfoBackground.ScaleType = Enum.ScaleType.Crop
 
 Instance.new("UICorner", InfoBackground).CornerRadius = UDim.new(0, 6)
 
--- COMPACT INFO LAYOUT - 2x2 Grid
+-- COMPACT INFO LAYOUT - 2x2 Grid with Images
 local InfoContainer = Instance.new("Frame")
 InfoContainer.Name = "InfoContainer"
 InfoContainer.Parent = InfoFrame
@@ -360,7 +530,7 @@ InfoContainer.BackgroundTransparency = 1
 InfoContainer.Position = UDim2.new(0, 10, 0, 10)
 InfoContainer.Size = UDim2.new(1, -20, 1, -20)
 
-local function CreateCompactInfo(title, value, posX, posY, sizeX, sizeY)
+local function CreateCompactInfoWithImage(title, value, posX, posY, sizeX, sizeY, imageId)
     local section = Instance.new("Frame")
     section.Name = title .. "Section"
     section.Parent = InfoContainer
@@ -369,12 +539,21 @@ local function CreateCompactInfo(title, value, posX, posY, sizeX, sizeY)
     section.Size = UDim2.new(sizeX, 0, sizeY, 0)
     Instance.new("UICorner", section).CornerRadius = UDim.new(0, 6)
     
+    local icon = Instance.new("ImageLabel")
+    icon.Name = "Icon"
+    icon.Parent = section
+    icon.BackgroundTransparency = 1
+    icon.Position = UDim2.new(0, 8, 0, 8)
+    icon.Size = UDim2.new(0, 20, 0, 20)
+    icon.Image = "rbxassetid://" .. imageId
+    icon.ImageColor3 = Color3.fromRGB(200, 200, 200)
+    
     local titleLabel = Instance.new("TextLabel")
     titleLabel.Name = "Title"
     titleLabel.Parent = section
     titleLabel.BackgroundTransparency = 1
-    titleLabel.Position = UDim2.new(0, 8, 0, 4)
-    titleLabel.Size = UDim2.new(1, -16, 0, 16)
+    titleLabel.Position = UDim2.new(0, 35, 0, 4)
+    titleLabel.Size = UDim2.new(1, -45, 0, 16)
     titleLabel.Font = Enum.Font.GothamBold
     titleLabel.Text = title
     titleLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
@@ -385,12 +564,12 @@ local function CreateCompactInfo(title, value, posX, posY, sizeX, sizeY)
     valueLabel.Name = "Value"
     valueLabel.Parent = section
     valueLabel.BackgroundTransparency = 1
-    valueLabel.Position = UDim2.new(0, 8, 0, 18)
-    valueLabel.Size = UDim2.new(1, -16, 1, -22)
+    valueLabel.Position = UDim2.new(0, 8, 0, 28)
+    valueLabel.Size = UDim2.new(1, -16, 1, -36)
     valueLabel.Font = Enum.Font.Gotham
     valueLabel.Text = value
     valueLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    valueLabel.TextSize = 12
+    valueLabel.TextSize = 11
     valueLabel.TextXAlignment = Enum.TextXAlignment.Left
     valueLabel.TextYAlignment = Enum.TextYAlignment.Top
     valueLabel.TextWrapped = true
@@ -404,25 +583,42 @@ local gameInfo = game:GetService("MarketplaceService"):GetProductInfo(game.Place
 -- Top Row - Server & User (Side by Side)
 local serverId = game.JobId ~= "" and game.JobId:sub(1, 6) .. "..." or "Private"
 local serverText = "ID: " .. serverId .. "\nPlayers: " .. #game.Players:GetPlayers() .. "/" .. game.Players.MaxPlayers
-CreateCompactInfo("Server Info", serverText, 0, 0, 0.48, 0.28)
+local serverLabel = CreateCompactInfoWithImage("Server Info", serverText, 0, 0, 0.48, 0.28, "18189876016")
 
 local userText = "Name: " .. player.Name .. "\nDisplay: " .. player.DisplayName .. "\nID: " .. player.UserId
-CreateCompactInfo("User Info", userText, 0.52, 0, 0.48, 0.28)
+local userLabel = CreateCompactInfoWithImage("User Info", userText, 0.52, 0, 0.48, 0.28, "15164135517")
 
 -- Middle Row - Game & Time (Side by Side)
 local gameText = gameInfo.Name:sub(1, 25) .. (gameInfo.Name:len() > 25 and "..." or "") .. "\nPlace ID: " .. game.PlaceId
-CreateCompactInfo("Game", gameText, 0, 0.32, 0.48, 0.28)
+local gameLabel = CreateCompactInfoWithImage("Game", gameText, 0, 0.32, 0.48, 0.28, "92416323895079")
 
-local timeLabel = CreateCompactInfo("Time Zone", "Loading...", 0.52, 0.32, 0.48, 0.28)
-local function updateTime()
+local timeLabel = CreateCompactInfoWithImage("Time Zone", "Loading...", 0.52, 0.32, 0.48, 0.28, "100658411712215")
+
+-- Auto Update Stats every 0 seconds (every frame)
+local function updateStats()
+    -- Update Server Info
+    local currentServerId = game.JobId ~= "" and game.JobId:sub(1, 6) .. "..." or "Private"
+    serverLabel.Text = "ID: " .. currentServerId .. "\nPlayers: " .. #game.Players:GetPlayers() .. "/" .. game.Players.MaxPlayers
+    
+    -- Update User Info
+    userLabel.Text = "Name: " .. player.Name .. "\nDisplay: " .. player.DisplayName .. "\nID: " .. player.UserId
+    
+    -- Update Game Info
+    local currentGameInfo = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId)
+    local currentGameText = currentGameInfo.Name:sub(1, 25) .. (currentGameInfo.Name:len() > 25 and "..." or "") .. "\nPlace ID: " .. game.PlaceId
+    gameLabel.Text = currentGameText
+    
+    -- Update Time
     local timeZone = os.date("%Z") or "Unknown"
-    local localTime = os.date("%I:%M %p")
+    local localTime = os.date("%I:%M:%S %p")
     timeLabel.Text = "Zone: " .. timeZone .. "\nTime: " .. localTime
 end
-updateTime()
-game:GetService("RunService").Heartbeat:Connect(updateTime)
 
--- Bottom - Discord (Full Width, Compact)
+-- Run update immediately and connect to Heartbeat for 0s updates
+updateStats()
+game:GetService("RunService").Heartbeat:Connect(updateStats)
+
+-- Bottom - Discord (Full Width, Compact) with Thumbnail
 local DiscordSection = Instance.new("Frame")
 DiscordSection.Name = "DiscordSection"
 DiscordSection.Parent = InfoContainer
@@ -431,18 +627,29 @@ DiscordSection.Position = UDim2.new(0, 0, 0.64, 0)
 DiscordSection.Size = UDim2.new(1, 0, 0.32, 0)
 Instance.new("UICorner", DiscordSection).CornerRadius = UDim.new(0, 6)
 
+-- Discord Thumbnail (Left side)
+local DiscordThumbnail = Instance.new("ImageLabel")
+DiscordThumbnail.Name = "DiscordThumbnail"
+DiscordThumbnail.Parent = DiscordSection
+DiscordThumbnail.BackgroundTransparency = 1
+DiscordThumbnail.Position = UDim2.new(0, 10, 0.5, -25)
+DiscordThumbnail.Size = UDim2.new(0, 50, 0, 50)
+DiscordThumbnail.Image = "rbxassetid://114216963895291"
+DiscordThumbnail.ScaleType = Enum.ScaleType.Crop
+Instance.new("UICorner", DiscordThumbnail).CornerRadius = UDim.new(0, 6)
+
 DiscordIcon.Name = "DiscordIcon"
 DiscordIcon.Parent = DiscordSection
 DiscordIcon.BackgroundTransparency = 1
-DiscordIcon.Position = UDim2.new(0, 10, 0.5, -15)
+DiscordIcon.Position = UDim2.new(0, 70, 0.5, -15)
 DiscordIcon.Size = UDim2.new(0, 30, 0, 30)
 DiscordIcon.Image = "rbxassetid://115249452401470"
 
 DiscordLabel.Name = "DiscordLabel"
 DiscordLabel.Parent = DiscordSection
 DiscordLabel.BackgroundTransparency = 1
-DiscordLabel.Position = UDim2.new(0, 45, 0, 8)
-DiscordLabel.Size = UDim2.new(1, -160, 0, 20)
+DiscordLabel.Position = UDim2.new(0, 105, 0, 8)
+DiscordLabel.Size = UDim2.new(1, -260, 0, 20)
 DiscordLabel.Font = Enum.Font.GothamBold
 DiscordLabel.Text = "Join our Discord Server"
 DiscordLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -453,8 +660,8 @@ local DiscordLink = Instance.new("TextLabel")
 DiscordLink.Name = "DiscordLink"
 DiscordLink.Parent = DiscordSection
 DiscordLink.BackgroundTransparency = 1
-DiscordLink.Position = UDim2.new(0, 45, 0, 26)
-DiscordLink.Size = UDim2.new(1, -160, 0, 16)
+DiscordLink.Position = UDim2.new(0, 105, 0, 26)
+DiscordLink.Size = UDim2.new(1, -260, 0, 16)
 DiscordLink.Font = Enum.Font.Gotham
 DiscordLink.Text = "discord.gg/xnVDpcAYgC"
 DiscordLink.TextColor3 = Color3.fromRGB(180, 180, 180)
@@ -529,6 +736,24 @@ EditorScrollFrame.CanvasSize = UDim2.new(0, 0, 0, 450)
 
 Instance.new("UICorner", EditorScrollFrame).CornerRadius = UDim.new(0, 6)
 
+-- RichText Label for Syntax Highlighting (Visible)
+local SyntaxLabel = Instance.new("TextLabel")
+SyntaxLabel.Name = "SyntaxLabel"
+SyntaxLabel.Parent = EditorScrollFrame
+SyntaxLabel.BackgroundTransparency = 1
+SyntaxLabel.Size = UDim2.new(1, -10, 0, 900)
+SyntaxLabel.Position = UDim2.new(0, 5, 0, 0)
+SyntaxLabel.Font = Enum.Font.Code
+SyntaxLabel.Text = ""
+SyntaxLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+SyntaxLabel.TextSize = 14
+SyntaxLabel.TextWrapped = false
+SyntaxLabel.TextXAlignment = Enum.TextXAlignment.Left
+SyntaxLabel.TextYAlignment = Enum.TextYAlignment.Top
+SyntaxLabel.RichText = true
+SyntaxLabel.ClipsDescendants = true
+
+-- Source TextBox (Invisible but functional for input)
 Source.Name = "Source"
 Source.Parent = EditorScrollFrame
 Source.BackgroundTransparency = 1
@@ -545,8 +770,9 @@ Source.TextXAlignment = Enum.TextXAlignment.Left
 Source.TextYAlignment = Enum.TextYAlignment.Top
 Source.ClearTextOnFocus = false
 Source.MultiLine = true
+Source.TextTransparency = 0.5 -- Semi-transparent to see highlighting underneath
 
--- FIXED: Proper line number generation and syncing
+-- FIXED: Proper line number generation and syncing with syntax highlighting
 local function updateLineNumbers()
     local text = Source.Text
     if text == "" then text = " " end
@@ -568,9 +794,20 @@ local function updateLineNumbers()
     
     LineNumbers.Size = UDim2.new(1, -5, 0, totalHeight)
     Source.Size = UDim2.new(1, -10, 0, totalHeight)
+    SyntaxLabel.Size = UDim2.new(1, -10, 0, totalHeight)
     
     LineNumberFrame.CanvasSize = UDim2.new(0, 0, 0, totalHeight)
     EditorScrollFrame.CanvasSize = UDim2.new(0, 0, 0, totalHeight)
+    
+    -- Update syntax highlighting
+    local success, highlighted = pcall(function()
+        return highlighter.run(Source.Text)
+    end)
+    if success then
+        SyntaxLabel.Text = highlighted
+    else
+        SyntaxLabel.Text = Source.Text
+    end
 end
 
 Source:GetPropertyChangedSignal("Text"):Connect(updateLineNumbers)
@@ -891,25 +1128,104 @@ UniListLayout.Parent = UniScriptsList
 UniListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 UniListLayout.Padding = UDim.new(0, 5)
 
+-- MODIFIED: F8 Label positioned at top right
 CloseKeybind.Name = "CloseKeybind"
 CloseKeybind.Parent = Topbar
 CloseKeybind.BackgroundTransparency = 1
-CloseKeybind.Position = UDim2.new(1, -50, 0, 13)
-CloseKeybind.Size = UDim2.new(0, 40, 0, 30)
+CloseKeybind.Position = UDim2.new(1, -50, 0, 5) -- Changed from 0, 13 to 0, 5 to be at top
+CloseKeybind.Size = UDim2.new(0, 40, 0, 20)
 CloseKeybind.Font = Enum.Font.Roboto
 CloseKeybind.Text = "[ F8 ]"
 CloseKeybind.TextColor3 = Color3.fromRGB(200, 200, 200)
-CloseKeybind.TextSize = 16
+CloseKeybind.TextSize = 14
 
+-- Credits Section (Left of F8)
+local CreditsFrame = Instance.new("Frame")
+CreditsFrame.Name = "CreditsFrame"
+CreditsFrame.Parent = Topbar
+CreditsFrame.BackgroundTransparency = 1
+CreditsFrame.Position = UDim2.new(1, -180, 0, 5)
+CreditsFrame.Size = UDim2.new(0, 125, 0, 20)
+
+local CreditsIcon = Instance.new("ImageLabel")
+CreditsIcon.Name = "CreditsIcon"
+CreditsIcon.Parent = CreditsFrame
+CreditsIcon.BackgroundTransparency = 1
+CreditsIcon.Position = UDim2.new(0, 0, 0, 0)
+CreditsIcon.Size = UDim2.new(0, 20, 0, 20)
+CreditsIcon.Image = "rbxassetid://13048477501"
+
+local CreditsText = Instance.new("TextLabel")
+CreditsText.Name = "CreditsText"
+CreditsText.Parent = CreditsFrame
+CreditsText.BackgroundTransparency = 1
+CreditsText.Position = UDim2.new(0, 25, 0, 0)
+CreditsText.Size = UDim2.new(1, -25, 1, 0)
+CreditsText.Font = Enum.Font.Gotham
+CreditsText.Text = 'Credits: "nynxyz_"'
+CreditsText.TextColor3 = Color3.fromRGB(180, 180, 180)
+CreditsText.TextSize = 12
+CreditsText.TextXAlignment = Enum.TextXAlignment.Left
+
+-- MODIFIED: Title with Version 3 Badge
 TextLabel.Parent = Topbar
 TextLabel.BackgroundTransparency = 1
 TextLabel.Position = UDim2.new(0, 15, 0, 0)
-TextLabel.Size = UDim2.new(0, 400, 0, 40)
+TextLabel.Size = UDim2.new(0, 300, 0, 40)
 TextLabel.Font = Enum.Font.SourceSans
 TextLabel.Text = "ZZINSWARE | Script-hub Executor"
 TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel.TextSize = 16
 TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Version 3 Badge (Glowing Purple/Black/White)
+local VersionBadge = Instance.new("TextLabel")
+VersionBadge.Name = "VersionBadge"
+VersionBadge.Parent = Topbar
+VersionBadge.BackgroundTransparency = 1
+VersionBadge.Position = UDim2.new(0, 320, 0, 10)
+VersionBadge.Size = UDim2.new(0, 80, 0, 20)
+VersionBadge.Font = Enum.Font.GothamBold
+VersionBadge.Text = "Version 3"
+VersionBadge.TextSize = 14
+
+-- Create gradient for glow effect
+local textGradient = Instance.new("UIGradient")
+textGradient.Parent = VersionBadge
+textGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(147, 0, 211)), -- Purple
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 0, 0)),   -- Black
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255)) -- White
+})
+textGradient.Rotation = 45
+
+-- Add glow effect with multiple labels
+local glow1 = VersionBadge:Clone()
+glow1.Name = "Glow1"
+glow1.Parent = Topbar
+glow1.Position = UDim2.new(0, 320, 0, 10)
+glow1.TextColor3 = Color3.fromRGB(147, 0, 211)
+glow1.TextTransparency = 0.7
+glow1.ZIndex = 0
+
+local glow2 = VersionBadge:Clone()
+glow2.Name = "Glow2"
+glow2.Parent = Topbar
+glow2.Position = UDim2.new(0, 320, 0, 10)
+glow2.TextColor3 = Color3.fromRGB(255, 255, 255)
+glow2.TextTransparency = 0.8
+glow2.ZIndex = 0
+
+-- Animate glow
+local tweenService = game:GetService("TweenService")
+local function animateGlow()
+    while true do
+        local tween1 = tweenService:Create(textGradient, TweenInfo.new(2, Enum.EasingStyle.Linear), {Rotation = textGradient.Rotation + 180})
+        tween1:Play()
+        wait(2)
+    end
+end
+coroutine.wrap(animateGlow)()
 
 local UserInputService = game:GetService("UserInputService")
 local HttpService = game:GetService("HttpService")
