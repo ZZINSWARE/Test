@@ -1,0 +1,1696 @@
+local Windows11UI = Instance.new("ScreenGui")
+local Topbar = Instance.new("Frame")
+local UICorner = Instance.new("UICorner")
+local Frame = Instance.new("Frame")
+local UICorner_2 = Instance.new("UICorner")
+local TabFrame = Instance.new("Frame")
+local InfoTab = Instance.new("ImageButton")
+local EditorTab = Instance.new("ImageButton")
+local SearcherTab = Instance.new("ImageButton")
+local GameScriptsTab = Instance.new("ImageButton")
+local UniversalScriptsTab = Instance.new("ImageButton")
+local InfoFrame = Instance.new("Frame")
+local InfoBackground = Instance.new("ImageLabel")
+local DiscordLabel = Instance.new("TextLabel")
+local DiscordIcon = Instance.new("ImageLabel")
+local CopyDiscordBtn = Instance.new("ImageButton")
+local CopyDiscordLabel = Instance.new("TextLabel")
+local EditorFrame = Instance.new("Frame")
+local Source = Instance.new("TextBox")
+local Inject = Instance.new("ImageButton")
+local Execute = Instance.new("ImageButton")
+local Clear = Instance.new("ImageButton")
+local Paste = Instance.new("ImageButton")
+local Copy = Instance.new("ImageButton")
+local OpenConsole = Instance.new("ImageButton")
+local SearcherFrame = Instance.new("Frame")
+local SearchBox = Instance.new("TextBox")
+local SearchButton = Instance.new("ImageButton")
+local FilterFrame = Instance.new("Frame")
+local FreeFilter = Instance.new("TextButton")
+local VerifiedFilter = Instance.new("TextButton")
+local TrendingFilter = Instance.new("TextButton")
+local MostViewedFilter = Instance.new("TextButton")
+local UnverifiedFilter = Instance.new("TextButton")
+local ScriptList = Instance.new("ScrollingFrame")
+local ListLayout = Instance.new("UIListLayout")
+local PageFrame = Instance.new("Frame")
+local PrevPageBtn = Instance.new("ImageButton")
+local PageLabel = Instance.new("TextLabel")
+local NextPageBtn = Instance.new("ImageButton")
+local GameScriptsFrame = Instance.new("Frame")
+local GameSearchBox = Instance.new("TextBox")
+local GameSearchButton = Instance.new("ImageButton")
+local GameScriptsList = Instance.new("ScrollingFrame")
+local GameListLayout = Instance.new("UIListLayout")
+local UniversalScriptsFrame = Instance.new("Frame")
+local UniSearchBox = Instance.new("TextBox")
+local UniSearchButton = Instance.new("ImageButton")
+local UniScriptsList = Instance.new("ScrollingFrame")
+local UniListLayout = Instance.new("UIListLayout")
+local FilesFrame = Instance.new("Frame")
+local FilesHeader = Instance.new("Frame")
+local FilesIcon = Instance.new("ImageLabel")
+local FilesLabel = Instance.new("TextLabel")
+local FilesList = Instance.new("ScrollingFrame")
+local FilesListLayout = Instance.new("UIListLayout")
+local FileNameBox = Instance.new("TextBox")
+local SaveFileBtn = Instance.new("ImageButton")
+local LoadFileBtn = Instance.new("ImageButton")
+local RenameFileBtn = Instance.new("ImageButton")
+local DeleteFileBtn = Instance.new("ImageButton")
+local ExecuteFileBtn = Instance.new("ImageButton")
+local CloseKeybind = Instance.new("TextLabel")
+local TextLabel = Instance.new("TextLabel")
+
+Windows11UI.Name = "Windows11UI"
+Windows11UI.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+Windows11UI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+Topbar.Name = "Topbar"
+Topbar.Parent = Windows11UI
+Topbar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+Topbar.BorderSizePixel = 0
+Topbar.Position = UDim2.new(0.279261738, 0, 0.19421488, 0)
+Topbar.Size = UDim2.new(0, 700, 0, 56)
+
+UICorner.Parent = Topbar
+
+Frame.Parent = Topbar
+Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Frame.BorderSizePixel = 0
+Frame.Position = UDim2.new(0, 0, 0.65956223, 0)
+Frame.Size = UDim2.new(0, 700, 0, 320)
+
+UICorner_2.Parent = Frame
+
+FilesFrame.Name = "FilesFrame"
+FilesFrame.Parent = Frame
+FilesFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+FilesFrame.BorderSizePixel = 0
+FilesFrame.Position = UDim2.new(0, 0, 0, 0)
+FilesFrame.Size = UDim2.new(0, 140, 0, 320)
+
+local FilesCorner = Instance.new("UICorner")
+FilesCorner.CornerRadius = UDim.new(0, 0)
+FilesCorner.Parent = FilesFrame
+
+FilesHeader.Name = "FilesHeader"
+FilesHeader.Parent = FilesFrame
+FilesHeader.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+FilesHeader.BorderSizePixel = 0
+FilesHeader.Position = UDim2.new(0, 0, 0, 0)
+FilesHeader.Size = UDim2.new(1, 0, 0, 40)
+
+local HeaderCorner = Instance.new("UICorner")
+HeaderCorner.CornerRadius = UDim.new(0, 0)
+HeaderCorner.Parent = FilesHeader
+
+FilesIcon.Name = "FilesIcon"
+FilesIcon.Parent = FilesHeader
+FilesIcon.BackgroundTransparency = 1
+FilesIcon.Position = UDim2.new(0, 10, 0, 5)
+FilesIcon.Size = UDim2.new(0, 30, 0, 30)
+FilesIcon.Image = "rbxassetid://12141614304"
+-- Removed blue color
+
+FilesLabel.Name = "FilesLabel"
+FilesLabel.Parent = FilesHeader
+FilesLabel.BackgroundTransparency = 1
+FilesLabel.Position = UDim2.new(0, 45, 0, 0)
+FilesLabel.Size = UDim2.new(0, 95, 0, 40)
+FilesLabel.Font = Enum.Font.GothamBold
+FilesLabel.Text = "FILES"
+FilesLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+FilesLabel.TextSize = 16
+
+FilesList.Name = "FilesList"
+FilesList.Parent = FilesFrame
+FilesList.BackgroundTransparency = 1
+FilesList.Position = UDim2.new(0, 5, 0, 85)
+FilesList.Size = UDim2.new(0, 130, 0, 140)
+FilesList.ScrollBarThickness = 3
+FilesList.CanvasSize = UDim2.new(0, 0, 0, 0)
+
+FilesListLayout.Parent = FilesList
+FilesListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+FilesListLayout.Padding = UDim.new(0, 4)
+
+FileNameBox.Name = "FileNameBox"
+FileNameBox.Parent = FilesFrame
+FileNameBox.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+FileNameBox.BorderColor3 = Color3.fromRGB(50, 50, 50)
+FileNameBox.BorderSizePixel = 1
+FileNameBox.Position = UDim2.new(0, 5, 0, 45)
+FileNameBox.Size = UDim2.new(0, 130, 0, 25)
+FileNameBox.Font = Enum.Font.Gotham
+FileNameBox.Text = ""
+FileNameBox.PlaceholderText = "File name..."
+FileNameBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 100)
+FileNameBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+FileNameBox.TextSize = 11
+FileNameBox.TextXAlignment = Enum.TextXAlignment.Left
+
+Instance.new("UICorner", FileNameBox).CornerRadius = UDim.new(0, 4)
+
+SaveFileBtn.Name = "SaveFileBtn"
+SaveFileBtn.Parent = FilesFrame
+SaveFileBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+SaveFileBtn.Position = UDim2.new(0, 5, 0, 230)
+SaveFileBtn.Size = UDim2.new(0, 35, 0, 35)
+SaveFileBtn.Image = "rbxassetid://11768914234"
+
+Instance.new("UICorner", SaveFileBtn).CornerRadius = UDim.new(0, 6)
+
+local SaveTooltip = Instance.new("TextLabel")
+SaveTooltip.Parent = SaveFileBtn
+SaveTooltip.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+SaveTooltip.BackgroundTransparency = 0.5
+SaveTooltip.Position = UDim2.new(0, 0, 0, -20)
+SaveTooltip.Size = UDim2.new(1, 0, 0, 18)
+SaveTooltip.Font = Enum.Font.Gotham
+SaveTooltip.Text = "Save"
+SaveTooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
+SaveTooltip.TextSize = 10
+SaveTooltip.Visible = false
+
+SaveFileBtn.MouseEnter:Connect(function() SaveTooltip.Visible = true end)
+SaveFileBtn.MouseLeave:Connect(function() SaveTooltip.Visible = false end)
+
+LoadFileBtn.Name = "LoadFileBtn"
+LoadFileBtn.Parent = FilesFrame
+LoadFileBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+LoadFileBtn.Position = UDim2.new(0, 45, 0, 230)
+LoadFileBtn.Size = UDim2.new(0, 35, 0, 35)
+LoadFileBtn.Image = "rbxassetid://85502241059648"
+
+Instance.new("UICorner", LoadFileBtn).CornerRadius = UDim.new(0, 6)
+
+local LoadTooltip = Instance.new("TextLabel")
+LoadTooltip.Parent = LoadFileBtn
+LoadTooltip.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+LoadTooltip.BackgroundTransparency = 0.5
+LoadTooltip.Position = UDim2.new(0, 0, 0, -20)
+LoadTooltip.Size = UDim2.new(1, 0, 0, 18)
+LoadTooltip.Font = Enum.Font.Gotham
+LoadTooltip.Text = "Load"
+LoadTooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
+LoadTooltip.TextSize = 10
+LoadTooltip.Visible = false
+
+LoadFileBtn.MouseEnter:Connect(function() LoadTooltip.Visible = true end)
+LoadFileBtn.MouseLeave:Connect(function() LoadTooltip.Visible = false end)
+
+RenameFileBtn.Name = "RenameFileBtn"
+RenameFileBtn.Parent = FilesFrame
+RenameFileBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+RenameFileBtn.Position = UDim2.new(0, 85, 0, 230)
+RenameFileBtn.Size = UDim2.new(0, 35, 0, 35)
+RenameFileBtn.Image = "rbxassetid://88134306391339"
+
+Instance.new("UICorner", RenameFileBtn).CornerRadius = UDim.new(0, 6)
+
+local RenameTooltip = Instance.new("TextLabel")
+RenameTooltip.Parent = RenameFileBtn
+RenameTooltip.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+RenameTooltip.BackgroundTransparency = 0.5
+RenameTooltip.Position = UDim2.new(0, 0, 0, -20)
+RenameTooltip.Size = UDim2.new(1, 0, 0, 18)
+RenameTooltip.Font = Enum.Font.Gotham
+RenameTooltip.Text = "Rename"
+RenameTooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
+RenameTooltip.TextSize = 10
+RenameTooltip.Visible = false
+
+RenameFileBtn.MouseEnter:Connect(function() RenameTooltip.Visible = true end)
+RenameFileBtn.MouseLeave:Connect(function() RenameTooltip.Visible = false end)
+
+DeleteFileBtn.Name = "DeleteFileBtn"
+DeleteFileBtn.Parent = FilesFrame
+DeleteFileBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+DeleteFileBtn.Position = UDim2.new(0, 5, 0, 275)
+DeleteFileBtn.Size = UDim2.new(0, 35, 0, 35)
+DeleteFileBtn.Image = "rbxassetid://97265398503265"
+
+Instance.new("UICorner", DeleteFileBtn).CornerRadius = UDim.new(0, 6)
+
+local DeleteTooltip = Instance.new("TextLabel")
+DeleteTooltip.Parent = DeleteFileBtn
+DeleteTooltip.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+DeleteTooltip.BackgroundTransparency = 0.5
+DeleteTooltip.Position = UDim2.new(0, 0, 0, -20)
+DeleteTooltip.Size = UDim2.new(1, 0, 0, 18)
+DeleteTooltip.Font = Enum.Font.Gotham
+DeleteTooltip.Text = "Delete"
+DeleteTooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
+DeleteTooltip.TextSize = 10
+DeleteTooltip.Visible = false
+
+DeleteFileBtn.MouseEnter:Connect(function() DeleteTooltip.Visible = true end)
+DeleteFileBtn.MouseLeave:Connect(function() DeleteTooltip.Visible = false end)
+
+ExecuteFileBtn.Name = "ExecuteFileBtn"
+ExecuteFileBtn.Parent = FilesFrame
+ExecuteFileBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+ExecuteFileBtn.Position = UDim2.new(0, 45, 0, 275)
+ExecuteFileBtn.Size = UDim2.new(0, 35, 0, 35)
+ExecuteFileBtn.Image = "rbxassetid://130193182186125"
+
+Instance.new("UICorner", ExecuteFileBtn).CornerRadius = UDim.new(0, 6)
+
+local ExecTooltip = Instance.new("TextLabel")
+ExecTooltip.Parent = ExecuteFileBtn
+ExecTooltip.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ExecTooltip.BackgroundTransparency = 0.5
+ExecTooltip.Position = UDim2.new(0, 0, 0, -20)
+ExecTooltip.Size = UDim2.new(1, 0, 0, 18)
+ExecTooltip.Font = Enum.Font.Gotham
+ExecTooltip.Text = "Execute"
+ExecTooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
+ExecTooltip.TextSize = 10
+ExecTooltip.Visible = false
+
+ExecuteFileBtn.MouseEnter:Connect(function() ExecTooltip.Visible = true end)
+ExecuteFileBtn.MouseLeave:Connect(function() ExecTooltip.Visible = false end)
+
+TabFrame.Name = "TabFrame"
+TabFrame.Parent = Frame
+TabFrame.BackgroundTransparency = 1
+TabFrame.BorderSizePixel = 0
+TabFrame.Position = UDim2.new(0, 150, 0, 5)
+TabFrame.Size = UDim2.new(0, 545, 0, 30)
+
+InfoTab.Name = "InfoTab"
+InfoTab.Parent = TabFrame
+InfoTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+InfoTab.BorderSizePixel = 0
+InfoTab.Position = UDim2.new(0, 0, 0, 0)
+InfoTab.Size = UDim2.new(0, 35, 0, 30)
+InfoTab.Image = "rbxassetid://9405926389"
+InfoTab.ImageColor3 = Color3.fromRGB(200, 200, 200)
+
+Instance.new("UICorner", InfoTab).CornerRadius = UDim.new(0, 6)
+
+EditorTab.Name = "EditorTab"
+EditorTab.Parent = TabFrame
+EditorTab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+EditorTab.BorderSizePixel = 0
+EditorTab.Position = UDim2.new(0, 45, 0, 0)
+EditorTab.Size = UDim2.new(0, 35, 0, 30)
+EditorTab.Image = "rbxassetid://103950363563606"
+
+Instance.new("UICorner", EditorTab).CornerRadius = UDim.new(0, 6)
+
+SearcherTab.Name = "SearcherTab"
+SearcherTab.Parent = TabFrame
+SearcherTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+SearcherTab.BorderSizePixel = 0
+SearcherTab.Position = UDim2.new(0, 90, 0, 0)
+SearcherTab.Size = UDim2.new(0, 35, 0, 30)
+SearcherTab.Image = "rbxassetid://11713325834"
+SearcherTab.ImageColor3 = Color3.fromRGB(200, 200, 200)
+
+Instance.new("UICorner", SearcherTab).CornerRadius = UDim.new(0, 6)
+
+GameScriptsTab.Name = "GameScriptsTab"
+GameScriptsTab.Parent = TabFrame
+GameScriptsTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+GameScriptsTab.BorderSizePixel = 0
+GameScriptsTab.Position = UDim2.new(0, 135, 0, 0)
+GameScriptsTab.Size = UDim2.new(0, 35, 0, 30)
+GameScriptsTab.Image = "rbxassetid://86591853167234"
+GameScriptsTab.ImageColor3 = Color3.fromRGB(200, 200, 200)
+
+Instance.new("UICorner", GameScriptsTab).CornerRadius = UDim.new(0, 6)
+
+UniversalScriptsTab.Name = "UniversalScriptsTab"
+UniversalScriptsTab.Parent = TabFrame
+UniversalScriptsTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+UniversalScriptsTab.BorderSizePixel = 0
+UniversalScriptsTab.Position = UDim2.new(0, 180, 0, 0)
+UniversalScriptsTab.Size = UDim2.new(0, 35, 0, 30)
+UniversalScriptsTab.Image = "rbxassetid://134398528532961"
+UniversalScriptsTab.ImageColor3 = Color3.fromRGB(200, 200, 200)
+
+Instance.new("UICorner", UniversalScriptsTab).CornerRadius = UDim.new(0, 6)
+
+InfoFrame.Name = "InfoFrame"
+InfoFrame.Parent = Frame
+InfoFrame.BackgroundTransparency = 1
+InfoFrame.Position = UDim2.new(0, 150, 0, 40)
+InfoFrame.Size = UDim2.new(0, 545, 0, 275)
+InfoFrame.Visible = false
+
+InfoBackground.Name = "InfoBackground"
+InfoBackground.Parent = InfoFrame
+InfoBackground.BackgroundTransparency = 1
+InfoBackground.Size = UDim2.new(1, 0, 1, 0)
+InfoBackground.Image = "rbxassetid://6655732452"
+InfoBackground.ImageTransparency = 0.3
+InfoBackground.ScaleType = Enum.ScaleType.Crop
+
+Instance.new("UICorner", InfoBackground).CornerRadius = UDim.new(0, 6)
+
+-- Clean Info Layout with Server Info, User Info, Game, and Time Zone
+local InfoContainer = Instance.new("Frame")
+InfoContainer.Name = "InfoContainer"
+InfoContainer.Parent = InfoFrame
+InfoContainer.BackgroundTransparency = 1
+InfoContainer.Position = UDim2.new(0, 20, 0, 20)
+InfoContainer.Size = UDim2.new(1, -40, 1, -40)
+
+local function CreateInfoSection(title, yPos)
+    local section = Instance.new("Frame")
+    section.Name = title .. "Section"
+    section.Parent = InfoContainer
+    section.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    section.Position = UDim2.new(0, 0, 0, yPos)
+    section.Size = UDim2.new(1, 0, 0, 50)
+    Instance.new("UICorner", section).CornerRadius = UDim.new(0, 6)
+    
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Name = "Title"
+    titleLabel.Parent = section
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.Position = UDim2.new(0, 10, 0, 5)
+    titleLabel.Size = UDim2.new(1, -20, 0, 18)
+    titleLabel.Font = Enum.Font.GothamBold
+    titleLabel.Text = title
+    titleLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    titleLabel.TextSize = 12
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local valueLabel = Instance.new("TextLabel")
+    valueLabel.Name = "Value"
+    valueLabel.Parent = section
+    valueLabel.BackgroundTransparency = 1
+    valueLabel.Position = UDim2.new(0, 10, 0, 23)
+    valueLabel.Size = UDim2.new(1, -20, 0, 22)
+    valueLabel.Font = Enum.Font.Gotham
+    valueLabel.Text = "Loading..."
+    valueLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    valueLabel.TextSize = 14
+    valueLabel.TextXAlignment = Enum.TextXAlignment.Left
+    valueLabel.TextTruncate = Enum.TextTruncate.AtEnd
+    
+    return valueLabel
+end
+
+-- Server Info
+local ServerInfoLabel = CreateInfoSection("Server Info / Stats", 0)
+local serverId = game.JobId ~= "" and game.JobId:sub(1, 8) .. "..." or "Private Server"
+local serverPlayers = #game.Players:GetPlayers() .. "/" .. game.Players.MaxPlayers
+ServerInfoLabel.Text = "Server ID: " .. serverId .. " | Players: " .. serverPlayers
+
+-- User Info
+local UserInfoLabel = CreateInfoSection("User Info / Stats", 60)
+local player = game.Players.LocalPlayer
+local userId = player.UserId
+local username = player.Name
+local displayName = player.DisplayName
+UserInfoLabel.Text = "User: " .. username .. " (" .. displayName .. ") | ID: " .. userId
+
+-- Game Info
+local GameInfoLabel = CreateInfoSection("Game", 120)
+local gameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
+GameInfoLabel.Text = gameName .. " (Place ID: " .. game.PlaceId .. ")"
+
+-- Time Zone
+local TimeZoneLabel = CreateInfoSection("Time Zone", 180)
+local function updateTime()
+    local timeZone = os.date("%Z") or "Unknown"
+    local localTime = os.date("%I:%M %p")
+    TimeZoneLabel.Text = timeZone .. " | Local Time: " .. localTime
+end
+updateTime()
+game:GetService("RunService").Heartbeat:Connect(updateTime)
+
+-- Discord Section (moved below info sections)
+DiscordIcon.Name = "DiscordIcon"
+DiscordIcon.Parent = InfoContainer
+DiscordIcon.BackgroundTransparency = 1
+DiscordIcon.Position = UDim2.new(0, 0, 0, 240)
+DiscordIcon.Size = UDim2.new(0, 40, 0, 40)
+DiscordIcon.Image = "rbxassetid://115249452401470"
+
+DiscordLabel.Name = "DiscordLabel"
+DiscordLabel.Parent = InfoContainer
+DiscordLabel.BackgroundTransparency = 1
+DiscordLabel.Position = UDim2.new(0, 50, 0, 240)
+DiscordLabel.Size = UDim2.new(1, -50, 0, 40)
+DiscordLabel.Font = Enum.Font.GothamBold
+DiscordLabel.Text = "Our Discord Server: https://discord.gg/xnVDpcAYgC"
+DiscordLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+DiscordLabel.TextSize = 14
+DiscordLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+CopyDiscordBtn.Name = "CopyDiscordBtn"
+CopyDiscordBtn.Parent = InfoContainer
+CopyDiscordBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+CopyDiscordBtn.Position = UDim2.new(0, 0, 0, 290)
+CopyDiscordBtn.Size = UDim2.new(0, 160, 0, 35)
+CopyDiscordBtn.Image = "rbxassetid://16264282445"
+CopyDiscordBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
+
+Instance.new("UICorner", CopyDiscordBtn).CornerRadius = UDim.new(0, 6)
+
+CopyDiscordLabel.Name = "CopyDiscordLabel"
+CopyDiscordLabel.Parent = CopyDiscordBtn
+CopyDiscordLabel.BackgroundTransparency = 1
+CopyDiscordLabel.Position = UDim2.new(0, 40, 0, 0)
+CopyDiscordLabel.Size = UDim2.new(1, -40, 1, 0)
+CopyDiscordLabel.Font = Enum.Font.Gotham
+CopyDiscordLabel.Text = "Copy Server Link"
+CopyDiscordLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+CopyDiscordLabel.TextSize = 12
+
+EditorFrame.Name = "EditorFrame"
+EditorFrame.Parent = Frame
+EditorFrame.BackgroundTransparency = 1
+EditorFrame.Position = UDim2.new(0, 150, 0, 40)
+EditorFrame.Size = UDim2.new(0, 545, 0, 275)
+
+-- ScrollFrame 1 (Line Numbers)
+local LineNumberFrame = Instance.new("ScrollingFrame")
+LineNumberFrame.Name = "LineNumberFrame"
+LineNumberFrame.Parent = EditorFrame
+LineNumberFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+LineNumberFrame.BorderSizePixel = 0
+LineNumberFrame.Position = UDim2.new(0, 0, 0, 0)
+LineNumberFrame.Size = UDim2.new(0, 40, 0, 225)
+LineNumberFrame.ScrollBarThickness = 0
+LineNumberFrame.CanvasSize = UDim2.new(0, 0, 2, 0)
+LineNumberFrame.ScrollingDirection = Enum.ScrollingDirection.Y
+
+Instance.new("UICorner", LineNumberFrame).CornerRadius = UDim.new(0, 6)
+
+local LineNumbers = Instance.new("TextLabel")
+LineNumbers.Name = "LineNumbers"
+LineNumbers.Parent = LineNumberFrame
+LineNumbers.BackgroundTransparency = 1
+LineNumbers.Size = UDim2.new(1, 0, 2, 0)
+LineNumbers.Font = Enum.Font.Code
+LineNumbers.Text = "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25"
+LineNumbers.TextColor3 = Color3.fromRGB(100, 100, 100)
+LineNumbers.TextSize = 14
+LineNumbers.TextYAlignment = Enum.TextYAlignment.Top
+
+-- ScrollFrame 2 (Main Editor)
+local EditorScrollFrame = Instance.new("ScrollingFrame")
+EditorScrollFrame.Name = "EditorScrollFrame"
+EditorScrollFrame.Parent = EditorFrame
+EditorScrollFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+EditorScrollFrame.BorderColor3 = Color3.fromRGB(50, 50, 50)
+EditorScrollFrame.BorderSizePixel = 1
+EditorScrollFrame.Position = UDim2.new(0, 45, 0, 0)
+EditorScrollFrame.Size = UDim2.new(0, 500, 0, 225)
+EditorScrollFrame.ScrollBarThickness = 4
+EditorScrollFrame.CanvasSize = UDim2.new(0, 0, 2, 0)
+
+Instance.new("UICorner", EditorScrollFrame).CornerRadius = UDim.new(0, 6)
+
+Source.Name = "Source"
+Source.Parent = EditorScrollFrame
+Source.BackgroundTransparency = 1
+Source.Size = UDim2.new(1, -10, 2, 0)
+Source.Position = UDim2.new(0, 5, 0, 0)
+Source.Font = Enum.Font.Code
+Source.Text = ""
+Source.TextColor3 = Color3.fromRGB(255, 255, 255)
+Source.PlaceholderText = "-- Enter script here..."
+Source.PlaceholderColor3 = Color3.fromRGB(100, 100, 100)
+Source.TextSize = 14
+Source.TextWrapped = false
+Source.TextXAlignment = Enum.TextXAlignment.Left
+Source.TextYAlignment = Enum.TextYAlignment.Top
+Source.ClearTextOnFocus = false
+Source.MultiLine = true
+
+-- Sync scrolling between line numbers and editor
+Source:GetPropertyChangedSignal("Text"):Connect(function()
+    local lines = select(2, Source.Text:gsub("\n", "\n")) + 1
+    local lineText = ""
+    for i = 1, math.max(lines, 25) do
+        lineText = lineText .. i .. (i < math.max(lines, 25) and "\n" or "")
+    end
+    LineNumbers.Text = lineText
+    LineNumberFrame.CanvasSize = UDim2.new(0, 0, 0, math.max(lines * 20, 450))
+    EditorScrollFrame.CanvasSize = UDim2.new(0, 0, 0, math.max(lines * 20, 450))
+end)
+
+EditorScrollFrame:GetPropertyChangedSignal("CanvasPosition"):Connect(function()
+    LineNumberFrame.CanvasPosition = Vector2.new(0, EditorScrollFrame.CanvasPosition.Y)
+end)
+
+Execute.Name = "Execute"
+Execute.Parent = EditorFrame
+Execute.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Execute.BorderSizePixel = 0
+Execute.Position = UDim2.new(0, 0, 0, 235)
+Execute.Size = UDim2.new(0, 40, 0, 35)
+Execute.Image = "rbxassetid://130193182186125"
+
+Instance.new("UICorner", Execute).CornerRadius = UDim.new(0, 6)
+
+Clear.Name = "Clear"
+Clear.Parent = EditorFrame
+Clear.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Clear.BorderSizePixel = 0
+Clear.Position = UDim2.new(0, 50, 0, 235)
+Clear.Size = UDim2.new(0, 40, 0, 35)
+Clear.Image = "rbxassetid://110016091132925"
+
+Instance.new("UICorner", Clear).CornerRadius = UDim.new(0, 6)
+
+Paste.Name = "Paste"
+Paste.Parent = EditorFrame
+Paste.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Paste.BorderSizePixel = 0
+Paste.Position = UDim2.new(0, 100, 0, 235)
+Paste.Size = UDim2.new(0, 40, 0, 35)
+Paste.Image = "rbxassetid://89773130507890"
+
+Instance.new("UICorner", Paste).CornerRadius = UDim.new(0, 6)
+
+Copy.Name = "Copy"
+Copy.Parent = EditorFrame
+Copy.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Copy.BorderSizePixel = 0
+Copy.Position = UDim2.new(0, 150, 0, 235)
+Copy.Size = UDim2.new(0, 40, 0, 35)
+Copy.Image = "rbxassetid://10169282923"
+
+Instance.new("UICorner", Copy).CornerRadius = UDim.new(0, 6)
+
+OpenConsole.Name = "OpenConsole"
+OpenConsole.Parent = EditorFrame
+OpenConsole.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+OpenConsole.BorderSizePixel = 0
+OpenConsole.Position = UDim2.new(0, 460, 0, 235)
+OpenConsole.Size = UDim2.new(0, 40, 0, 35)
+OpenConsole.Image = "rbxassetid://72375675759243"
+
+Instance.new("UICorner", OpenConsole).CornerRadius = UDim.new(0, 6)
+
+local ConsoleTooltip = Instance.new("TextLabel")
+ConsoleTooltip.Parent = OpenConsole
+ConsoleTooltip.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ConsoleTooltip.BackgroundTransparency = 0.5
+ConsoleTooltip.Position = UDim2.new(0, 0, 0, -20)
+ConsoleTooltip.Size = UDim2.new(1, 0, 0, 18)
+ConsoleTooltip.Font = Enum.Font.Gotham
+ConsoleTooltip.Text = "Console"
+ConsoleTooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
+ConsoleTooltip.TextSize = 10
+ConsoleTooltip.Visible = false
+
+OpenConsole.MouseEnter:Connect(function() ConsoleTooltip.Visible = true end)
+OpenConsole.MouseLeave:Connect(function() ConsoleTooltip.Visible = false end)
+
+Inject.Name = "Inject"
+Inject.Parent = EditorFrame
+Inject.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Inject.BorderSizePixel = 0
+Inject.Position = UDim2.new(0, 505, 0, 235)
+Inject.Size = UDim2.new(0, 40, 0, 35)
+Inject.Image = "rbxassetid://13353741942"
+
+Instance.new("UICorner", Inject).CornerRadius = UDim.new(0, 6)
+
+SearcherFrame.Name = "SearcherFrame"
+SearcherFrame.Parent = Frame
+SearcherFrame.BackgroundTransparency = 1
+SearcherFrame.Position = UDim2.new(0, 150, 0, 40)
+SearcherFrame.Size = UDim2.new(0, 545, 0, 275)
+SearcherFrame.Visible = false
+
+SearchBox.Name = "SearchBox"
+SearchBox.Parent = SearcherFrame
+SearchBox.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+SearchBox.BorderColor3 = Color3.fromRGB(50, 50, 50)
+SearchBox.BorderSizePixel = 1
+SearchBox.Position = UDim2.new(0, 0, 0, 0)
+SearchBox.Size = UDim2.new(0, 350, 0, 30)
+SearchBox.Font = Enum.Font.Code
+SearchBox.Text = ""
+SearchBox.PlaceholderText = "Search ScriptBlox..."
+SearchBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 100)
+SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+SearchBox.TextSize = 13
+SearchBox.TextXAlignment = Enum.TextXAlignment.Left
+
+Instance.new("UICorner", SearchBox).CornerRadius = UDim.new(0, 6)
+
+SearchButton.Name = "SearchButton"
+SearchButton.Parent = SearcherFrame
+SearchButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+SearchButton.BorderSizePixel = 0
+SearchButton.Position = UDim2.new(0, 360, 0, 0)
+SearchButton.Size = UDim2.new(0, 35, 0, 30)
+SearchButton.Image = "rbxassetid://118397071140701"
+
+Instance.new("UICorner", SearchButton).CornerRadius = UDim.new(0, 6)
+
+FilterFrame.Name = "FilterFrame"
+FilterFrame.Parent = SearcherFrame
+FilterFrame.BackgroundTransparency = 1
+FilterFrame.Position = UDim2.new(0, 0, 0, 35)
+FilterFrame.Size = UDim2.new(0, 545, 0, 25)
+
+local function CreateFilterButton(name, position, apiParam, color)
+	local btn = Instance.new("TextButton")
+	btn.Name = name .. "Filter"
+	btn.Parent = FilterFrame
+	btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	btn.BorderSizePixel = 0
+	btn.Position = position
+	btn.Size = UDim2.new(0, 75, 0, 22)
+	btn.Font = Enum.Font.Gotham
+	btn.Text = name
+	btn.TextColor3 = Color3.fromRGB(200, 200, 200)
+	btn.TextSize = 10
+	btn.AutoButtonColor = true
+	
+	Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 4)
+	
+	btn.MouseButton1Click:Connect(function()
+		for _, child in pairs(FilterFrame:GetChildren()) do
+			if child:IsA("TextButton") then
+				child.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+				child.TextColor3 = Color3.fromRGB(200, 200, 200)
+			end
+		end
+		btn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+		CurrentFilter = apiParam
+		CurrentPage = 1
+		PerformSearch()
+	end)
+	
+	return btn
+end
+
+FreeFilter = CreateFilterButton("Free", UDim2.new(0, 0, 0, 0), "mode=free")
+VerifiedFilter = CreateFilterButton("Verified", UDim2.new(0, 80, 0, 0), "filters=verified&legacy_filters=true")
+TrendingFilter = CreateFilterButton("Trending", UDim2.new(0, 160, 0, 0), "trending")
+MostViewedFilter = CreateFilterButton("Most Viewed", UDim2.new(0, 240, 0, 0), "sortBy=views&order=desc")
+UnverifiedFilter = CreateFilterButton("Unverified", UDim2.new(0, 320, 0, 0), "verified=0")
+
+PageFrame.Name = "PageFrame"
+PageFrame.Parent = SearcherFrame
+PageFrame.BackgroundTransparency = 1
+PageFrame.Position = UDim2.new(0, 0, 0, 65)
+PageFrame.Size = UDim2.new(0, 545, 0, 30)
+
+PrevPageBtn.Name = "PrevPage"
+PrevPageBtn.Parent = PageFrame
+PrevPageBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+PrevPageBtn.BorderSizePixel = 0
+PrevPageBtn.Position = UDim2.new(0, 0, 0, 0)
+PrevPageBtn.Size = UDim2.new(0, 40, 0, 28)
+PrevPageBtn.Image = "rbxassetid://137224201341259"
+PrevPageBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
+
+Instance.new("UICorner", PrevPageBtn).CornerRadius = UDim.new(0, 6)
+
+PageLabel.Name = "PageLabel"
+PageLabel.Parent = PageFrame
+PageLabel.BackgroundTransparency = 1
+PageLabel.Position = UDim2.new(0, 45, 0, 0)
+PageLabel.Size = UDim2.new(0, 40, 0, 28)
+PageLabel.Font = Enum.Font.GothamBold
+PageLabel.Text = "1"
+PageLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+PageLabel.TextSize = 14
+
+NextPageBtn.Name = "NextPage"
+NextPageBtn.Parent = PageFrame
+NextPageBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+NextPageBtn.BorderSizePixel = 0
+NextPageBtn.Position = UDim2.new(0, 90, 0, 0)
+NextPageBtn.Size = UDim2.new(0, 40, 0, 28)
+NextPageBtn.Image = "rbxassetid://117408302517589"
+NextPageBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
+
+Instance.new("UICorner", NextPageBtn).CornerRadius = UDim.new(0, 6)
+
+ScriptList.Name = "ScriptList"
+ScriptList.Parent = SearcherFrame
+ScriptList.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+ScriptList.BorderColor3 = Color3.fromRGB(50, 50, 50)
+ScriptList.BorderSizePixel = 1
+ScriptList.Position = UDim2.new(0, 0, 0, 100)
+ScriptList.Size = UDim2.new(0, 545, 0, 175)
+ScriptList.ScrollBarThickness = 4
+ScriptList.CanvasSize = UDim2.new(0, 0, 0, 0)
+
+Instance.new("UICorner", ScriptList).CornerRadius = UDim.new(0, 6)
+
+ListLayout.Parent = ScriptList
+ListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+ListLayout.Padding = UDim.new(0, 6)
+
+GameScriptsFrame.Name = "GameScriptsFrame"
+GameScriptsFrame.Parent = Frame
+GameScriptsFrame.BackgroundTransparency = 1
+GameScriptsFrame.Position = UDim2.new(0, 150, 0, 40)
+GameScriptsFrame.Size = UDim2.new(0, 545, 0, 275)
+GameScriptsFrame.Visible = false
+
+GameSearchBox.Name = "GameSearchBox"
+GameSearchBox.Parent = GameScriptsFrame
+GameSearchBox.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+GameSearchBox.BorderColor3 = Color3.fromRGB(50, 50, 50)
+GameSearchBox.BorderSizePixel = 1
+GameSearchBox.Position = UDim2.new(0, 0, 0, 0)
+GameSearchBox.Size = UDim2.new(0, 500, 0, 30)
+GameSearchBox.Font = Enum.Font.Code
+GameSearchBox.Text = ""
+GameSearchBox.PlaceholderText = "Search Game Scripts..."
+GameSearchBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 100)
+GameSearchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+GameSearchBox.TextSize = 13
+GameSearchBox.TextXAlignment = Enum.TextXAlignment.Left
+
+Instance.new("UICorner", GameSearchBox).CornerRadius = UDim.new(0, 6)
+
+GameSearchButton.Name = "GameSearchButton"
+GameSearchButton.Parent = GameScriptsFrame
+GameSearchButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+GameSearchButton.BorderSizePixel = 0
+GameSearchButton.Position = UDim2.new(0, 510, 0, 0)
+GameSearchButton.Size = UDim2.new(0, 35, 0, 30)
+GameSearchButton.Image = "rbxassetid://118397071140701"
+
+Instance.new("UICorner", GameSearchButton).CornerRadius = UDim.new(0, 6)
+
+GameScriptsList.Name = "GameScriptsList"
+GameScriptsList.Parent = GameScriptsFrame
+GameScriptsList.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+GameScriptsList.BorderColor3 = Color3.fromRGB(50, 50, 50)
+GameScriptsList.BorderSizePixel = 1
+GameScriptsList.Position = UDim2.new(0, 0, 0, 40)
+GameScriptsList.Size = UDim2.new(0, 545, 0, 235)
+GameScriptsList.ScrollBarThickness = 4
+GameScriptsList.CanvasSize = UDim2.new(0, 0, 0, 0)
+
+Instance.new("UICorner", GameScriptsList).CornerRadius = UDim.new(0, 6)
+
+GameListLayout.Parent = GameScriptsList
+GameListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+GameListLayout.Padding = UDim.new(0, 5)
+
+UniversalScriptsFrame.Name = "UniversalScriptsFrame"
+UniversalScriptsFrame.Parent = Frame
+UniversalScriptsFrame.BackgroundTransparency = 1
+UniversalScriptsFrame.Position = UDim2.new(0, 150, 0, 40)
+UniversalScriptsFrame.Size = UDim2.new(0, 545, 0, 275)
+UniversalScriptsFrame.Visible = false
+
+UniSearchBox.Name = "UniSearchBox"
+UniSearchBox.Parent = UniversalScriptsFrame
+UniSearchBox.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+UniSearchBox.BorderColor3 = Color3.fromRGB(50, 50, 50)
+UniSearchBox.BorderSizePixel = 1
+UniSearchBox.Position = UDim2.new(0, 0, 0, 0)
+UniSearchBox.Size = UDim2.new(0, 500, 0, 30)
+UniSearchBox.Font = Enum.Font.Code
+UniSearchBox.Text = ""
+UniSearchBox.PlaceholderText = "Search Universal Scripts..."
+UniSearchBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 100)
+UniSearchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+UniSearchBox.TextSize = 13
+UniSearchBox.TextXAlignment = Enum.TextXAlignment.Left
+
+Instance.new("UICorner", UniSearchBox).CornerRadius = UDim.new(0, 6)
+
+UniSearchButton.Name = "UniSearchButton"
+UniSearchButton.Parent = UniversalScriptsFrame
+UniSearchButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+UniSearchButton.BorderSizePixel = 0
+UniSearchButton.Position = UDim2.new(0, 510, 0, 0)
+UniSearchButton.Size = UDim2.new(0, 35, 0, 30)
+UniSearchButton.Image = "rbxassetid://118397071140701"
+
+Instance.new("UICorner", UniSearchButton).CornerRadius = UDim.new(0, 6)
+
+UniScriptsList.Name = "UniScriptsList"
+UniScriptsList.Parent = UniversalScriptsFrame
+UniScriptsList.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+UniScriptsList.BorderColor3 = Color3.fromRGB(50, 50, 50)
+UniScriptsList.BorderSizePixel = 1
+UniScriptsList.Position = UDim2.new(0, 0, 0, 40)
+UniScriptsList.Size = UDim2.new(0, 545, 0, 235)
+UniScriptsList.ScrollBarThickness = 4
+UniScriptsList.CanvasSize = UDim2.new(0, 0, 0, 0)
+
+Instance.new("UICorner", UniScriptsList).CornerRadius = UDim.new(0, 6)
+
+UniListLayout.Parent = UniScriptsList
+UniListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UniListLayout.Padding = UDim.new(0, 5)
+
+CloseKeybind.Name = "CloseKeybind"
+CloseKeybind.Parent = Topbar
+CloseKeybind.BackgroundTransparency = 1
+CloseKeybind.Position = UDim2.new(1, -50, 0, 13)
+CloseKeybind.Size = UDim2.new(0, 40, 0, 30)
+CloseKeybind.Font = Enum.Font.Roboto
+CloseKeybind.Text = "[ F8 ]"
+CloseKeybind.TextColor3 = Color3.fromRGB(200, 200, 200)
+CloseKeybind.TextSize = 16
+
+TextLabel.Parent = Topbar
+TextLabel.BackgroundTransparency = 1
+TextLabel.Position = UDim2.new(0, 15, 0, 0)
+TextLabel.Size = UDim2.new(0, 400, 0, 40)
+TextLabel.Font = Enum.Font.SourceSans
+TextLabel.Text = "ZZINSWARE | Script-hub Executor"
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.TextSize = 16
+TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local UserInputService = game:GetService("UserInputService")
+local HttpService = game:GetService("HttpService")
+
+local player = game.Players.LocalPlayer
+local savedFiles = {}
+local selectedFile = nil
+
+local dragging, dragInput, dragStart, startPos = false, nil, nil, nil
+
+local function update(input)
+	local delta = input.Position - dragStart
+	Topbar.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+Topbar.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = true
+		dragStart = input.Position
+		startPos = Topbar.Position
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then dragging = false end
+		end)
+	end
+end)
+
+Topbar.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+		dragInput = input
+	end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+	if input == dragInput and dragging then update(input) end
+end)
+
+local isVisible = true
+UserInputService.InputBegan:Connect(function(Input, g)
+	if not g and Input.KeyCode == Enum.KeyCode.F8 then
+		isVisible = not isVisible
+		Topbar.Visible = isVisible
+	end
+end)
+
+local function SwitchTab(tab)
+	InfoTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	InfoTab.ImageColor3 = Color3.fromRGB(150, 150, 150)
+	EditorTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	EditorTab.ImageColor3 = Color3.fromRGB(150, 150, 150)
+	SearcherTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	SearcherTab.ImageColor3 = Color3.fromRGB(150, 150, 150)
+	GameScriptsTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	GameScriptsTab.ImageColor3 = Color3.fromRGB(150, 150, 150)
+	UniversalScriptsTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	UniversalScriptsTab.ImageColor3 = Color3.fromRGB(150, 150, 150)
+	
+	InfoFrame.Visible = false
+	EditorFrame.Visible = false
+	SearcherFrame.Visible = false
+	GameScriptsFrame.Visible = false
+	UniversalScriptsFrame.Visible = false
+	
+	if tab == "Info" then
+		InfoTab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		InfoTab.ImageColor3 = Color3.fromRGB(255, 255, 255)
+		InfoFrame.Visible = true
+	elseif tab == "Editor" then
+		EditorTab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		EditorTab.ImageColor3 = Color3.fromRGB(255, 255, 255)
+		EditorFrame.Visible = true
+	elseif tab == "Searcher" then
+		SearcherTab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		SearcherTab.ImageColor3 = Color3.fromRGB(255, 255, 255)
+		SearcherFrame.Visible = true
+	elseif tab == "GameScripts" then
+		GameScriptsTab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		GameScriptsTab.ImageColor3 = Color3.fromRGB(255, 255, 255)
+		GameScriptsFrame.Visible = true
+	elseif tab == "UniversalScripts" then
+		UniversalScriptsTab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		UniversalScriptsTab.ImageColor3 = Color3.fromRGB(255, 255, 255)
+		UniversalScriptsFrame.Visible = true
+	end
+end
+
+InfoTab.MouseButton1Click:Connect(function() SwitchTab("Info") end)
+EditorTab.MouseButton1Click:Connect(function() SwitchTab("Editor") end)
+SearcherTab.MouseButton1Click:Connect(function() SwitchTab("Searcher") end)
+GameScriptsTab.MouseButton1Click:Connect(function() SwitchTab("GameScripts") end)
+UniversalScriptsTab.MouseButton1Click:Connect(function() SwitchTab("UniversalScripts") end)
+
+CopyDiscordBtn.MouseButton1Click:Connect(function()
+	pcall(function()
+		if setclipboard then
+			setclipboard("https://discord.gg/xnVDpcAYgC")
+		end
+	end)
+end)
+
+OpenConsole.MouseButton1Click:Connect(function()
+	pcall(function()
+		if game:GetService("StarterGui"):GetCore("DevConsoleVisible") ~= nil then
+			game:GetService("StarterGui"):SetCore("DevConsoleVisible", true)
+		end
+	end)
+end)
+
+Execute.MouseButton1Click:Connect(function()
+	if Source.Text ~= "" then
+		local success, err = pcall(function()
+			loadstring(Source.Text)()
+		end)
+		if not success then
+			warn("Execution Error: " .. tostring(err))
+		end
+	end
+end)
+
+Clear.MouseButton1Click:Connect(function() Source.Text = "" end)
+
+Paste.MouseButton1Click:Connect(function()
+	local success, result = pcall(function()
+		return getclipboard and getclipboard() or ""
+	end)
+	if success and result ~= "" then
+		Source.Text = result
+	end
+end)
+
+Copy.MouseButton1Click:Connect(function()
+	if Source.Text ~= "" then
+		pcall(function()
+			if setclipboard then
+				setclipboard(Source.Text)
+			end
+		end)
+	end
+end)
+
+local function refreshFilesList()
+	for _, child in pairs(FilesList:GetChildren()) do
+		if child:IsA("TextButton") then
+			child:Destroy()
+		end
+	end
+	
+	for name, _ in pairs(savedFiles) do
+		local fileBtn = Instance.new("TextButton")
+		fileBtn.Size = UDim2.new(1, 0, 0, 28)
+		fileBtn.BackgroundColor3 = (selectedFile == name) and Color3.fromRGB(60, 60, 60) or Color3.fromRGB(40, 40, 40)
+		fileBtn.Text = name
+		fileBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+		fileBtn.TextSize = 11
+		fileBtn.Font = Enum.Font.Gotham
+		fileBtn.Parent = FilesList
+		
+		Instance.new("UICorner", fileBtn).CornerRadius = UDim.new(0, 4)
+		
+		fileBtn.MouseButton1Click:Connect(function()
+			selectedFile = name
+			FileNameBox.Text = name
+			refreshFilesList()
+		end)
+	end
+	
+	FilesList.CanvasSize = UDim2.new(0, 0, 0, #savedFiles * 32)
+end
+
+SaveFileBtn.MouseButton1Click:Connect(function()
+	local name = FileNameBox.Text
+	if name == "" then name = "Script_" .. os.time() end
+	if Source.Text ~= "" then
+		savedFiles[name] = Source.Text
+		selectedFile = name
+		refreshFilesList()
+	end
+end)
+
+LoadFileBtn.MouseButton1Click:Connect(function()
+	if selectedFile and savedFiles[selectedFile] then
+		Source.Text = savedFiles[selectedFile]
+		FileNameBox.Text = selectedFile
+	elseif FileNameBox.Text ~= "" and savedFiles[FileNameBox.Text] then
+		Source.Text = savedFiles[FileNameBox.Text]
+		selectedFile = FileNameBox.Text
+		refreshFilesList()
+	end
+end)
+
+RenameFileBtn.MouseButton1Click:Connect(function()
+	local oldName = selectedFile or FileNameBox.Text
+	local newName = FileNameBox.Text
+	if oldName and savedFiles[oldName] and newName ~= "" and newName ~= oldName then
+		savedFiles[newName] = savedFiles[oldName]
+		savedFiles[oldName] = nil
+		selectedFile = newName
+		refreshFilesList()
+	end
+end)
+
+DeleteFileBtn.MouseButton1Click:Connect(function()
+	local name = selectedFile or FileNameBox.Text
+	if savedFiles[name] then
+		savedFiles[name] = nil
+		if selectedFile == name then selectedFile = nil end
+		FileNameBox.Text = ""
+		refreshFilesList()
+	end
+end)
+
+ExecuteFileBtn.MouseButton1Click:Connect(function()
+	local name = selectedFile or FileNameBox.Text
+	if savedFiles[name] then
+		local success, err = pcall(function()
+			loadstring(savedFiles[name])()
+		end)
+		if not success then
+			warn("Execution Error: " .. tostring(err))
+		end
+	end
+end)
+
+local CurrentPage = 1
+local CurrentQuery = ""
+local CurrentFilter = ""
+local ScriptsPerPage = 6
+local TotalPages = 1
+
+local function SearchScriptBlox(query, page)
+	CurrentQuery = query
+	CurrentPage = page or 1
+	
+	local results = {}
+	local apiUrl
+	
+	if CurrentFilter == "trending" then
+		apiUrl = "https://scriptblox.com/api/script/trending?page=" .. CurrentPage .. "&max=" .. ScriptsPerPage
+	elseif CurrentFilter ~= "" then
+		apiUrl = "https://scriptblox.com/api/script/fetch?" .. CurrentFilter .. "&page=" .. CurrentPage .. "&max=" .. ScriptsPerPage
+	else
+		apiUrl = "https://scriptblox.com/api/script/search?q=" .. HttpService:UrlEncode(query) .. "&page=" .. CurrentPage .. "&max=" .. ScriptsPerPage
+	end
+	
+	local success, response = pcall(function()
+		return game:HttpGet(apiUrl)
+	end)
+	
+	if success and response then
+		local data = HttpService:JSONDecode(response)
+		if data and data.result and data.result.scripts then
+			for i, script in pairs(data.result.scripts) do
+				table.insert(results, {
+					name = script.title or "Unknown",
+					desc = "By " .. (script.owner and script.owner.username or "Unknown") .. " | " .. (script.game and script.game.name or "Universal") .. " | " .. (script.views or 0) .. " views",
+					code = script.script or "",
+					image = script.game and script.game.imageUrl or "",
+					verified = script.verified or false,
+					key = script.key or false,
+					scriptType = script.scriptType or "normal",
+					isPatched = script.isPatched or false,
+					isUniversal = script.isUniversal or false,
+					slug = script.slug or ""
+				})
+			end
+			
+			if data.result.total then
+				TotalPages = math.ceil(data.result.total / ScriptsPerPage)
+				PageLabel.Text = CurrentPage .. "/" .. TotalPages
+			else
+				TotalPages = 999
+				PageLabel.Text = tostring(CurrentPage)
+			end
+		end
+	end
+	
+	return results
+end
+
+local function GetScriptDetails(slug)
+	local success, response = pcall(function()
+		return game:HttpGet("https://scriptblox.com/api/script/" .. slug .. "?legacy_tags=true")
+	end)
+	
+	if success and response then
+		local data = HttpService:JSONDecode(response)
+		if data and data.result then
+			return data.result.script
+		end
+	end
+	return nil
+end
+
+local function CreateScriptButton(data, parent)
+	local Btn = Instance.new("Frame")
+	Btn.Size = UDim2.new(1, -10, 0, 80)
+	Btn.Position = UDim2.new(0, 5, 0, 0)
+	Btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+	Btn.BorderSizePixel = 0
+	Btn.Parent = parent
+	
+	Instance.new("UICorner", Btn).CornerRadius = UDim.new(0, 6)
+	
+	local Thumbnail = Instance.new("ImageLabel")
+	Thumbnail.Name = "Thumbnail"
+	Thumbnail.Size = UDim2.new(0, 60, 0, 60)
+	Thumbnail.Position = UDim2.new(0, 10, 0, 10)
+	Thumbnail.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	Thumbnail.ScaleType = Enum.ScaleType.Crop
+	Thumbnail.Parent = Btn
+	
+	Instance.new("UICorner", Thumbnail).CornerRadius = UDim.new(0, 4)
+	
+	if data.image and data.image ~= "" then
+		Thumbnail.Image = data.image
+	else
+		Thumbnail.Image = "rbxassetid://9405926389"
+	end
+	
+	local BadgeFrame = Instance.new("Frame")
+	BadgeFrame.Size = UDim2.new(0, 200, 0, 16)
+	BadgeFrame.Position = UDim2.new(0, 75, 0, 8)
+	BadgeFrame.BackgroundTransparency = 1
+	BadgeFrame.Parent = Btn
+	
+	local badgeOffset = 0
+	
+	if data.verified then
+		local Verified = Instance.new("ImageLabel")
+		Verified.Size = UDim2.new(0, 16, 0, 16)
+		Verified.Position = UDim2.new(0, badgeOffset, 0, 0)
+		Verified.BackgroundTransparency = 1
+		Verified.Image = "rbxassetid://11839277083"
+		Verified.ImageColor3 = Color3.fromRGB(200, 200, 200)
+		Verified.Parent = BadgeFrame
+		badgeOffset = badgeOffset + 20
+	end
+	
+	if data.isUniversal then
+		local UniBadge = Instance.new("TextLabel")
+		UniBadge.Size = UDim2.new(0, 50, 0, 16)
+		UniBadge.Position = UDim2.new(0, badgeOffset, 0, 0)
+		UniBadge.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+		UniBadge.Text = "UNIVERSAL"
+		UniBadge.TextColor3 = Color3.fromRGB(255, 255, 255)
+		UniBadge.TextSize = 7
+		UniBadge.Font = Enum.Font.GothamBold
+		UniBadge.Parent = BadgeFrame
+		Instance.new("UICorner", UniBadge).CornerRadius = UDim.new(0, 3)
+		badgeOffset = badgeOffset + 55
+	end
+	
+	if data.key then
+		local KeyBadge = Instance.new("TextLabel")
+		KeyBadge.Size = UDim2.new(0, 30, 0, 16)
+		KeyBadge.Position = UDim2.new(0, badgeOffset, 0, 0)
+		KeyBadge.BackgroundColor3 = Color3.fromRGB(150, 150, 150)
+		KeyBadge.Text = "KEY"
+		KeyBadge.TextColor3 = Color3.fromRGB(255, 255, 255)
+		KeyBadge.TextSize = 8
+		KeyBadge.Font = Enum.Font.GothamBold
+		KeyBadge.Parent = BadgeFrame
+		Instance.new("UICorner", KeyBadge).CornerRadius = UDim.new(0, 3)
+		badgeOffset = badgeOffset + 35
+	end
+	
+	if data.isPatched then
+		local PatchedBadge = Instance.new("TextLabel")
+		PatchedBadge.Size = UDim2.new(0, 50, 0, 16)
+		PatchedBadge.Position = UDim2.new(0, badgeOffset, 0, 0)
+		PatchedBadge.BackgroundColor3 = Color3.fromRGB(150, 50, 50)
+		PatchedBadge.Text = "PATCHED"
+		PatchedBadge.TextColor3 = Color3.fromRGB(255, 255, 255)
+		PatchedBadge.TextSize = 8
+		PatchedBadge.Font = Enum.Font.GothamBold
+		PatchedBadge.Parent = BadgeFrame
+		Instance.new("UICorner", PatchedBadge).CornerRadius = UDim.new(0, 3)
+		badgeOffset = badgeOffset + 55
+	end
+	
+	if data.scriptType == "paid" then
+		local PaidBadge = Instance.new("TextLabel")
+		PaidBadge.Size = UDim2.new(0, 30, 0, 16)
+		PaidBadge.Position = UDim2.new(0, badgeOffset, 0, 0)
+		PaidBadge.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+		PaidBadge.Text = "PAID"
+		PaidBadge.TextColor3 = Color3.fromRGB(0, 0, 0)
+		PaidBadge.TextSize = 8
+		PaidBadge.Font = Enum.Font.GothamBold
+		PaidBadge.Parent = BadgeFrame
+		Instance.new("UICorner", PaidBadge).CornerRadius = UDim.new(0, 3)
+	end
+	
+	local Title = Instance.new("TextLabel")
+	Title.Size = UDim2.new(1, -150, 0, 18)
+	Title.Position = UDim2.new(0, 75, 0, 28)
+	Title.BackgroundTransparency = 1
+	Title.Text = data.name
+	Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Title.TextSize = 13
+	Title.Font = Enum.Font.GothamBold
+	Title.TextXAlignment = Enum.TextXAlignment.Left
+	Title.TextTruncate = Enum.TextTruncate.AtEnd
+	Title.Parent = Btn
+	
+	local Desc = Instance.new("TextLabel")
+	Desc.Size = UDim2.new(1, -150, 0, 25)
+	Desc.Position = UDim2.new(0, 75, 0, 48)
+	Desc.BackgroundTransparency = 1
+	Desc.Text = data.desc
+	Desc.TextColor3 = Color3.fromRGB(150, 150, 150)
+	Desc.TextSize = 10
+	Desc.Font = Enum.Font.Gotham
+	Desc.TextXAlignment = Enum.TextXAlignment.Left
+	Desc.TextYAlignment = Enum.TextYAlignment.Top
+	Desc.TextWrapped = true
+	Desc.Parent = Btn
+	
+	local ExecBtn = Instance.new("ImageButton")
+	ExecBtn.Name = "Execute"
+	ExecBtn.Size = UDim2.new(0, 30, 0, 30)
+	ExecBtn.Position = UDim2.new(1, -70, 0, 15)
+	ExecBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+	ExecBtn.Image = "rbxassetid://130193182186125"
+	ExecBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
+	ExecBtn.Parent = Btn
+	
+	Instance.new("UICorner", ExecBtn).CornerRadius = UDim.new(0, 4)
+	
+	ExecBtn.MouseEnter:Connect(function()
+		ExecBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+	end)
+	ExecBtn.MouseLeave:Connect(function()
+		ExecBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+	end)
+	
+	ExecBtn.MouseButton1Click:Connect(function()
+		if data.code and data.code ~= "" then
+			Source.Text = data.code
+			SwitchTab("Editor")
+			local success, err = pcall(function()
+				loadstring(data.code)()
+			end)
+			if not success then
+				warn("Execution Error: " .. tostring(err))
+			end
+		elseif data.slug ~= "" then
+			local details = GetScriptDetails(data.slug)
+			if details and details.script then
+				Source.Text = details.script
+				SwitchTab("Editor")
+				local success, err = pcall(function()
+					loadstring(details.script)()
+				end)
+				if not success then
+					warn("Execution Error: " .. tostring(err))
+				end
+			end
+		end
+	end)
+	
+	local CopyBtn = Instance.new("ImageButton")
+	CopyBtn.Name = "Copy"
+	CopyBtn.Size = UDim2.new(0, 30, 0, 30)
+	CopyBtn.Position = UDim2.new(1, -35, 0, 15)
+	CopyBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	CopyBtn.Image = "rbxassetid://10169282923"
+	CopyBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
+	CopyBtn.Parent = Btn
+	
+	Instance.new("UICorner", CopyBtn).CornerRadius = UDim.new(0, 4)
+	
+	CopyBtn.MouseEnter:Connect(function()
+		CopyBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+	end)
+	CopyBtn.MouseLeave:Connect(function()
+		CopyBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	end)
+	
+	CopyBtn.MouseButton1Click:Connect(function()
+		if data.code and data.code ~= "" then
+			Source.Text = data.code
+			SwitchTab("Editor")
+		elseif data.slug ~= "" then
+			local details = GetScriptDetails(data.slug)
+			if details and details.script then
+				Source.Text = details.script
+				SwitchTab("Editor")
+			end
+		end
+	end)
+	
+	local ViewBtn = Instance.new("ImageButton")
+	ViewBtn.Name = "View"
+	ViewBtn.Size = UDim2.new(0, 30, 0, 30)
+	ViewBtn.Position = UDim2.new(1, -70, 0, 50)
+	ViewBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	ViewBtn.Image = "rbxassetid://11713325834"
+	ViewBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
+	ViewBtn.Parent = Btn
+	
+	Instance.new("UICorner", ViewBtn).CornerRadius = UDim.new(0, 4)
+	
+	ViewBtn.MouseEnter:Connect(function()
+		ViewBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+	end)
+	ViewBtn.MouseLeave:Connect(function()
+		ViewBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	end)
+	
+	ViewBtn.MouseButton1Click:Connect(function()
+		if data.slug ~= "" then
+			local details = GetScriptDetails(data.slug)
+			if details then
+				local infoText = "Title: " .. (details.title or "Unknown") .. "\n"
+				infoText = infoText .. "Game: " .. (details.game and details.game.name or "Universal") .. "\n"
+				infoText = infoText .. "Views: " .. (details.views or 0) .. "\n"
+				infoText = infoText .. "Verified: " .. tostring(details.verified or false) .. "\n"
+				infoText = infoText .. "Key Required: " .. tostring(details.key or false) .. "\n"
+				infoText = infoText .. "Patched: " .. tostring(details.isPatched or false) .. "\n"
+				infoText = infoText .. "Created: " .. (details.createdAt or "Unknown")
+				
+				Source.Text = "-- Script Info:\n-- " .. infoText:gsub("\n", "\n-- ") .. "\n\n" .. (details.script or "-- No script code available")
+				SwitchTab("Editor")
+			end
+		end
+	end)
+end
+
+local function ClearList(parent)
+	for _, child in pairs(parent:GetChildren()) do
+		if child:IsA("Frame") then
+			child:Destroy()
+		end
+	end
+end
+
+local function PerformSearch()
+	local query = SearchBox.Text
+	if query == "" and CurrentFilter == "" then return end
+	
+	ClearList(ScriptList)
+	
+	local Loading = Instance.new("TextLabel")
+	Loading.Size = UDim2.new(1, 0, 0, 50)
+	Loading.Position = UDim2.new(0, 0, 0, 80)
+	Loading.BackgroundTransparency = 1
+	Loading.Text = "Searching..."
+	Loading.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Loading.TextSize = 14
+	Loading.Parent = ScriptList
+	
+	local results = SearchScriptBlox(query, CurrentPage)
+	Loading:Destroy()
+	
+	if #results == 0 then
+		local NoResults = Instance.new("TextLabel")
+		NoResults.Size = UDim2.new(1, 0, 0, 50)
+		NoResults.Position = UDim2.new(0, 0, 0, 80)
+		NoResults.BackgroundTransparency = 1
+		NoResults.Text = "No results found"
+		NoResults.TextColor3 = Color3.fromRGB(255, 100, 100)
+		NoResults.TextSize = 14
+		NoResults.Parent = ScriptList
+	else
+		for _, script in pairs(results) do
+			CreateScriptButton(script, ScriptList)
+		end
+	end
+	
+	ScriptList.CanvasSize = UDim2.new(0, 0, 0, ListLayout.AbsoluteContentSize.Y + 10)
+end
+
+SearchButton.MouseButton1Click:Connect(PerformSearch)
+
+SearchBox.FocusLost:Connect(function(enterPressed)
+	if enterPressed then
+		PerformSearch()
+	end
+end)
+
+NextPageBtn.MouseButton1Click:Connect(function()
+	if CurrentPage < TotalPages then
+		CurrentPage = CurrentPage + 1
+		PerformSearch()
+	end
+end)
+
+PrevPageBtn.MouseButton1Click:Connect(function()
+	if CurrentPage > 1 then
+		CurrentPage = CurrentPage - 1
+		PerformSearch()
+	end
+end)
+
+local gameScripts = {
+	{name = "Siren Head: LEGACY", url = "https://raw.githubusercontent.com/ZZINSWARE/Siren-Head-LEGACY/refs/heads/main/ZZINSWARE"},
+	{name = "The Rake Remastered", url = "https://raw.githubusercontent.com/ZZINSWARE/The-Rake-Remastered/refs/heads/main/ZZINSWARE"},
+	{name = "Feel The Facility", url = "https://raw.githubusercontent.com/ZZINSWARE/Feel-The-Facility/refs/heads/main/ZZINSWARE"},
+	{name = "Death Note", url = "https://raw.githubusercontent.com/ZZINSWARE/Death-Note/refs/heads/main/ZZINSWARE"},
+	{name = "99 Nights in The Forest", url = "https://raw.githubusercontent.com/ZZINSWARE/99-Nights-In-The-Forest/refs/heads/main/ZZINSWARE"},
+	{name = "Fluffy Infection", url = "https://raw.githubusercontent.com/ZZINSWARE/Fluffy-Infection/refs/heads/main/ZZINSWARE"},
+	{name = "3008", url = "https://raw.githubusercontent.com/ZZINSWARE/3008/refs/heads/main/ZZINSWARE"},
+	{name = "Infectious Smile", url = "https://raw.githubusercontent.com/ZZINSWARE/Infectious-Smile/main/ZZINSWARE"},
+	{name = "Another Infection Game", url = "https://raw.githubusercontent.com/ZZINSWARE/Another-Infection-Game/refs/heads/main/ZZINSWARE"},
+	{name = "Zombie Attack", url = "https://raw.githubusercontent.com/ZZINSWARE/Zombie-Attack/refs/heads/main/ZZINSWARE"},
+	{name = "Gun Grounds FFA", url = "https://raw.githubusercontent.com/ZZINS077/Gun-Grounds-FFA/refs/heads/main/ZZINSHUB"},
+	{name = "Hunty Zombie", url = "https://raw.githubusercontent.com/ZZINSWARE/Hunty-Zombie/refs/heads/main/ZZINSWARE"},
+	{name = "Zombie RNG", url = "https://raw.githubusercontent.com/ZZINSWARE/Zombie-RNG/refs/heads/main/ZZINSWARE"},
+	{name = "Blade X Zombies", url = "https://raw.githubusercontent.com/ZZINSWARE/Blade-X-Zombies/refs/heads/main/ZZINSWARE"},
+	{name = "Zombie Rush", url = "https://raw.githubusercontent.com/ZZINSWARE/Zombie-Rush/refs/heads/main/ZZINSWARE"},
+	{name = "Noobs Must Die", url = "https://raw.githubusercontent.com/ZZINS077/Noobs-Must-die/main/ZZINSHUB"},
+	{name = "Noob Invaders", url = "https://raw.githubusercontent.com/ZZINSWARE/Noob-Invaders/refs/heads/main/ZZINSWARE"},
+	{name = "Arsenal", url = "https://raw.githubusercontent.com/ZZINSWARE/Arsneal/main/ZZINSWARE"},
+	{name = "Fortline", url = "https://raw.githubusercontent.com/ZZINSWARE/Fortline/refs/heads/main/ZZINSHUB"},
+	{name = "Combat Arena", url = "https://raw.githubusercontent.com/ZZINSWARE/Combat-Arena/refs/heads/main/ZZINSWARE"},
+	{name = "The Last Front", url = "https://raw.githubusercontent.com/ZZINSWARE/The-Last-Front/refs/heads/main/ZZINSWARE"},
+	{name = "Blade Ball", url = "https://raw.githubusercontent.com/ZZINSWARE/Blade-Ball/refs/heads/main/ZZINSWARE"},
+	{name = "Death Ball", url = "https://raw.githubusercontent.com/ZZINSWARE/Death-Ball/refs/heads/main/ZZINSWARE"},
+	{name = "Blind Shot", url = "https://raw.githubusercontent.com/ZZINSWARE/Blind-Shot/refs/heads/main/ZZINSWARE"},
+	{name = "Tower of Hell", url = "https://raw.githubusercontent.com/ZZINS077/Tower-of-Hell/refs/heads/main/ZZINS%20HUB"},
+	{name = "Tower of Jump", url = "https://raw.githubusercontent.com/ZZINSWARE/Tower-Of-Jump/refs/heads/main/ZZINSWARE"},
+	{name = "Brainrot Tower", url = "https://raw.githubusercontent.com/ZZINSWARE/Brainrot-Tower/refs/heads/main/ZZINSWARE"},
+	{name = "Prop Morph Tower", url = "https://raw.githubusercontent.com/ZZINSWARE/Prop-Morph-Tower/refs/heads/main/ZZINSWARE"},
+	{name = "a Dusty Trip", url = "https://raw.githubusercontent.com/ZZINSWARE/a-Dusty-Trip/refs/heads/main/ZZINSWARE"},
+	{name = "Build a Boat For Treasure", url = "https://raw.githubusercontent.com/ZZINSWARE/Build-a-Boat-For-Treasure/refs/heads/main/ZZINSWARE"},
+	{name = "Blox Fruits", url = "https://raw.githubusercontent.com/ZZINSWARE/Blox-fruits/refs/heads/main/ZZINSWARE"},
+	{name = "Anime Final Quest", url = "https://raw.githubusercontent.com/ZZINSWARE/Anime-Final-Quest/refs/heads/main/ZZINSWARE"},
+	{name = "Elemental Dungeons", url = "https://raw.githubusercontent.com/ZZINSWARE/Elemental-Dungeons/refs/heads/main/ZZINZWARE"},
+	{name = "Dungeon Heros", url = "https://raw.githubusercontent.com/ZZINSWARE/Dungeon-Heros/refs/heads/main/ZZINSWARE"},
+	{name = "Legends of Speed", url = "https://raw.githubusercontent.com/ZZINSWARE/Legends-of-Speed/refs/heads/main/ZZINSWARE"},
+	{name = "Last Run", url = "https://raw.githubusercontent.com/ZZINSWARE/Last-Run/refs/heads/main/ZZINSWARE"},
+	{name = "Plants Vs Brainrots", url = "https://raw.githubusercontent.com/ZZINSWARE/Plants-vs-Brainrots/refs/heads/main/ZZINSWARE"},
+	{name = "Fish a Brainrot", url = "https://raw.githubusercontent.com/ZZINSWARE/Fish-a-Brainrot-/refs/heads/main/ZZINSWARE"},
+	{name = "My Fishing Brainrots", url = "https://raw.githubusercontent.com/ZZINSWARE/My-Fishing-Brainrots/refs/heads/main/ZZINSWARE"},
+	{name = "Smack The Brainrots", url = "https://raw.githubusercontent.com/ZZINSWARE/Smack-The-Brainrots/refs/heads/main/ZZINSWARE"},
+	{name = "Poop a Brainrot", url = "https://raw.githubusercontent.com/ZZINSWARE/Poop-a-Brainrot/refs/heads/main/ZZINSWARE"},
+	{name = "Find The Brainrots", url = "https://raw.githubusercontent.com/ZZINSWARE/Find-The-Brainrots/refs/heads/main/ZZINSWARE"},
+	{name = "Poop a Big Poop", url = "https://raw.githubusercontent.com/ZZINSWARE/Poop-a-Big-Poop/refs/heads/main/ZZINSWARE"},
+	{name = "Poop Everything", url = "https://raw.githubusercontent.com/ZZINSWARE/Poop-Everything/refs/heads/main/ZZINSWARE"},
+	{name = "Iq Test", url = "https://raw.githubusercontent.com/ZZINSWARE/IQ-Test/refs/heads/main/ZZINSWARE"},
+	{name = "Emote RNG", url = "https://raw.githubusercontent.com/ZZINSWARE/Emote-RNG/refs/heads/main/ZZINSWARE"},
+	{name = "Drill For Ores", url = "https://raw.githubusercontent.com/ZZINSWARE/Drill-For-Ores/refs/heads/main/ZZINSWARE"},
+	{name = "Fisch", url = "https://raw.githubusercontent.com/ZZINSWARE/Fisch/refs/heads/main/ZZINSWARE"},
+	{name = "Go Fishing", url = "https://raw.githubusercontent.com/ZZINSWARE/Go-Fishing/refs/heads/main/ZZINSWARE"},
+	{name = "Sword Fishing", url = "https://raw.githubusercontent.com/ZZINSWARE/Sword-Fishing/refs/heads/main/ZZINSWARE"},
+	{name = "Throw a Basketball", url = "https://raw.githubusercontent.com/ZZINSWARE/Throw-a-Basketball/refs/heads/main/ZZINSWARE"},
+	{name = "Blue Lock Rivals", url = "https://raw.githubusercontent.com/ZZINSWARE/Blue-Lock-Rivals/refs/heads/main/ZZINSWARE"},
+	{name = "Flick", url = "https://raw.githubusercontent.com/ZZINSWARE/Flick/refs/heads/main/ZZINSWARE"},
+	{name = "Funky Friday", url = "https://raw.githubusercontent.com/ZZINSWARE/Funky-Friday/refs/heads/main/ZZINSWARE"},
+	{name = "Lucky Block BattleGrounds", url = "https://raw.githubusercontent.com/ZZINSWARE/Lucky-block-Battlegrounds/refs/heads/main/ZZINSWARE"},
+	{name = "Animal Simulator", url = "https://raw.githubusercontent.com/ZZINSWARE/Animal-Simulator/main/ZZINSWARE"},
+	{name = "Vehicle Legends Cars", url = "https://raw.githubusercontent.com/ZZINSWARE/Vehicle-Legends-Cars/main/ZZINSWARE"},
+	{name = "Cut Trees", url = "https://raw.githubusercontent.com/ZZINSWARE/Cut-Trees/refs/heads/main/ZZINSWARE"},
+	{name = "Chop Your Tree", url = "https://raw.githubusercontent.com/ZZINSWARE/Chop-your-Tree/refs/heads/main/ZZINSWARE"},
+	{name = "Meme Sea", url = "https://raw.githubusercontent.com/ZZINSWARE/Meme-Sea/refs/heads/main/ZZINSWARE"},
+	{name = "The Forge", url = "https://raw.githubusercontent.com/ZZINSWARE/The-Forge/refs/heads/main/ZZINSWARE"},
+	{name = "Lootify", url = "https://raw.githubusercontent.com/ZZINSWARE/Lootify/refs/heads/main/ZZINSWARE"},
+	{name = "Voxels", url = "https://raw.githubusercontent.com/ZZINSWARE/Voxels/main/ZZINSWARE"},
+	{name = "67 Tag", url = "https://raw.githubusercontent.com/ZZINSWARE/67-Tag/refs/heads/main/ZZINSWARE"},
+	{name = "You Vs Homer", url = "https://raw.githubusercontent.com/ZZINSWARE/You-Vs-Homer/refs/heads/main/ZZINSWARE"},
+	{name = "Hero Loot", url = "https://raw.githubusercontent.com/ZZINSWARE/Hero-Loot/refs/heads/main/ZZINSWARE"},
+	{name = "Slap Fights", url = "https://raw.githubusercontent.com/ZZINSWARE/Slap-Fights/refs/heads/main/ZZINSWARE"},
+	{name = "Fish For Lucky Blocks", url = "https://raw.githubusercontent.com/ZZINSWARE/Fish-For-Lucky-Blocks/refs/heads/main/ZZINSWARE"},
+	{name = "You Vs Homer [Wallhop Practice]", url = "https://raw.githubusercontent.com/ZZINSWARE/You-Vs-Homer-WallHop-Practice-/refs/heads/main/ZZINSWARE"},
+	{name = "Anime Slap Tower", url = "https://raw.githubusercontent.com/ZZINSWARE/Anime-Slap-Tower/refs/heads/main/ZZINSWARE"}
+}
+
+local universalScripts = {
+	{name = "Image Logger", url = "https://raw.githubusercontent.com/ZZINSWARE/Image-Logger/refs/heads/main/ZZINSWARE"},
+	{name = "Better Console", url = "https://raw.githubusercontent.com/ZZINSWARE/Console/refs/heads/main/ZZINSWARE"},
+	{name = "Fake Lag Switch", url = "https://raw.githubusercontent.com/ZZINSWARE/Fake-Lag-switch/refs/heads/main/ZZINSWARE"},
+	{name = "Sus R6 Animations", url = "https://raw.githubusercontent.com/ZZINSWARE/Sus-R6/refs/heads/main/ZZINSWARE"},
+	{name = "Chat Spammer", url = "https://raw.githubusercontent.com/ZZINSWARE/Chat-Spammer/refs/heads/main/ZZINSWARE"},
+	{name = "Chat Bypasser", url = "https://raw.githubusercontent.com/ZZINSWARE/Chat-Bypasser/refs/heads/main/ZZINSWARE"},
+	{name = "Fake Wallhop", url = "https://raw.githubusercontent.com/ZZINSWARE/Fake-Wallhop/refs/heads/main/ZZINSWARE"},
+	{name = "Anti Tools", url = "https://raw.githubusercontent.com/ZZINSWARE/Anti-Tools/refs/heads/main/ZZINSWARE"},
+	{name = "FE Invisible", url = "https://raw.githubusercontent.com/ZZINSWARE/FE-Invisible/refs/heads/main/ZZINSWARE"}
+}
+
+local function CreateGameButton(data)
+	local Btn = Instance.new("Frame")
+	Btn.Size = UDim2.new(1, -10, 0, 50)
+	Btn.Position = UDim2.new(0, 5, 0, 0)
+	Btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+	Btn.BorderSizePixel = 0
+	Btn.Parent = GameScriptsList
+	
+	Instance.new("UICorner", Btn).CornerRadius = UDim.new(0, 6)
+	
+	local Title = Instance.new("TextLabel")
+	Title.Size = UDim2.new(1, -100, 0, 50)
+	Title.Position = UDim2.new(0, 15, 0, 0)
+	Title.BackgroundTransparency = 1
+	Title.Text = data.name
+	Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Title.TextSize = 14
+	Title.Font = Enum.Font.GothamBold
+	Title.TextXAlignment = Enum.TextXAlignment.Left
+	Title.TextTruncate = Enum.TextTruncate.AtEnd
+	Title.Parent = Btn
+	
+	local ExecBtn = Instance.new("ImageButton")
+	ExecBtn.Size = UDim2.new(0, 35, 0, 35)
+	ExecBtn.Position = UDim2.new(1, -45, 0, 7)
+	ExecBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	ExecBtn.Image = "rbxassetid://130193182186125"
+	ExecBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
+	ExecBtn.Parent = Btn
+	
+	Instance.new("UICorner", ExecBtn).CornerRadius = UDim.new(0, 6)
+	
+	ExecBtn.MouseEnter:Connect(function()
+		ExecBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+	end)
+	ExecBtn.MouseLeave:Connect(function()
+		ExecBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	end)
+	
+	ExecBtn.MouseButton1Click:Connect(function()
+		local success, err = pcall(function()
+			loadstring(game:HttpGet(data.url))()
+		end)
+		if success then
+			print("Executed: " .. data.name)
+		else
+			warn("Error: " .. tostring(err))
+		end
+	end)
+end
+
+local function CreateUniButton(data)
+	local Btn = Instance.new("Frame")
+	Btn.Size = UDim2.new(1, -10, 0, 50)
+	Btn.Position = UDim2.new(0, 5, 0, 0)
+	Btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+	Btn.BorderSizePixel = 0
+	Btn.Parent = UniScriptsList
+	
+	Instance.new("UICorner", Btn).CornerRadius = UDim.new(0, 6)
+	
+	local Title = Instance.new("TextLabel")
+	Title.Size = UDim2.new(1, -100, 0, 50)
+	Title.Position = UDim2.new(0, 15, 0, 0)
+	Title.BackgroundTransparency = 1
+	Title.Text = data.name
+	Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Title.TextSize = 14
+	Title.Font = Enum.Font.GothamBold
+	Title.TextXAlignment = Enum.TextXAlignment.Left
+	Title.TextTruncate = Enum.TextTruncate.AtEnd
+	Title.Parent = Btn
+	
+	local ExecBtn = Instance.new("ImageButton")
+	ExecBtn.Size = UDim2.new(0, 35, 0, 35)
+	ExecBtn.Position = UDim2.new(1, -45, 0, 7)
+	ExecBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	ExecBtn.Image = "rbxassetid://130193182186125"
+	ExecBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
+	ExecBtn.Parent = Btn
+	
+	Instance.new("UICorner", ExecBtn).CornerRadius = UDim.new(0, 6)
+	
+	ExecBtn.MouseEnter:Connect(function()
+		ExecBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+	end)
+	ExecBtn.MouseLeave:Connect(function()
+		ExecBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	end)
+	
+	ExecBtn.MouseButton1Click:Connect(function()
+		local success, err = pcall(function()
+			loadstring(game:HttpGet(data.url))()
+		end)
+		if success then
+			print("Executed: " .. data.name)
+		else
+			warn("Error: " .. tostring(err))
+		end
+	end)
+end
+
+local function LoadGameScripts(filter)
+	ClearList(GameScriptsList)
+	for _, script in pairs(gameScripts) do
+		if not filter or script.name:lower():find(filter:lower()) then
+			CreateGameButton(script)
+		end
+	end
+	GameScriptsList.CanvasSize = UDim2.new(0, 0, 0, GameListLayout.AbsoluteContentSize.Y + 10)
+end
+
+local function LoadUniScripts(filter)
+	ClearList(UniScriptsList)
+	for _, script in pairs(universalScripts) do
+		if not filter or script.name:lower():find(filter:lower()) then
+			CreateUniButton(script)
+		end
+	end
+	UniScriptsList.CanvasSize = UDim2.new(0, 0, 0, UniListLayout.AbsoluteContentSize.Y + 10)
+end
+
+GameSearchButton.MouseButton1Click:Connect(function()
+	LoadGameScripts(GameSearchBox.Text)
+end)
+
+GameSearchBox.FocusLost:Connect(function(enterPressed)
+	if enterPressed then
+		LoadGameScripts(GameSearchBox.Text)
+	end
+end)
+
+UniSearchButton.MouseButton1Click:Connect(function()
+	LoadUniScripts(UniSearchBox.Text)
+end)
+
+UniSearchBox.FocusLost:Connect(function(enterPressed)
+	if enterPressed then
+		LoadUniScripts(UniSearchBox.Text)
+	end
+end)
+
+LoadGameScripts()
+LoadUniScripts()
+
+SwitchTab("Info")
