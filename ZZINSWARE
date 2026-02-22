@@ -1,5 +1,5 @@
 -- ZZINSWARE V4: Full Featured Script Hub with Lua Syntax Highlighting
--- Features: Discord Integration, Auto-Update Stats, Lua Highlighter, Version Badge, Credits, System Monitor, Error Notifications
+-- Features: Discord Integration, Auto-Update Stats, Lua Highlighter, Version Badge, Credits, System Monitor, Error Notifications, Settings
 
 local highlighter = {}
 local keywords = {
@@ -90,7 +90,16 @@ local function getHighlight(tokens, index)
 	end
 end
 
+-- OPTIMIZED: Support for thousands of characters with chunking
 function highlighter.run(source)
+	-- Limit processing for very large scripts to prevent lag
+	local maxLength = 50000
+	local processSource = source
+	
+	if #source > maxLength then
+		processSource = source:sub(1, maxLength)
+	end
+	
 	local tokens = {}
 	local currentToken = ""
 	
@@ -98,8 +107,8 @@ function highlighter.run(source)
 	local inComment = false
 	local commentPersist = false
 	
-	for i = 1, #source do
-		local character = source:sub(i, i)
+	for i = 1, #processSource do
+		local character = processSource:sub(i, i)
 		
 		if inComment then
 			if character == "\n" and not commentPersist then
@@ -108,7 +117,7 @@ function highlighter.run(source)
 				currentToken = ""
 				
 				inComment = false
-			elseif source:sub(i - 1, i) == "]]" and commentPersist then
+			elseif processSource:sub(i - 1, i) == "]]" and commentPersist then
 				currentToken = currentToken .. "]"
 				
 				table.insert(tokens, currentToken)
@@ -120,18 +129,18 @@ function highlighter.run(source)
 				currentToken = currentToken .. character
 			end
 		elseif inString then
-			if character == inString and source:sub(i-1, i-1) ~= "\\" or character == "\n" then
+			if character == inString and processSource:sub(i-1, i-1) ~= "\\" or character == "\n" then
 				currentToken = currentToken .. character
 				inString = false
 			else
 				currentToken = currentToken .. character
 			end
 		else
-			if source:sub(i, i + 1) == "--" then
+			if processSource:sub(i, i + 1) == "--" then
 				table.insert(tokens, currentToken)
 				currentToken = "-"
 				inComment = true
-				commentPersist = source:sub(i + 2, i + 3) == "[["
+				commentPersist = processSource:sub(i + 2, i + 3) == "[["
 			elseif character == "\"" or character == "\'" then
 				table.insert(tokens, currentToken)
 				currentToken = character
@@ -169,83 +178,148 @@ function highlighter.run(source)
 	return table.concat(highlighted)
 end
 
--- ERROR NOTIFICATION SYSTEM
-local function ShowErrorNotification(message, parent)
-	local ErrorFrame = Instance.new("Frame")
-	ErrorFrame.Name = "ErrorNotification"
-	ErrorFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-	ErrorFrame.BorderSizePixel = 0
-	ErrorFrame.Position = UDim2.new(0.5, -150, 0, -50)
-	ErrorFrame.Size = UDim2.new(0, 300, 0, 40)
-	ErrorFrame.ZIndex = 100
-	ErrorFrame.Parent = parent or Windows11UI
+-- SETTINGS SYSTEM
+local Settings = {
+	Font = "Code",
+	SyntaxHighlighting = true,
+	LastScript = ""
+}
+
+local FontOptions = {
+	["Original"] = Enum.Font.Code,
+	["Legacy"] = Enum.Font.Legacy,
+	["Code"] = Enum.Font.Code,
+	["Arcade"] = Enum.Font.Arcade
+}
+
+-- ENHANCED NOTIFICATION SYSTEM
+local function ShowNotification(title, message, notifType, duration)
+	duration = duration or 3
+	local parent = Windows11UI
 	
-	local ErrorCorner = Instance.new("UICorner")
-	ErrorCorner.CornerRadius = UDim.new(0, 6)
-	ErrorCorner.Parent = ErrorFrame
+	local NotifFrame = Instance.new("Frame")
+	NotifFrame.Name = "Notification"
+	NotifFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+	NotifFrame.BorderSizePixel = 0
+	NotifFrame.Position = UDim2.new(0.5, -200, 0, -100)
+	NotifFrame.Size = UDim2.new(0, 400, 0, 70)
+	NotifFrame.ZIndex = 1000
+	NotifFrame.Parent = parent
 	
-	local ErrorStroke = Instance.new("UIStroke")
-	ErrorStroke.Color = Color3.fromRGB(255, 50, 50)
-	ErrorStroke.Thickness = 2
-	ErrorStroke.Parent = ErrorFrame
+	local NotifCorner = Instance.new("UICorner")
+	NotifCorner.CornerRadius = UDim.new(0, 8)
+	NotifCorner.Parent = NotifFrame
 	
-	local ErrorIcon = Instance.new("ImageLabel")
-	ErrorIcon.Name = "ErrorIcon"
-	ErrorIcon.Parent = ErrorFrame
-	ErrorIcon.BackgroundTransparency = 1
-	ErrorIcon.Position = UDim2.new(0, 10, 0.5, -12)
-	ErrorIcon.Size = UDim2.new(0, 24, 0, 24)
-	ErrorIcon.Image = "rbxassetid://137703776500811"
-	ErrorIcon.ImageColor3 = Color3.fromRGB(255, 100, 100)
-	ErrorIcon.ZIndex = 101
+	local NotifStroke = Instance.new("UIStroke")
+	NotifStroke.Color = notifType == "Error" and Color3.fromRGB(255, 50, 50) or Color3.fromRGB(50, 150, 255)
+	NotifStroke.Thickness = 2
+	NotifStroke.Parent = NotifFrame
 	
-	local ErrorText = Instance.new("TextLabel")
-	ErrorText.Name = "ErrorText"
-	ErrorText.Parent = ErrorFrame
-	ErrorText.BackgroundTransparency = 1
-	ErrorText.Position = UDim2.new(0, 40, 0, 0)
-	ErrorText.Size = UDim2.new(1, -50, 1, 0)
-	ErrorText.Font = Enum.Font.GothamBold
-	ErrorText.Text = message
-	ErrorText.TextColor3 = Color3.fromRGB(255, 100, 100)
-	ErrorText.TextSize = 12
-	ErrorText.TextXAlignment = Enum.TextXAlignment.Left
-	ErrorText.TextWrapped = true
-	ErrorText.ZIndex = 101
+	-- Gradient background
+	local NotifGradient = Instance.new("UIGradient")
+	NotifGradient.Color = ColorSequence.new({
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 30, 30)),
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 20, 20))
+	})
+	NotifGradient.Rotation = 90
+	NotifGradient.Parent = NotifFrame
+	
+	-- Icon
+	local NotifIcon = Instance.new("ImageLabel")
+	NotifIcon.Name = "Icon"
+	NotifIcon.Parent = NotifFrame
+	NotifIcon.BackgroundTransparency = 1
+	NotifIcon.Position = UDim2.new(0, 15, 0.5, -20)
+	NotifIcon.Size = UDim2.new(0, 40, 0, 40)
+	NotifIcon.Image = notifType == "Error" and "rbxassetid://137703776500811" or "rbxassetid://9405926389"
+	NotifIcon.ImageColor3 = notifType == "Error" and Color3.fromRGB(255, 100, 100) or Color3.fromRGB(100, 200, 255)
+	NotifIcon.ZIndex = 1001
+	
+	-- Title
+	local NotifTitle = Instance.new("TextLabel")
+	NotifTitle.Name = "Title"
+	NotifTitle.Parent = NotifFrame
+	NotifTitle.BackgroundTransparency = 1
+	NotifTitle.Position = UDim2.new(0, 65, 0, 8)
+	NotifTitle.Size = UDim2.new(1, -75, 0, 22)
+	NotifTitle.Font = Enum.Font.GothamBold
+	NotifTitle.Text = title
+	NotifTitle.TextColor3 = notifType == "Error" and Color3.fromRGB(255, 100, 100) or Color3.fromRGB(255, 255, 255)
+	NotifTitle.TextSize = 14
+	NotifTitle.TextXAlignment = Enum.TextXAlignment.Left
+	NotifTitle.ZIndex = 1001
+	
+	-- Message
+	local NotifMessage = Instance.new("TextLabel")
+	NotifMessage.Name = "Message"
+	NotifMessage.Parent = NotifFrame
+	NotifMessage.BackgroundTransparency = 1
+	NotifMessage.Position = UDim2.new(0, 65, 0, 32)
+	NotifMessage.Size = UDim2.new(1, -75, 0, 30)
+	NotifMessage.Font = Enum.Font.Gotham
+	NotifMessage.Text = message
+	NotifMessage.TextColor3 = Color3.fromRGB(180, 180, 180)
+	NotifMessage.TextSize = 12
+	NotifMessage.TextXAlignment = Enum.TextXAlignment.Left
+	NotifMessage.TextWrapped = true
+	NotifMessage.ZIndex = 1001
+	
+	-- Close button
+	local CloseBtn = Instance.new("TextButton")
+	CloseBtn.Name = "Close"
+	CloseBtn.Parent = NotifFrame
+	CloseBtn.BackgroundTransparency = 1
+	CloseBtn.Position = UDim2.new(1, -25, 0, 5)
+	CloseBtn.Size = UDim2.new(0, 20, 0, 20)
+	CloseBtn.Font = Enum.Font.GothamBold
+	CloseBtn.Text = "×"
+	CloseBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
+	CloseBtn.TextSize = 20
+	CloseBtn.ZIndex = 1001
 	
 	-- Animate in
 	local tweenService = game:GetService("TweenService")
-	local slideIn = tweenService:Create(ErrorFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
-		Position = UDim2.new(0.5, -150, 0, 10)
+	local slideIn = tweenService:Create(NotifFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+		Position = UDim2.new(0.5, -200, 0, 20)
 	})
 	slideIn:Play()
 	
-	-- Shake effect
-	local shakeTween = tweenService:Create(ErrorFrame, TweenInfo.new(0.1, Enum.EasingStyle.Linear), {
-		Position = UDim2.new(0.5, -145, 0, 10)
-	})
+	-- Error shake effect
+	if notifType == "Error" then
+		local shake1 = tweenService:Create(NotifFrame, TweenInfo.new(0.05), {Position = UDim2.new(0.5, -195, 0, 20)})
+		local shake2 = tweenService:Create(NotifFrame, TweenInfo.new(0.05), {Position = UDim2.new(0.5, -200, 0, 20)})
+		local shake3 = tweenService:Create(NotifFrame, TweenInfo.new(0.05), {Position = UDim2.new(0.5, -205, 0, 20)})
+		local shake4 = tweenService:Create(NotifFrame, TweenInfo.new(0.05), {Position = UDim2.new(0.5, -200, 0, 20)})
+		
+		slideIn.Completed:Connect(function()
+			shake1:Play()
+			shake1.Completed:Connect(function()
+				shake2:Play()
+				shake2.Completed:Connect(function()
+					shake3:Play()
+					shake3.Completed:Connect(function()
+						shake4:Play()
+					end)
+				end)
+			end)
+		end)
+	end
 	
-	local shakeBack = tweenService:Create(ErrorFrame, TweenInfo.new(0.1, Enum.EasingStyle.Linear), {
-		Position = UDim2.new(0.5, -150, 0, 10)
-	})
-	
-	shakeTween:Play()
-	shakeTween.Completed:Connect(function()
-		shakeBack:Play()
-	end)
-	
-	-- Auto remove after 3 seconds
-	delay(3, function()
-		local slideOut = tweenService:Create(ErrorFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {
-			Position = UDim2.new(0.5, -150, 0, -50)
+	-- Auto remove
+	local function removeNotif()
+		local slideOut = tweenService:Create(NotifFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {
+			Position = UDim2.new(0.5, -200, 0, -100)
 		})
 		slideOut:Play()
 		slideOut.Completed:Connect(function()
-			ErrorFrame:Destroy()
+			NotifFrame:Destroy()
 		end)
-	end)
+	end
 	
-	return ErrorFrame
+	CloseBtn.MouseButton1Click:Connect(removeNotif)
+	delay(duration, removeNotif)
+	
+	return NotifFrame
 end
 
 -- MAIN UI CREATION
@@ -260,6 +334,7 @@ local EditorTab = Instance.new("ImageButton")
 local SearcherTab = Instance.new("ImageButton")
 local GameScriptsTab = Instance.new("ImageButton")
 local UniversalScriptsTab = Instance.new("ImageButton")
+local SettingsTab = Instance.new("ImageButton")
 local InfoFrame = Instance.new("Frame")
 local InfoBackground = Instance.new("ImageLabel")
 local DiscordLabel = Instance.new("TextLabel")
@@ -274,6 +349,7 @@ local Clear = Instance.new("ImageButton")
 local Paste = Instance.new("ImageButton")
 local Copy = Instance.new("ImageButton")
 local OpenConsole = Instance.new("ImageButton")
+local ReExecuteBtn = Instance.new("ImageButton")
 local SearcherFrame = Instance.new("Frame")
 local SearchBox = Instance.new("TextBox")
 local SearchButton = Instance.new("ImageButton")
@@ -299,6 +375,7 @@ local UniSearchBox = Instance.new("TextBox")
 local UniSearchButton = Instance.new("ImageButton")
 local UniScriptsList = Instance.new("ScrollingFrame")
 local UniListLayout = Instance.new("UIListLayout")
+local SettingsFrame = Instance.new("Frame")
 local FilesFrame = Instance.new("Frame")
 local FilesHeader = Instance.new("Frame")
 local FilesIcon = Instance.new("ImageLabel")
@@ -383,7 +460,7 @@ FilesIcon.Parent = FilesHeader
 FilesIcon.BackgroundTransparency = 1
 FilesIcon.Position = UDim2.new(0, 10, 0, 5)
 FilesIcon.Size = UDim2.new(0, 30, 0, 30)
-FilesIcon.Image = "rbxassetid://12141614304"
+FilesIcon.Image = "rbxassetid://104044432682220"
 
 FilesLabel.Name = "FilesLabel"
 FilesLabel.Parent = FilesHeader
@@ -628,7 +705,7 @@ InfoTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 InfoTab.BorderSizePixel = 0
 InfoTab.Position = UDim2.new(0, 0, 0, 0)
 InfoTab.Size = UDim2.new(0, 35, 0, 30)
-InfoTab.Image = "rbxassetid://9405926389"
+InfoTab.Image = "rbxassetid://110502792434357"
 InfoTab.ImageColor3 = Color3.fromRGB(200, 200, 200)
 
 Instance.new("UICorner", InfoTab).CornerRadius = UDim.new(0, 6)
@@ -639,7 +716,7 @@ EditorTab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 EditorTab.BorderSizePixel = 0
 EditorTab.Position = UDim2.new(0, 45, 0, 0)
 EditorTab.Size = UDim2.new(0, 35, 0, 30)
-EditorTab.Image = "rbxassetid://103950363563606"
+EditorTab.Image = "rbxassetid://117772889196810"
 
 Instance.new("UICorner", EditorTab).CornerRadius = UDim.new(0, 6)
 
@@ -649,7 +726,7 @@ SearcherTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 SearcherTab.BorderSizePixel = 0
 SearcherTab.Position = UDim2.new(0, 90, 0, 0)
 SearcherTab.Size = UDim2.new(0, 35, 0, 30)
-SearcherTab.Image = "rbxassetid://11713325834"
+SearcherTab.Image = "rbxassetid://88898640085751"
 SearcherTab.ImageColor3 = Color3.fromRGB(200, 200, 200)
 
 Instance.new("UICorner", SearcherTab).CornerRadius = UDim.new(0, 6)
@@ -675,6 +752,17 @@ UniversalScriptsTab.Image = "rbxassetid://134398528532961"
 UniversalScriptsTab.ImageColor3 = Color3.fromRGB(200, 200, 200)
 
 Instance.new("UICorner", UniversalScriptsTab).CornerRadius = UDim.new(0, 6)
+
+SettingsTab.Name = "SettingsTab"
+SettingsTab.Parent = TabFrame
+SettingsTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+SettingsTab.BorderSizePixel = 0
+SettingsTab.Position = UDim2.new(0, 225, 0, 0)
+SettingsTab.Size = UDim2.new(0, 35, 0, 30)
+SettingsTab.Image = "rbxassetid://140694510860609"
+SettingsTab.ImageColor3 = Color3.fromRGB(200, 200, 200)
+
+Instance.new("UICorner", SettingsTab).CornerRadius = UDim.new(0, 6)
 
 InfoFrame.Name = "InfoFrame"
 InfoFrame.Parent = Frame
@@ -954,7 +1042,7 @@ LineNumberFrame.Size = UDim2.new(0, 35, 0, 225)
 LineNumberFrame.ScrollBarThickness = 0
 LineNumberFrame.CanvasSize = UDim2.new(0, 0, 0, 450)
 LineNumberFrame.ScrollingDirection = Enum.ScrollingDirection.Y
-LineNumberFrame.ScrollingEnabled = false -- Disable direct scrolling, sync with editor
+LineNumberFrame.ScrollingEnabled = false
 
 Instance.new("UICorner", LineNumberFrame).CornerRadius = UDim.new(0, 6)
 
@@ -981,9 +1069,9 @@ EditorScrollFrame.BorderSizePixel = 1
 EditorScrollFrame.Position = UDim2.new(0, 40, 0, 0)
 EditorScrollFrame.Size = UDim2.new(0, 505, 0, 225)
 EditorScrollFrame.ScrollBarThickness = 4
-EditorScrollFrame.CanvasSize = UDim2.new(0, 2000, 0, 450) -- Added horizontal canvas size
-EditorScrollFrame.ScrollingDirection = Enum.ScrollingDirection.XY -- Allow both directions
-EditorScrollFrame.AutomaticCanvasSize = Enum.AutomaticSize.XY -- Auto-expand in both directions
+EditorScrollFrame.CanvasSize = UDim2.new(0, 2000, 0, 450)
+EditorScrollFrame.ScrollingDirection = Enum.ScrollingDirection.XY
+EditorScrollFrame.AutomaticCanvasSize = Enum.AutomaticSize.XY
 
 Instance.new("UICorner", EditorScrollFrame).CornerRadius = UDim.new(0, 6)
 
@@ -992,7 +1080,7 @@ local SyntaxLabel = Instance.new("TextLabel")
 SyntaxLabel.Name = "SyntaxLabel"
 SyntaxLabel.Parent = EditorScrollFrame
 SyntaxLabel.BackgroundTransparency = 1
-SyntaxLabel.Size = UDim2.new(0, 2000, 0, 900) -- Wide for horizontal scroll
+SyntaxLabel.Size = UDim2.new(0, 2000, 0, 900)
 SyntaxLabel.Position = UDim2.new(0, 5, 0, 0)
 SyntaxLabel.Font = Enum.Font.Code
 SyntaxLabel.Text = ""
@@ -1003,13 +1091,13 @@ SyntaxLabel.TextXAlignment = Enum.TextXAlignment.Left
 SyntaxLabel.TextYAlignment = Enum.TextYAlignment.Top
 SyntaxLabel.RichText = true
 SyntaxLabel.ClipsDescendants = true
-SyntaxLabel.AutomaticSize = Enum.AutomaticSize.X -- Auto-expand width
+SyntaxLabel.AutomaticSize = Enum.AutomaticSize.X
 
--- Source TextBox (Invisible but functional for input) - MODIFIED for horizontal scroll
+-- Source TextBox (Invisible but functional for input)
 Source.Name = "Source"
 Source.Parent = EditorScrollFrame
 Source.BackgroundTransparency = 1
-Source.Size = UDim2.new(0, 2000, 0, 900) -- Wide for horizontal scroll
+Source.Size = UDim2.new(0, 2000, 0, 900)
 Source.Position = UDim2.new(0, 5, 0, 0)
 Source.Font = Enum.Font.Code
 Source.Text = ""
@@ -1022,8 +1110,8 @@ Source.TextXAlignment = Enum.TextXAlignment.Left
 Source.TextYAlignment = Enum.TextYAlignment.Top
 Source.ClearTextOnFocus = false
 Source.MultiLine = true
-Source.TextTransparency = 0.5 -- Semi-transparent to see highlighting underneath
-Source.AutomaticSize = Enum.AutomaticSize.X -- Auto-expand width
+Source.TextTransparency = 0.5
+Source.AutomaticSize = Enum.AutomaticSize.X
 
 -- FIXED: Proper line number generation and syncing with syntax highlighting
 local function updateLineNumbers()
@@ -1039,9 +1127,8 @@ local function updateLineNumbers()
         lineText = lineText .. i .. "\n"
     end
     
-    LineNumbers.Text = lineText:sub(1, -2) -- Remove last newline
+    LineNumbers.Text = lineText:sub(1, -2)
     
-    -- Calculate height based on line count
     local lineHeight = 20
     local totalHeight = math.max(lines * lineHeight, 450)
     
@@ -1052,12 +1139,16 @@ local function updateLineNumbers()
     LineNumberFrame.CanvasSize = UDim2.new(0, 0, 0, totalHeight)
     EditorScrollFrame.CanvasSize = UDim2.new(0, 2000, 0, totalHeight)
     
-    -- Update syntax highlighting
-    local success, highlighted = pcall(function()
-        return highlighter.run(Source.Text)
-    end)
-    if success then
-        SyntaxLabel.Text = highlighted
+    -- Update syntax highlighting if enabled
+    if Settings.SyntaxHighlighting then
+        local success, highlighted = pcall(function()
+            return highlighter.run(Source.Text)
+        end)
+        if success then
+            SyntaxLabel.Text = highlighted
+        else
+            SyntaxLabel.Text = Source.Text
+        end
     else
         SyntaxLabel.Text = Source.Text
     end
@@ -1233,7 +1324,7 @@ OpenConsole.Name = "OpenConsole"
 OpenConsole.Parent = EditorFrame
 OpenConsole.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 OpenConsole.BorderSizePixel = 0
-OpenConsole.Position = UDim2.new(0, 460, 0, 235)
+OpenConsole.Position = UDim2.new(0, 410, 0, 235)
 OpenConsole.Size = UDim2.new(0, 40, 0, 35)
 OpenConsole.Image = "rbxassetid://102551636383591"
 
@@ -1272,7 +1363,7 @@ Inject.Name = "Inject"
 Inject.Parent = EditorFrame
 Inject.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 Inject.BorderSizePixel = 0
-Inject.Position = UDim2.new(0, 505, 0, 235)
+Inject.Position = UDim2.new(0, 460, 0, 235)
 Inject.Size = UDim2.new(0, 40, 0, 35)
 Inject.Image = "rbxassetid://105409383174185"
 
@@ -1306,6 +1397,47 @@ InjectTooltipText.ZIndex = 11
 
 Inject.MouseEnter:Connect(function() InjectTooltip.Visible = true end)
 Inject.MouseLeave:Connect(function() InjectTooltip.Visible = false end)
+
+-- RE-EXECUTE BUTTON
+ReExecuteBtn.Name = "ReExecuteBtn"
+ReExecuteBtn.Parent = EditorFrame
+ReExecuteBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+ReExecuteBtn.BorderSizePixel = 0
+ReExecuteBtn.Position = UDim2.new(0, 505, 0, 235)
+ReExecuteBtn.Size = UDim2.new(0, 40, 0, 35)
+ReExecuteBtn.Image = "rbxassetid://119065240115720"
+ReExecuteBtn.ImageColor3 = Color3.fromRGB(200, 255, 200)
+
+Instance.new("UICorner", ReExecuteBtn).CornerRadius = UDim.new(0, 6)
+
+-- ENHANCED: PC-style tooltip for Re-Execute
+local ReExecuteTooltip = Instance.new("Frame")
+ReExecuteTooltip.Name = "ReExecuteTooltip"
+ReExecuteTooltip.Parent = ReExecuteBtn
+ReExecuteTooltip.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+ReExecuteTooltip.BorderColor3 = Color3.fromRGB(60, 60, 60)
+ReExecuteTooltip.BorderSizePixel = 1
+ReExecuteTooltip.Position = UDim2.new(0, 0, 0, -28)
+ReExecuteTooltip.Size = UDim2.new(0, 70, 0, 22)
+ReExecuteTooltip.Visible = false
+ReExecuteTooltip.ZIndex = 10
+
+local ReExecuteTooltipCorner = Instance.new("UICorner")
+ReExecuteTooltipCorner.CornerRadius = UDim.new(0, 4)
+ReExecuteTooltipCorner.Parent = ReExecuteTooltip
+
+local ReExecuteTooltipText = Instance.new("TextLabel")
+ReExecuteTooltipText.Parent = ReExecuteTooltip
+ReExecuteTooltipText.BackgroundTransparency = 1
+ReExecuteTooltipText.Size = UDim2.new(1, 0, 1, 0)
+ReExecuteTooltipText.Font = Enum.Font.GothamSemibold
+ReExecuteTooltipText.Text = "Re-Execute"
+ReExecuteTooltipText.TextColor3 = Color3.fromRGB(200, 200, 200)
+ReExecuteTooltipText.TextSize = 11
+ReExecuteTooltipText.ZIndex = 11
+
+ReExecuteBtn.MouseEnter:Connect(function() ReExecuteTooltip.Visible = true end)
+ReExecuteBtn.MouseLeave:Connect(function() ReExecuteTooltip.Visible = false end)
 
 SearcherFrame.Name = "SearcherFrame"
 SearcherFrame.Parent = Frame
@@ -1540,6 +1672,146 @@ UniListLayout.Parent = UniScriptsList
 UniListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 UniListLayout.Padding = UDim.new(0, 5)
 
+-- SETTINGS FRAME
+SettingsFrame.Name = "SettingsFrame"
+SettingsFrame.Parent = Frame
+SettingsFrame.BackgroundTransparency = 1
+SettingsFrame.Position = UDim2.new(0, 150, 0, 40)
+SettingsFrame.Size = UDim2.new(0, 545, 0, 275)
+SettingsFrame.Visible = false
+
+local SettingsContainer = Instance.new("Frame")
+SettingsContainer.Name = "SettingsContainer"
+SettingsContainer.Parent = SettingsFrame
+SettingsContainer.BackgroundTransparency = 1
+SettingsContainer.Position = UDim2.new(0, 10, 0, 10)
+SettingsContainer.Size = UDim2.new(1, -20, 1, -20)
+
+-- Font Selection
+local FontLabel = Instance.new("TextLabel")
+FontLabel.Name = "FontLabel"
+FontLabel.Parent = SettingsContainer
+FontLabel.BackgroundTransparency = 1
+FontLabel.Position = UDim2.new(0, 0, 0, 0)
+FontLabel.Size = UDim2.new(1, 0, 0, 25)
+FontLabel.Font = Enum.Font.GothamBold
+FontLabel.Text = "Editor Font"
+FontLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+FontLabel.TextSize = 14
+FontLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local FontDropdown = Instance.new("TextButton")
+FontDropdown.Name = "FontDropdown"
+FontDropdown.Parent = SettingsContainer
+FontDropdown.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+FontDropdown.Position = UDim2.new(0, 0, 0, 30)
+FontDropdown.Size = UDim2.new(0, 200, 0, 35)
+FontDropdown.Font = Enum.Font.Gotham
+FontDropdown.Text = "  " .. Settings.Font
+FontDropdown.TextColor3 = Color3.fromRGB(255, 255, 255)
+FontDropdown.TextSize = 13
+FontDropdown.TextXAlignment = Enum.TextXAlignment.Left
+
+Instance.new("UICorner", FontDropdown).CornerRadius = UDim.new(0, 6)
+
+local FontArrow = Instance.new("ImageLabel")
+FontArrow.Name = "Arrow"
+FontArrow.Parent = FontDropdown
+FontArrow.BackgroundTransparency = 1
+FontArrow.Position = UDim2.new(1, -25, 0.5, -8)
+FontArrow.Size = UDim2.new(0, 16, 0, 16)
+FontArrow.Image = "rbxassetid://117408302517589"
+FontArrow.ImageColor3 = Color3.fromRGB(200, 200, 200)
+FontArrow.Rotation = 90
+
+local FontOptionsFrame = Instance.new("Frame")
+FontOptionsFrame.Name = "FontOptions"
+FontOptionsFrame.Parent = FontDropdown
+FontOptionsFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+FontOptionsFrame.BorderColor3 = Color3.fromRGB(50, 50, 50)
+FontOptionsFrame.BorderSizePixel = 1
+FontOptionsFrame.Position = UDim2.new(0, 0, 1, 5)
+FontOptionsFrame.Size = UDim2.new(1, 0, 0, 140)
+FontOptionsFrame.Visible = false
+FontOptionsFrame.ZIndex = 100
+
+Instance.new("UICorner", FontOptionsFrame).CornerRadius = UDim.new(0, 6)
+
+local FontOptionsLayout = Instance.new("UIListLayout")
+FontOptionsLayout.Parent = FontOptionsFrame
+FontOptionsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+local function CreateFontOption(name)
+	local btn = Instance.new("TextButton")
+	btn.Name = name .. "Option"
+	btn.Parent = FontOptionsFrame
+	btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	btn.Size = UDim2.new(1, 0, 0, 35)
+	btn.Font = Enum.Font.Gotham
+	btn.Text = "  " .. name
+	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	btn.TextSize = 12
+	btn.TextXAlignment = Enum.TextXAlignment.Left
+	btn.ZIndex = 101
+	
+	btn.MouseButton1Click:Connect(function()
+		Settings.Font = name
+		FontDropdown.Text = "  " .. name
+		Source.Font = FontOptions[name]
+		LineNumbers.Font = FontOptions[name]
+		SyntaxLabel.Font = FontOptions[name]
+		FontOptionsFrame.Visible = false
+		FontArrow.Rotation = 90
+		ShowNotification("Settings", "Font changed to " .. name, "Success", 2)
+	end)
+	
+	return btn
+end
+
+CreateFontOption("Original")
+CreateFontOption("Legacy")
+CreateFontOption("Code")
+CreateFontOption("Arcade")
+
+FontDropdown.MouseButton1Click:Connect(function()
+	FontOptionsFrame.Visible = not FontOptionsFrame.Visible
+	FontArrow.Rotation = FontOptionsFrame.Visible and -90 or 90
+end)
+
+-- Syntax Highlighting Toggle
+local SyntaxLabel = Instance.new("TextLabel")
+SyntaxLabel.Name = "SyntaxLabel"
+SyntaxLabel.Parent = SettingsContainer
+SyntaxLabel.BackgroundTransparency = 1
+SyntaxLabel.Position = UDim2.new(0, 0, 0, 90)
+SyntaxLabel.Size = UDim2.new(1, 0, 0, 25)
+SyntaxLabel.Font = Enum.Font.GothamBold
+SyntaxLabel.Text = "Syntax Highlighting"
+SyntaxLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+SyntaxLabel.TextSize = 14
+SyntaxLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local SyntaxToggle = Instance.new("TextButton")
+SyntaxToggle.Name = "SyntaxToggle"
+SyntaxToggle.Parent = SettingsContainer
+SyntaxToggle.BackgroundColor3 = Settings.SyntaxHighlighting and Color3.fromRGB(50, 200, 100) or Color3.fromRGB(200, 50, 50)
+SyntaxToggle.Position = UDim2.new(0, 0, 0, 120)
+SyntaxToggle.Size = UDim2.new(0, 60, 0, 30)
+SyntaxToggle.Font = Enum.Font.GothamBold
+SyntaxToggle.Text = Settings.SyntaxHighlighting and "ON" or "OFF"
+SyntaxToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+SyntaxToggle.TextSize = 12
+
+Instance.new("UICorner", SyntaxToggle).CornerRadius = UDim.new(0, 15)
+
+SyntaxToggle.MouseButton1Click:Connect(function()
+	Settings.SyntaxHighlighting = not Settings.SyntaxHighlighting
+	SyntaxToggle.BackgroundColor3 = Settings.SyntaxHighlighting and Color3.fromRGB(50, 200, 100) or Color3.fromRGB(200, 50, 50)
+	SyntaxToggle.Text = Settings.SyntaxHighlighting and "ON" or "OFF"
+	updateLineNumbers()
+	ShowNotification("Settings", "Syntax Highlighting " .. (Settings.SyntaxHighlighting and "Enabled" or "Disabled"), "Success", 2)
+end)
+
 -- MODIFIED: F8 Label positioned at top right
 CloseKeybind.Name = "CloseKeybind"
 CloseKeybind.Parent = Topbar
@@ -1579,27 +1851,29 @@ CreditsText.TextColor3 = Color3.fromRGB(180, 180, 180)
 CreditsText.TextSize = 12
 CreditsText.TextXAlignment = Enum.TextXAlignment.Left
 
--- MODIFIED: Title with Version 4 Badge (Black/Grey/White)
+-- MODIFIED: Title with Version 4 Badge (Black/Grey/White) - MORE VISIBLE
 TextLabel.Parent = Topbar
 TextLabel.BackgroundTransparency = 1
 TextLabel.Position = UDim2.new(0, 15, 0, 0)
 TextLabel.Size = UDim2.new(0, 300, 0, 40)
-TextLabel.Font = Enum.Font.SourceSans
+TextLabel.Font = Enum.Font.SourceSansBold
 TextLabel.Text = "ZZINSWARE | Script-hub Executor"
 TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextLabel.TextSize = 16
+TextLabel.TextSize = 18
 TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 
--- Version 4 Badge (Black/Grey/White)
+-- Version 4 Badge (Black/Grey/White) - ENHANCED VISIBILITY
 local VersionBadge = Instance.new("TextLabel")
 VersionBadge.Name = "VersionBadge"
 VersionBadge.Parent = Topbar
 VersionBadge.BackgroundTransparency = 1
-VersionBadge.Position = UDim2.new(0, 320, 0, 10)
-VersionBadge.Size = UDim2.new(0, 80, 0, 20)
-VersionBadge.Font = Enum.Font.GothamBold
-VersionBadge.Text = "Version 4"
-VersionBadge.TextSize = 14
+VersionBadge.Position = UDim2.new(0, 330, 0, 8)
+VersionBadge.Size = UDim2.new(0, 100, 0, 24)
+VersionBadge.Font = Enum.Font.GothamBlack
+VersionBadge.Text = "VERSION 4"
+VersionBadge.TextSize = 16
+VersionBadge.TextStrokeTransparency = 0.8
+VersionBadge.TextStrokeColor3 = Color3.fromRGB(255, 255, 255)
 
 -- Create gradient for Black/Grey/White effect
 local textGradient = Instance.new("UIGradient")
@@ -1615,17 +1889,17 @@ textGradient.Rotation = 45
 local glow1 = VersionBadge:Clone()
 glow1.Name = "Glow1"
 glow1.Parent = Topbar
-glow1.Position = UDim2.new(0, 320, 0, 10)
+glow1.Position = UDim2.new(0, 330, 0, 8)
 glow1.TextColor3 = Color3.fromRGB(128, 128, 128)
-glow1.TextTransparency = 0.7
+glow1.TextTransparency = 0.6
 glow1.ZIndex = 0
 
 local glow2 = VersionBadge:Clone()
 glow2.Name = "Glow2"
 glow2.Parent = Topbar
-glow2.Position = UDim2.new(0, 320, 0, 10)
+glow2.Position = UDim2.new(0, 330, 0, 8)
 glow2.TextColor3 = Color3.fromRGB(255, 255, 255)
-glow2.TextTransparency = 0.8
+glow2.TextTransparency = 0.7
 glow2.ZIndex = 0
 
 -- Animate glow
@@ -1693,12 +1967,15 @@ local function SwitchTab(tab)
 	GameScriptsTab.ImageColor3 = Color3.fromRGB(150, 150, 150)
 	UniversalScriptsTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 	UniversalScriptsTab.ImageColor3 = Color3.fromRGB(150, 150, 150)
+	SettingsTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	SettingsTab.ImageColor3 = Color3.fromRGB(150, 150, 150)
 	
 	InfoFrame.Visible = false
 	EditorFrame.Visible = false
 	SearcherFrame.Visible = false
 	GameScriptsFrame.Visible = false
 	UniversalScriptsFrame.Visible = false
+	SettingsFrame.Visible = false
 	
 	if tab == "Info" then
 		InfoTab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
@@ -1720,6 +1997,10 @@ local function SwitchTab(tab)
 		UniversalScriptsTab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 		UniversalScriptsTab.ImageColor3 = Color3.fromRGB(255, 255, 255)
 		UniversalScriptsFrame.Visible = true
+	elseif tab == "Settings" then
+		SettingsTab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		SettingsTab.ImageColor3 = Color3.fromRGB(255, 255, 255)
+		SettingsFrame.Visible = true
 	end
 end
 
@@ -1728,6 +2009,7 @@ EditorTab.MouseButton1Click:Connect(function() SwitchTab("Editor") end)
 SearcherTab.MouseButton1Click:Connect(function() SwitchTab("Searcher") end)
 GameScriptsTab.MouseButton1Click:Connect(function() SwitchTab("GameScripts") end)
 UniversalScriptsTab.MouseButton1Click:Connect(function() SwitchTab("UniversalScripts") end)
+SettingsTab.MouseButton1Click:Connect(function() SwitchTab("Settings") end)
 
 CopyDiscordBtn.MouseButton1Click:Connect(function()
 	local success = pcall(function()
@@ -1736,7 +2018,7 @@ CopyDiscordBtn.MouseButton1Click:Connect(function()
 		end
 	end)
 	if not success then
-		ShowErrorNotification("Failed to copy to clipboard", EditorFrame)
+		ShowNotification("Error", "Failed to copy to clipboard", "Error", 3)
 	end
 end)
 
@@ -1747,20 +2029,37 @@ OpenConsole.MouseButton1Click:Connect(function()
 		end
 	end)
 	if not success then
-		ShowErrorNotification("Failed to open console", EditorFrame)
+		ShowNotification("Error", "Failed to open console", "Error", 3)
 	end
 end)
 
 Execute.MouseButton1Click:Connect(function()
 	if Source.Text == "" then
-		ShowErrorNotification("No script to execute", EditorFrame)
+		ShowNotification("Error", "No script to execute", "Error", 3)
 		return
 	end
+	Settings.LastScript = Source.Text
 	local success, err = pcall(function()
 		loadstring(Source.Text)()
 	end)
 	if not success then
-		ShowErrorNotification("Execution Error: " .. tostring(err):sub(1, 50), EditorFrame)
+		ShowNotification("Execution Failed", tostring(err):sub(1, 100), "Error", 5)
+	end
+end)
+
+-- RE-EXECUTE BUTTON FUNCTION
+ReExecuteBtn.MouseButton1Click:Connect(function()
+	if Settings.LastScript == "" then
+		ShowNotification("Error", "No previous script to re-execute", "Error", 3)
+		return
+	end
+	local success, err = pcall(function()
+		loadstring(Settings.LastScript)()
+	end)
+	if not success then
+		ShowNotification("Re-Execution Failed", tostring(err):sub(1, 100), "Error", 5)
+	else
+		ShowNotification("Success", "Script re-executed successfully", "Success", 2)
 	end
 end)
 
@@ -1775,13 +2074,13 @@ Paste.MouseButton1Click:Connect(function()
 	if success and result ~= "" then
 		Source.Text = result
 	else
-		ShowErrorNotification("Failed to paste from clipboard", EditorFrame)
+		ShowNotification("Error", "Failed to paste from clipboard", "Error", 3)
 	end
 end)
 
 Copy.MouseButton1Click:Connect(function()
 	if Source.Text == "" then
-		ShowErrorNotification("No text to copy", EditorFrame)
+		ShowNotification("Error", "No text to copy", "Error", 3)
 		return
 	end
 	local success = pcall(function()
@@ -1790,7 +2089,9 @@ Copy.MouseButton1Click:Connect(function()
 		end
 	end)
 	if not success then
-		ShowErrorNotification("Failed to copy to clipboard", EditorFrame)
+		ShowNotification("Error", "Failed to copy to clipboard", "Error", 3)
+	else
+		ShowNotification("Success", "Text copied to clipboard", "Success", 2)
 	end
 end)
 
@@ -1827,12 +2128,13 @@ SaveFileBtn.MouseButton1Click:Connect(function()
 	local name = FileNameBox.Text
 	if name == "" then name = "Script_" .. os.time() end
 	if Source.Text == "" then
-		ShowErrorNotification("No script to save", FilesFrame)
+		ShowNotification("Error", "No script to save", "Error", 3)
 		return
 	end
 	savedFiles[name] = Source.Text
 	selectedFile = name
 	refreshFilesList()
+	ShowNotification("Success", "Script saved as '" .. name .. "'", "Success", 2)
 end)
 
 LoadFileBtn.MouseButton1Click:Connect(function()
@@ -1844,7 +2146,7 @@ LoadFileBtn.MouseButton1Click:Connect(function()
 		selectedFile = FileNameBox.Text
 		refreshFilesList()
 	else
-		ShowErrorNotification("No file selected", FilesFrame)
+		ShowNotification("Error", "No file selected", "Error", 3)
 	end
 end)
 
@@ -1852,46 +2154,49 @@ RenameFileBtn.MouseButton1Click:Connect(function()
 	local oldName = selectedFile or FileNameBox.Text
 	local newName = FileNameBox.Text
 	if not oldName or not savedFiles[oldName] then
-		ShowErrorNotification("No file selected to rename", FilesFrame)
+		ShowNotification("Error", "No file selected to rename", "Error", 3)
 		return
 	end
 	if newName == "" then
-		ShowErrorNotification("Enter new name", FilesFrame)
+		ShowNotification("Error", "Enter new name", "Error", 3)
 		return
 	end
 	if newName == oldName then
-		ShowErrorNotification("New name must be different", FilesFrame)
+		ShowNotification("Error", "New name must be different", "Error", 3)
 		return
 	end
 	savedFiles[newName] = savedFiles[oldName]
 	savedFiles[oldName] = nil
 	selectedFile = newName
 	refreshFilesList()
+	ShowNotification("Success", "Renamed to '" .. newName .. "'", "Success", 2)
 end)
 
 DeleteFileBtn.MouseButton1Click:Connect(function()
 	local name = selectedFile or FileNameBox.Text
 	if not savedFiles[name] then
-		ShowErrorNotification("No file selected to delete", FilesFrame)
+		ShowNotification("Error", "No file selected to delete", "Error", 3)
 		return
 	end
 	savedFiles[name] = nil
 	if selectedFile == name then selectedFile = nil end
 	FileNameBox.Text = ""
 	refreshFilesList()
+	ShowNotification("Success", "File deleted", "Success", 2)
 end)
 
 ExecuteFileBtn.MouseButton1Click:Connect(function()
 	local name = selectedFile or FileNameBox.Text
 	if not savedFiles[name] then
-		ShowErrorNotification("No file selected to execute", FilesFrame)
+		ShowNotification("Error", "No file selected to execute", "Error", 3)
 		return
 	end
+	Settings.LastScript = savedFiles[name]
 	local success, err = pcall(function()
 		loadstring(savedFiles[name])()
 	end)
 	if not success then
-		ShowErrorNotification("Execution Error: " .. tostring(err):sub(1, 50), FilesFrame)
+		ShowNotification("Execution Failed", tostring(err):sub(1, 100), "Error", 5)
 	end
 end)
 
@@ -1949,27 +2254,6 @@ local function SearchScriptBlox(query, page)
 	end
 	
 	return results
-end
-
-local function GetScriptDetails(slug)
-	local success, response = pcall(function()
-		return game:HttpGet("https://scriptblox.com/api/script/" .. slug .. "?legacy_tags=true")
-	end)
-	
-	if success and response then
-		local data = HttpService:JSONDecode(response)
-		if data and data.result then
-			return data.result.script
-		end
-	end
-	return nil
-end
-
-local function CreateScriptButton(data, parent)
-	local Btn = Instance.new("Frame")
-	Btn.Size = UDim2.new(1, -10, 0, 80)
-	Btn.Position = UDim2.new(0, 5, 0, 0)
-	Btn.BackgroundColor3 = Color3.fromRGB	return results
 end
 
 local function GetScriptDetails(slug)
@@ -2160,29 +2444,31 @@ local function CreateScriptButton(data, parent)
 	ExecBtn.MouseButton1Click:Connect(function()
 		if data.code and data.code ~= "" then
 			Source.Text = data.code
+			Settings.LastScript = data.code
 			SwitchTab("Editor")
 			local success, err = pcall(function()
 				loadstring(data.code)()
 			end)
 			if not success then
-				ShowErrorNotification("Execution Error: " .. tostring(err):sub(1, 50), EditorFrame)
+				ShowNotification("Execution Failed", tostring(err):sub(1, 100), "Error", 5)
 			end
 		elseif data.slug ~= "" then
 			local details = GetScriptDetails(data.slug)
 			if details and details.script then
 				Source.Text = details.script
+				Settings.LastScript = details.script
 				SwitchTab("Editor")
 				local success, err = pcall(function()
 					loadstring(details.script)()
 				end)
 				if not success then
-					ShowErrorNotification("Execution Error: " .. tostring(err):sub(1, 50), EditorFrame)
+					ShowNotification("Execution Failed", tostring(err):sub(1, 100), "Error", 5)
 				end
 			else
-				ShowErrorNotification("Failed to load script details", SearcherFrame)
+				ShowNotification("Error", "Failed to load script details", "Error", 3)
 			end
 		else
-			ShowErrorNotification("No script code available", SearcherFrame)
+			ShowNotification("Error", "No script code available", "Error", 3)
 		end
 	end)
 	
@@ -2242,10 +2528,10 @@ local function CreateScriptButton(data, parent)
 				Source.Text = details.script
 				SwitchTab("Editor")
 			else
-				ShowErrorNotification("Failed to load script details", SearcherFrame)
+				ShowNotification("Error", "Failed to load script details", "Error", 3)
 			end
 		else
-			ShowErrorNotification("No script code available", SearcherFrame)
+			ShowNotification("Error", "No script code available", "Error", 3)
 		end
 	end)
 	
@@ -2310,10 +2596,10 @@ local function CreateScriptButton(data, parent)
 				Source.Text = "-- Script Info:\n-- " .. infoText:gsub("\n", "\n-- ") .. "\n\n" .. (details.script or "-- No script code available")
 				SwitchTab("Editor")
 			else
-				ShowErrorNotification("Failed to load script details", SearcherFrame)
+				ShowNotification("Error", "Failed to load script details", "Error", 3)
 			end
 		else
-			ShowErrorNotification("No script details available", SearcherFrame)
+			ShowNotification("Error", "No script details available", "Error", 3)
 		end
 	end)
 end
@@ -2329,7 +2615,7 @@ end
 local function PerformSearch()
 	local query = SearchBox.Text
 	if query == "" and CurrentFilter == "" then 
-		ShowErrorNotification("Enter search query or select filter", SearcherFrame)
+		ShowNotification("Error", "Enter search query or select filter", "Error", 3)
 		return 
 	end
 	
@@ -2378,7 +2664,7 @@ NextPageBtn.MouseButton1Click:Connect(function()
 		CurrentPage = CurrentPage + 1
 		PerformSearch()
 	else
-		ShowErrorNotification("Already on last page", SearcherFrame)
+		ShowNotification("Error", "Already on last page", "Error", 3)
 	end
 end)
 
@@ -2387,7 +2673,7 @@ PrevPageBtn.MouseButton1Click:Connect(function()
 		CurrentPage = CurrentPage - 1
 		PerformSearch()
 	else
-		ShowErrorNotification("Already on first page", SearcherFrame)
+		ShowNotification("Error", "Already on first page", "Error", 3)
 	end
 end)
 
@@ -2549,9 +2835,9 @@ local function CreateGameButton(data)
 			loadstring(game:HttpGet(data.url))()
 		end)
 		if success then
-			print("Executed: " .. data.name)
+			ShowNotification("Success", "Executed: " .. data.name, "Success", 2)
 		else
-			ShowErrorNotification("Error: " .. tostring(err):sub(1, 50), GameScriptsFrame)
+			ShowNotification("Execution Failed", tostring(err):sub(1, 100), "Error", 5)
 		end
 	end)
 end
@@ -2628,9 +2914,9 @@ local function CreateUniButton(data)
 			loadstring(game:HttpGet(data.url))()
 		end)
 		if success then
-			print("Executed: " .. data.name)
+			ShowNotification("Success", "Executed: " .. data.name, "Success", 2)
 		else
-			ShowErrorNotification("Error: " .. tostring(err):sub(1, 50), UniversalScriptsFrame)
+			ShowNotification("Execution Failed", tostring(err):sub(1, 100), "Error", 5)
 		end
 	end)
 end
