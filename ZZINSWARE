@@ -1,4 +1,4 @@
--- ZZINSWARE V3: Full Featured Script Hub with Lua Syntax Highlighting
+-- ZZINSWARE V4: Full Featured Script Hub with Lua Syntax Highlighting
 -- Features: Discord Integration, Auto-Update Stats, Lua Highlighter, Version Badge, Credits, System Monitor
 
 local highlighter = {}
@@ -445,7 +445,7 @@ ExecuteFileBtn.Parent = FilesFrame
 ExecuteFileBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 ExecuteFileBtn.Position = UDim2.new(0, 45, 0, 275)
 ExecuteFileBtn.Size = UDim2.new(0, 35, 0, 35)
-ExecuteFileBtn.Image = "rbxassetid://130193182186125"
+ExecuteFileBtn.Image = "rbxassetid://119065240115720"
 
 Instance.new("UICorner", ExecuteFileBtn).CornerRadius = UDim.new(0, 6)
 
@@ -661,11 +661,11 @@ local function CreateSystemStat(name, posX, imageId)
 end
 
 -- Create system stat boxes
-local fpsLabel = CreateSystemStat("FPS", 0, "15427264536")
-local pingLabel = CreateSystemStat("Ping", 0.20, "15427264536")
-local memoryLabel = CreateSystemStat("Memory", 0.40, "15427264536")
-local cpuLabel = CreateSystemStat("CPU", 0.60, "15427264536")
-local gpuLabel = CreateSystemStat("GPU", 0.80, "15427264536")
+local fpsLabel = CreateSystemStat("FPS", 0, "80514302796622")
+local pingLabel = CreateSystemStat("Ping", 0.20, "73804197684672")
+local memoryLabel = CreateSystemStat("Memory", 0.40, "6934996829")
+local cpuLabel = CreateSystemStat("CPU", 0.60, "83732980750188")
+local gpuLabel = CreateSystemStat("GPU", 0.80, "120144751660153")
 
 -- Auto Update Stats every 0 seconds (every frame)
 local RunService = game:GetService("RunService")
@@ -928,9 +928,24 @@ Execute.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 Execute.BorderSizePixel = 0
 Execute.Position = UDim2.new(0, 0, 0, 235)
 Execute.Size = UDim2.new(0, 40, 0, 35)
-Execute.Image = "rbxassetid://130193182186125"
+Execute.Image = "rbxassetid://119065240115720"
 
 Instance.new("UICorner", Execute).CornerRadius = UDim.new(0, 6)
+
+local ExecuteTooltip = Instance.new("TextLabel")
+ExecuteTooltip.Parent = Execute
+ExecuteTooltip.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ExecuteTooltip.BackgroundTransparency = 0.5
+ExecuteTooltip.Position = UDim2.new(0, 0, 0, -20)
+ExecuteTooltip.Size = UDim2.new(1, 0, 0, 18)
+ExecuteTooltip.Font = Enum.Font.Gotham
+ExecuteTooltip.Text = "Execute"
+ExecuteTooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
+ExecuteTooltip.TextSize = 10
+ExecuteTooltip.Visible = false
+
+Execute.MouseEnter:Connect(function() ExecuteTooltip.Visible = true end)
+Execute.MouseLeave:Connect(function() ExecuteTooltip.Visible = false end)
 
 Clear.Name = "Clear"
 Clear.Parent = EditorFrame
@@ -938,9 +953,24 @@ Clear.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 Clear.BorderSizePixel = 0
 Clear.Position = UDim2.new(0, 50, 0, 235)
 Clear.Size = UDim2.new(0, 40, 0, 35)
-Clear.Image = "rbxassetid://110016091132925"
+Clear.Image = "rbxassetid://76624782632416"
 
 Instance.new("UICorner", Clear).CornerRadius = UDim.new(0, 6)
+
+local ClearTooltip = Instance.new("TextLabel")
+ClearTooltip.Parent = Clear
+ClearTooltip.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ClearTooltip.BackgroundTransparency = 0.5
+ClearTooltip.Position = UDim2.new(0, 0, 0, -20)
+ClearTooltip.Size = UDim2.new(1, 0, 0, 18)
+ClearTooltip.Font = Enum.Font.Gotham
+ClearTooltip.Text = "Clear"
+ClearTooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
+ClearTooltip.TextSize = 10
+ClearTooltip.Visible = false
+
+Clear.MouseEnter:Connect(function() ClearTooltip.Visible = true end)
+Clear.MouseLeave:Connect(function() ClearTooltip.Visible = false end)
 
 Paste.Name = "Paste"
 Paste.Parent = EditorFrame
@@ -952,6 +982,21 @@ Paste.Image = "rbxassetid://89773130507890"
 
 Instance.new("UICorner", Paste).CornerRadius = UDim.new(0, 6)
 
+local PasteTooltip = Instance.new("TextLabel")
+PasteTooltip.Parent = Paste
+PasteTooltip.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+PasteTooltip.BackgroundTransparency = 0.5
+PasteTooltip.Position = UDim2.new(0, 0, 0, -20)
+PasteTooltip.Size = UDim2.new(1, 0, 0, 18)
+PasteTooltip.Font = Enum.Font.Gotham
+PasteTooltip.Text = "Paste"
+PasteTooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
+PasteTooltip.TextSize = 10
+PasteTooltip.Visible = false
+
+Paste.MouseEnter:Connect(function() PasteTooltip.Visible = true end)
+Paste.MouseLeave:Connect(function() PasteTooltip.Visible = false end)
+
 Copy.Name = "Copy"
 Copy.Parent = EditorFrame
 Copy.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
@@ -961,6 +1006,21 @@ Copy.Size = UDim2.new(0, 40, 0, 35)
 Copy.Image = "rbxassetid://10169282923"
 
 Instance.new("UICorner", Copy).CornerRadius = UDim.new(0, 6)
+
+local CopyTooltip = Instance.new("TextLabel")
+CopyTooltip.Parent = Copy
+CopyTooltip.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+CopyTooltip.BackgroundTransparency = 0.5
+CopyTooltip.Position = UDim2.new(0, 0, 0, -20)
+CopyTooltip.Size = UDim2.new(1, 0, 0, 18)
+CopyTooltip.Font = Enum.Font.Gotham
+CopyTooltip.Text = "Copy"
+CopyTooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
+CopyTooltip.TextSize = 10
+CopyTooltip.Visible = false
+
+Copy.MouseEnter:Connect(function() CopyTooltip.Visible = true end)
+Copy.MouseLeave:Connect(function() CopyTooltip.Visible = false end)
 
 OpenConsole.Name = "OpenConsole"
 OpenConsole.Parent = EditorFrame
@@ -996,6 +1056,21 @@ Inject.Size = UDim2.new(0, 40, 0, 35)
 Inject.Image = "rbxassetid://13353741942"
 
 Instance.new("UICorner", Inject).CornerRadius = UDim.new(0, 6)
+
+local InjectTooltip = Instance.new("TextLabel")
+InjectTooltip.Parent = Inject
+InjectTooltip.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+InjectTooltip.BackgroundTransparency = 0.5
+InjectTooltip.Position = UDim2.new(0, 0, 0, -20)
+InjectTooltip.Size = UDim2.new(1, 0, 0, 18)
+InjectTooltip.Font = Enum.Font.Gotham
+InjectTooltip.Text = "Inject"
+InjectTooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
+InjectTooltip.TextSize = 10
+InjectTooltip.Visible = false
+
+Inject.MouseEnter:Connect(function() InjectTooltip.Visible = true end)
+Inject.MouseLeave:Connect(function() InjectTooltip.Visible = false end)
 
 SearcherFrame.Name = "SearcherFrame"
 SearcherFrame.Parent = Frame
@@ -1269,7 +1344,7 @@ CreditsText.TextColor3 = Color3.fromRGB(180, 180, 180)
 CreditsText.TextSize = 12
 CreditsText.TextXAlignment = Enum.TextXAlignment.Left
 
--- MODIFIED: Title with Version 3 Badge
+-- MODIFIED: Title with Version 4 Badge (Black/Grey/White)
 TextLabel.Parent = Topbar
 TextLabel.BackgroundTransparency = 1
 TextLabel.Position = UDim2.new(0, 15, 0, 0)
@@ -1280,7 +1355,7 @@ TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel.TextSize = 16
 TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 
--- Version 3 Badge (Glowing Purple/Black/White)
+-- Version 4 Badge (Black/Grey/White)
 local VersionBadge = Instance.new("TextLabel")
 VersionBadge.Name = "VersionBadge"
 VersionBadge.Parent = Topbar
@@ -1288,16 +1363,16 @@ VersionBadge.BackgroundTransparency = 1
 VersionBadge.Position = UDim2.new(0, 320, 0, 10)
 VersionBadge.Size = UDim2.new(0, 80, 0, 20)
 VersionBadge.Font = Enum.Font.GothamBold
-VersionBadge.Text = "Version 3"
+VersionBadge.Text = "Version 4"
 VersionBadge.TextSize = 14
 
--- Create gradient for glow effect
+-- Create gradient for Black/Grey/White effect
 local textGradient = Instance.new("UIGradient")
 textGradient.Parent = VersionBadge
 textGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(147, 0, 211)), -- Purple
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 0, 0)),   -- Black
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255)) -- White
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),       -- Black
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(128, 128, 128)), -- Grey
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))    -- White
 })
 textGradient.Rotation = 45
 
@@ -1306,7 +1381,7 @@ local glow1 = VersionBadge:Clone()
 glow1.Name = "Glow1"
 glow1.Parent = Topbar
 glow1.Position = UDim2.new(0, 320, 0, 10)
-glow1.TextColor3 = Color3.fromRGB(147, 0, 211)
+glow1.TextColor3 = Color3.fromRGB(128, 128, 128)
 glow1.TextTransparency = 0.7
 glow1.ZIndex = 0
 
@@ -1541,7 +1616,7 @@ end)
 ExecuteFileBtn.MouseButton1Click:Connect(function()
 	local name = selectedFile or FileNameBox.Text
 	if savedFiles[name] then
-		local success, err = pcall(function()
+	local success, err = pcall(function()
 			loadstring(savedFiles[name])()
 		end)
 		if not success then
@@ -1750,17 +1825,31 @@ local function CreateScriptButton(data, parent)
 	ExecBtn.Size = UDim2.new(0, 30, 0, 30)
 	ExecBtn.Position = UDim2.new(1, -70, 0, 15)
 	ExecBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-	ExecBtn.Image = "rbxassetid://130193182186125"
+	ExecBtn.Image = "rbxassetid://119065240115720"
 	ExecBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
 	ExecBtn.Parent = Btn
 	
 	Instance.new("UICorner", ExecBtn).CornerRadius = UDim.new(0, 4)
 	
+	local ExecBtnTooltip = Instance.new("TextLabel")
+	ExecBtnTooltip.Parent = ExecBtn
+	ExecBtnTooltip.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	ExecBtnTooltip.BackgroundTransparency = 0.5
+	ExecBtnTooltip.Position = UDim2.new(0, 0, 0, -20)
+	ExecBtnTooltip.Size = UDim2.new(1, 0, 0, 18)
+	ExecBtnTooltip.Font = Enum.Font.Gotham
+	ExecBtnTooltip.Text = "Execute"
+	ExecBtnTooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
+	ExecBtnTooltip.TextSize = 10
+	ExecBtnTooltip.Visible = false
+
 	ExecBtn.MouseEnter:Connect(function()
 		ExecBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+		ExecBtnTooltip.Visible = true
 	end)
 	ExecBtn.MouseLeave:Connect(function()
 		ExecBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		ExecBtnTooltip.Visible = false
 	end)
 	
 	ExecBtn.MouseButton1Click:Connect(function()
@@ -1799,11 +1888,25 @@ local function CreateScriptButton(data, parent)
 	
 	Instance.new("UICorner", CopyBtn).CornerRadius = UDim.new(0, 4)
 	
+	local CopyBtnTooltip = Instance.new("TextLabel")
+	CopyBtnTooltip.Parent = CopyBtn
+	CopyBtnTooltip.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	CopyBtnTooltip.BackgroundTransparency = 0.5
+	CopyBtnTooltip.Position = UDim2.new(0, 0, 0, -20)
+	CopyBtnTooltip.Size = UDim2.new(1, 0, 0, 18)
+	CopyBtnTooltip.Font = Enum.Font.Gotham
+	CopyBtnTooltip.Text = "Copy"
+	CopyBtnTooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
+	CopyBtnTooltip.TextSize = 10
+	CopyBtnTooltip.Visible = false
+
 	CopyBtn.MouseEnter:Connect(function()
 		CopyBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		CopyBtnTooltip.Visible = true
 	end)
 	CopyBtn.MouseLeave:Connect(function()
 		CopyBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+		CopyBtnTooltip.Visible = false
 	end)
 	
 	CopyBtn.MouseButton1Click:Connect(function()
@@ -1830,11 +1933,25 @@ local function CreateScriptButton(data, parent)
 	
 	Instance.new("UICorner", ViewBtn).CornerRadius = UDim.new(0, 4)
 	
+	local ViewBtnTooltip = Instance.new("TextLabel")
+	ViewBtnTooltip.Parent = ViewBtn
+	ViewBtnTooltip.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	ViewBtnTooltip.BackgroundTransparency = 0.5
+	ViewBtnTooltip.Position = UDim2.new(0, 0, 0, -20)
+	ViewBtnTooltip.Size = UDim2.new(1, 0, 0, 18)
+	ViewBtnTooltip.Font = Enum.Font.Gotham
+	ViewBtnTooltip.Text = "View"
+	ViewBtnTooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
+	ViewBtnTooltip.TextSize = 10
+	ViewBtnTooltip.Visible = false
+
 	ViewBtn.MouseEnter:Connect(function()
 		ViewBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		ViewBtnTooltip.Visible = true
 	end)
 	ViewBtn.MouseLeave:Connect(function()
 		ViewBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+		ViewBtnTooltip.Visible = false
 	end)
 	
 	ViewBtn.MouseButton1Click:Connect(function()
@@ -2035,17 +2152,31 @@ local function CreateGameButton(data)
 	ExecBtn.Size = UDim2.new(0, 35, 0, 35)
 	ExecBtn.Position = UDim2.new(1, -45, 0, 7)
 	ExecBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-	ExecBtn.Image = "rbxassetid://130193182186125"
+	ExecBtn.Image = "rbxassetid://119065240115720"
 	ExecBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
 	ExecBtn.Parent = Btn
 	
 	Instance.new("UICorner", ExecBtn).CornerRadius = UDim.new(0, 6)
 	
+	local ExecBtnTooltip = Instance.new("TextLabel")
+	ExecBtnTooltip.Parent = ExecBtn
+	ExecBtnTooltip.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	ExecBtnTooltip.BackgroundTransparency = 0.5
+	ExecBtnTooltip.Position = UDim2.new(0, 0, 0, -20)
+	ExecBtnTooltip.Size = UDim2.new(1, 0, 0, 18)
+	ExecBtnTooltip.Font = Enum.Font.Gotham
+	ExecBtnTooltip.Text = "Execute"
+	ExecBtnTooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
+	ExecBtnTooltip.TextSize = 10
+	ExecBtnTooltip.Visible = false
+
 	ExecBtn.MouseEnter:Connect(function()
 		ExecBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		ExecBtnTooltip.Visible = true
 	end)
 	ExecBtn.MouseLeave:Connect(function()
 		ExecBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+		ExecBtnTooltip.Visible = false
 	end)
 	
 	ExecBtn.MouseButton1Click:Connect(function()
@@ -2086,17 +2217,31 @@ local function CreateUniButton(data)
 	ExecBtn.Size = UDim2.new(0, 35, 0, 35)
 	ExecBtn.Position = UDim2.new(1, -45, 0, 7)
 	ExecBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-	ExecBtn.Image = "rbxassetid://130193182186125"
+	ExecBtn.Image = "rbxassetid://119065240115720"
 	ExecBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
 	ExecBtn.Parent = Btn
 	
 	Instance.new("UICorner", ExecBtn).CornerRadius = UDim.new(0, 6)
 	
+	local ExecBtnTooltip = Instance.new("TextLabel")
+	ExecBtnTooltip.Parent = ExecBtn
+	ExecBtnTooltip.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	ExecBtnTooltip.BackgroundTransparency = 0.5
+	ExecBtnTooltip.Position = UDim2.new(0, 0, 0, -20)
+	ExecBtnTooltip.Size = UDim2.new(1, 0, 0, 18)
+	ExecBtnTooltip.Font = Enum.Font.Gotham
+	ExecBtnTooltip.Text = "Execute"
+	ExecBtnTooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
+	ExecBtnTooltip.TextSize = 10
+	ExecBtnTooltip.Visible = false
+
 	ExecBtn.MouseEnter:Connect(function()
 		ExecBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		ExecBtnTooltip.Visible = true
 	end)
 	ExecBtn.MouseLeave:Connect(function()
 		ExecBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+		ExecBtnTooltip.Visible = false
 	end)
 	
 	ExecBtn.MouseButton1Click:Connect(function()
