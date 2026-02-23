@@ -349,7 +349,6 @@ local Clear = Instance.new("ImageButton")
 local Paste = Instance.new("ImageButton")
 local Copy = Instance.new("ImageButton")
 local OpenConsole = Instance.new("ImageButton")
-local ReExecuteBtn = Instance.new("ImageButton")
 local SearcherFrame = Instance.new("Frame")
 local SearchBox = Instance.new("TextBox")
 local SearchButton = Instance.new("ImageButton")
@@ -460,7 +459,7 @@ FilesIcon.Parent = FilesHeader
 FilesIcon.BackgroundTransparency = 1
 FilesIcon.Position = UDim2.new(0, 10, 0, 5)
 FilesIcon.Size = UDim2.new(0, 30, 0, 30)
-FilesIcon.Image = "rbxassetid://104044432682220"
+FilesIcon.Image = "rbxassetid://76766188301720"
 
 FilesLabel.Name = "FilesLabel"
 FilesLabel.Parent = FilesHeader
@@ -701,7 +700,7 @@ TabFrame.Size = UDim2.new(0, 545, 0, 30)
 
 InfoTab.Name = "InfoTab"
 InfoTab.Parent = TabFrame
-InfoTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+InfoTab.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 InfoTab.BorderSizePixel = 0
 InfoTab.Position = UDim2.new(0, 0, 0, 0)
 InfoTab.Size = UDim2.new(0, 35, 0, 30)
@@ -712,7 +711,7 @@ Instance.new("UICorner", InfoTab).CornerRadius = UDim.new(0, 6)
 
 EditorTab.Name = "EditorTab"
 EditorTab.Parent = TabFrame
-EditorTab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+EditorTab.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 EditorTab.BorderSizePixel = 0
 EditorTab.Position = UDim2.new(0, 45, 0, 0)
 EditorTab.Size = UDim2.new(0, 35, 0, 30)
@@ -722,7 +721,7 @@ Instance.new("UICorner", EditorTab).CornerRadius = UDim.new(0, 6)
 
 SearcherTab.Name = "SearcherTab"
 SearcherTab.Parent = TabFrame
-SearcherTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+SearcherTab.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 SearcherTab.BorderSizePixel = 0
 SearcherTab.Position = UDim2.new(0, 90, 0, 0)
 SearcherTab.Size = UDim2.new(0, 35, 0, 30)
@@ -733,7 +732,7 @@ Instance.new("UICorner", SearcherTab).CornerRadius = UDim.new(0, 6)
 
 GameScriptsTab.Name = "GameScriptsTab"
 GameScriptsTab.Parent = TabFrame
-GameScriptsTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+GameScriptsTab.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 GameScriptsTab.BorderSizePixel = 0
 GameScriptsTab.Position = UDim2.new(0, 135, 0, 0)
 GameScriptsTab.Size = UDim2.new(0, 35, 0, 30)
@@ -744,7 +743,7 @@ Instance.new("UICorner", GameScriptsTab).CornerRadius = UDim.new(0, 6)
 
 UniversalScriptsTab.Name = "UniversalScriptsTab"
 UniversalScriptsTab.Parent = TabFrame
-UniversalScriptsTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+UniversalScriptsTab.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 UniversalScriptsTab.BorderSizePixel = 0
 UniversalScriptsTab.Position = UDim2.new(0, 180, 0, 0)
 UniversalScriptsTab.Size = UDim2.new(0, 35, 0, 30)
@@ -755,11 +754,11 @@ Instance.new("UICorner", UniversalScriptsTab).CornerRadius = UDim.new(0, 6)
 
 SettingsTab.Name = "SettingsTab"
 SettingsTab.Parent = TabFrame
-SettingsTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+SettingsTab.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 SettingsTab.BorderSizePixel = 0
 SettingsTab.Position = UDim2.new(0, 225, 0, 0)
 SettingsTab.Size = UDim2.new(0, 35, 0, 30)
-SettingsTab.Image = "rbxassetid://140694510860609"
+SettingsTab.Image = "rbxassetid://115847366049931"
 SettingsTab.ImageColor3 = Color3.fromRGB(200, 200, 200)
 
 Instance.new("UICorner", SettingsTab).CornerRadius = UDim.new(0, 6)
@@ -1166,7 +1165,7 @@ updateLineNumbers()
 
 Execute.Name = "Execute"
 Execute.Parent = EditorFrame
-Execute.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Execute.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 Execute.BorderSizePixel = 0
 Execute.Position = UDim2.new(0, 0, 0, 235)
 Execute.Size = UDim2.new(0, 40, 0, 35)
@@ -1205,7 +1204,7 @@ Execute.MouseLeave:Connect(function() ExecuteTooltip.Visible = false end)
 
 Clear.Name = "Clear"
 Clear.Parent = EditorFrame
-Clear.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Clear.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 Clear.BorderSizePixel = 0
 Clear.Position = UDim2.new(0, 50, 0, 235)
 Clear.Size = UDim2.new(0, 40, 0, 35)
@@ -1244,7 +1243,7 @@ Clear.MouseLeave:Connect(function() ClearTooltip.Visible = false end)
 
 Paste.Name = "Paste"
 Paste.Parent = EditorFrame
-Paste.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Paste.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 Paste.BorderSizePixel = 0
 Paste.Position = UDim2.new(0, 100, 0, 235)
 Paste.Size = UDim2.new(0, 40, 0, 35)
@@ -1283,7 +1282,7 @@ Paste.MouseLeave:Connect(function() PasteTooltip.Visible = false end)
 
 Copy.Name = "Copy"
 Copy.Parent = EditorFrame
-Copy.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Copy.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 Copy.BorderSizePixel = 0
 Copy.Position = UDim2.new(0, 150, 0, 235)
 Copy.Size = UDim2.new(0, 40, 0, 35)
@@ -1322,7 +1321,7 @@ Copy.MouseLeave:Connect(function() CopyTooltip.Visible = false end)
 
 OpenConsole.Name = "OpenConsole"
 OpenConsole.Parent = EditorFrame
-OpenConsole.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+OpenConsole.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 OpenConsole.BorderSizePixel = 0
 OpenConsole.Position = UDim2.new(0, 410, 0, 235)
 OpenConsole.Size = UDim2.new(0, 40, 0, 35)
@@ -1361,7 +1360,7 @@ OpenConsole.MouseLeave:Connect(function() ConsoleTooltip.Visible = false end)
 
 Inject.Name = "Inject"
 Inject.Parent = EditorFrame
-Inject.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Inject.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 Inject.BorderSizePixel = 0
 Inject.Position = UDim2.new(0, 460, 0, 235)
 Inject.Size = UDim2.new(0, 40, 0, 35)
@@ -1398,47 +1397,6 @@ InjectTooltipText.ZIndex = 11
 Inject.MouseEnter:Connect(function() InjectTooltip.Visible = true end)
 Inject.MouseLeave:Connect(function() InjectTooltip.Visible = false end)
 
--- RE-EXECUTE BUTTON
-ReExecuteBtn.Name = "ReExecuteBtn"
-ReExecuteBtn.Parent = EditorFrame
-ReExecuteBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-ReExecuteBtn.BorderSizePixel = 0
-ReExecuteBtn.Position = UDim2.new(0, 505, 0, 235)
-ReExecuteBtn.Size = UDim2.new(0, 40, 0, 35)
-ReExecuteBtn.Image = "rbxassetid://119065240115720"
-ReExecuteBtn.ImageColor3 = Color3.fromRGB(200, 255, 200)
-
-Instance.new("UICorner", ReExecuteBtn).CornerRadius = UDim.new(0, 6)
-
--- ENHANCED: PC-style tooltip for Re-Execute
-local ReExecuteTooltip = Instance.new("Frame")
-ReExecuteTooltip.Name = "ReExecuteTooltip"
-ReExecuteTooltip.Parent = ReExecuteBtn
-ReExecuteTooltip.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-ReExecuteTooltip.BorderColor3 = Color3.fromRGB(60, 60, 60)
-ReExecuteTooltip.BorderSizePixel = 1
-ReExecuteTooltip.Position = UDim2.new(0, 0, 0, -28)
-ReExecuteTooltip.Size = UDim2.new(0, 70, 0, 22)
-ReExecuteTooltip.Visible = false
-ReExecuteTooltip.ZIndex = 10
-
-local ReExecuteTooltipCorner = Instance.new("UICorner")
-ReExecuteTooltipCorner.CornerRadius = UDim.new(0, 4)
-ReExecuteTooltipCorner.Parent = ReExecuteTooltip
-
-local ReExecuteTooltipText = Instance.new("TextLabel")
-ReExecuteTooltipText.Parent = ReExecuteTooltip
-ReExecuteTooltipText.BackgroundTransparency = 1
-ReExecuteTooltipText.Size = UDim2.new(1, 0, 1, 0)
-ReExecuteTooltipText.Font = Enum.Font.GothamSemibold
-ReExecuteTooltipText.Text = "Re-Execute"
-ReExecuteTooltipText.TextColor3 = Color3.fromRGB(200, 200, 200)
-ReExecuteTooltipText.TextSize = 11
-ReExecuteTooltipText.ZIndex = 11
-
-ReExecuteBtn.MouseEnter:Connect(function() ReExecuteTooltip.Visible = true end)
-ReExecuteBtn.MouseLeave:Connect(function() ReExecuteTooltip.Visible = false end)
-
 SearcherFrame.Name = "SearcherFrame"
 SearcherFrame.Parent = Frame
 SearcherFrame.BackgroundTransparency = 1
@@ -1465,7 +1423,7 @@ Instance.new("UICorner", SearchBox).CornerRadius = UDim.new(0, 6)
 
 SearchButton.Name = "SearchButton"
 SearchButton.Parent = SearcherFrame
-SearchButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+SearchButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 SearchButton.BorderSizePixel = 0
 SearchButton.Position = UDim2.new(0, 360, 0, 0)
 SearchButton.Size = UDim2.new(0, 35, 0, 30)
@@ -1483,7 +1441,7 @@ local function CreateFilterButton(name, position, apiParam, color)
 	local btn = Instance.new("TextButton")
 	btn.Name = name .. "Filter"
 	btn.Parent = FilterFrame
-	btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	btn.BorderSizePixel = 0
 	btn.Position = position
 	btn.Size = UDim2.new(0, 75, 0, 22)
@@ -1498,7 +1456,7 @@ local function CreateFilterButton(name, position, apiParam, color)
 	btn.MouseButton1Click:Connect(function()
 		for _, child in pairs(FilterFrame:GetChildren()) do
 			if child:IsA("TextButton") then
-				child.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+				child.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 				child.TextColor3 = Color3.fromRGB(200, 200, 200)
 			end
 		end
@@ -1526,7 +1484,7 @@ PageFrame.Size = UDim2.new(0, 545, 0, 30)
 
 PrevPageBtn.Name = "PrevPage"
 PrevPageBtn.Parent = PageFrame
-PrevPageBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+PrevPageBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 PrevPageBtn.BorderSizePixel = 0
 PrevPageBtn.Position = UDim2.new(0, 0, 0, 0)
 PrevPageBtn.Size = UDim2.new(0, 40, 0, 28)
@@ -1547,7 +1505,7 @@ PageLabel.TextSize = 14
 
 NextPageBtn.Name = "NextPage"
 NextPageBtn.Parent = PageFrame
-NextPageBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+NextPageBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 NextPageBtn.BorderSizePixel = 0
 NextPageBtn.Position = UDim2.new(0, 90, 0, 0)
 NextPageBtn.Size = UDim2.new(0, 40, 0, 28)
@@ -1598,7 +1556,7 @@ Instance.new("UICorner", GameSearchBox).CornerRadius = UDim.new(0, 6)
 
 GameSearchButton.Name = "GameSearchButton"
 GameSearchButton.Parent = GameScriptsFrame
-GameSearchButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+GameSearchButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 GameSearchButton.BorderSizePixel = 0
 GameSearchButton.Position = UDim2.new(0, 510, 0, 0)
 GameSearchButton.Size = UDim2.new(0, 35, 0, 30)
@@ -1648,7 +1606,7 @@ Instance.new("UICorner", UniSearchBox).CornerRadius = UDim.new(0, 6)
 
 UniSearchButton.Name = "UniSearchButton"
 UniSearchButton.Parent = UniversalScriptsFrame
-UniSearchButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+UniSearchButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 UniSearchButton.BorderSizePixel = 0
 UniSearchButton.Position = UDim2.new(0, 510, 0, 0)
 UniSearchButton.Size = UDim2.new(0, 35, 0, 30)
@@ -1703,7 +1661,7 @@ FontLabel.TextXAlignment = Enum.TextXAlignment.Left
 local FontDropdown = Instance.new("TextButton")
 FontDropdown.Name = "FontDropdown"
 FontDropdown.Parent = SettingsContainer
-FontDropdown.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+FontDropdown.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 FontDropdown.Position = UDim2.new(0, 0, 0, 30)
 FontDropdown.Size = UDim2.new(0, 200, 0, 35)
 FontDropdown.Font = Enum.Font.Gotham
@@ -1745,7 +1703,7 @@ local function CreateFontOption(name)
 	local btn = Instance.new("TextButton")
 	btn.Name = name .. "Option"
 	btn.Parent = FontOptionsFrame
-	btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	btn.Size = UDim2.new(1, 0, 0, 35)
 	btn.Font = Enum.Font.Gotham
 	btn.Text = "  " .. name
@@ -1857,10 +1815,19 @@ TextLabel.BackgroundTransparency = 1
 TextLabel.Position = UDim2.new(0, 15, 0, 0)
 TextLabel.Size = UDim2.new(0, 300, 0, 40)
 TextLabel.Font = Enum.Font.SourceSansBold
-TextLabel.Text = "ZZINSWARE | Script-hub Executor"
+TextLabel.Text = "ZZINSWARE"
 TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel.TextSize = 18
 TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Logo next to title
+local TitleLogo = Instance.new("ImageLabel")
+TitleLogo.Name = "TitleLogo"
+TitleLogo.Parent = Topbar
+TitleLogo.BackgroundTransparency = 1
+TitleLogo.Position = UDim2.new(0, 135, 0, 5)
+TitleLogo.Size = UDim2.new(0, 30, 0, 30)
+TitleLogo.Image = "rbxassetid://114216963895291"
 
 -- Version 4 Badge (Black/Grey/White) - ENHANCED VISIBILITY
 local VersionBadge = Instance.new("TextLabel")
@@ -1957,17 +1924,17 @@ UserInputService.InputBegan:Connect(function(Input, g)
 end)
 
 local function SwitchTab(tab)
-	InfoTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	InfoTab.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	InfoTab.ImageColor3 = Color3.fromRGB(150, 150, 150)
-	EditorTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	EditorTab.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	EditorTab.ImageColor3 = Color3.fromRGB(150, 150, 150)
-	SearcherTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	SearcherTab.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	SearcherTab.ImageColor3 = Color3.fromRGB(150, 150, 150)
-	GameScriptsTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	GameScriptsTab.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	GameScriptsTab.ImageColor3 = Color3.fromRGB(150, 150, 150)
-	UniversalScriptsTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	UniversalScriptsTab.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	UniversalScriptsTab.ImageColor3 = Color3.fromRGB(150, 150, 150)
-	SettingsTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	SettingsTab.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	SettingsTab.ImageColor3 = Color3.fromRGB(150, 150, 150)
 	
 	InfoFrame.Visible = false
@@ -2044,22 +2011,12 @@ Execute.MouseButton1Click:Connect(function()
 	end)
 	if not success then
 		ShowNotification("Execution Failed", tostring(err):sub(1, 100), "Error", 5)
-	end
-end)
-
--- RE-EXECUTE BUTTON FUNCTION
-ReExecuteBtn.MouseButton1Click:Connect(function()
-	if Settings.LastScript == "" then
-		ShowNotification("Error", "No previous script to re-execute", "Error", 3)
-		return
-	end
-	local success, err = pcall(function()
-		loadstring(Settings.LastScript)()
-	end)
-	if not success then
-		ShowNotification("Re-Execution Failed", tostring(err):sub(1, 100), "Error", 5)
 	else
-		ShowNotification("Success", "Script re-executed successfully", "Success", 2)
+		game:GetService("StarterGui"):SetCore("SendNotification", {
+			Title = "[🔔] ZZINSWARE",
+			Text = "Thanks for Using ZZINS Script-Hub.",
+			Duration = 5
+		})
 	end
 end)
 
@@ -2197,6 +2154,12 @@ ExecuteFileBtn.MouseButton1Click:Connect(function()
 	end)
 	if not success then
 		ShowNotification("Execution Failed", tostring(err):sub(1, 100), "Error", 5)
+	else
+		game:GetService("StarterGui"):SetCore("SendNotification", {
+			Title = "[🔔] ZZINSWARE",
+			Text = "Thanks for Using ZZINS Script-Hub.",
+			Duration = 5
+		})
 	end
 end)
 
@@ -2399,7 +2362,7 @@ local function CreateScriptButton(data, parent)
 	ExecBtn.Name = "Execute"
 	ExecBtn.Size = UDim2.new(0, 30, 0, 30)
 	ExecBtn.Position = UDim2.new(1, -70, 0, 15)
-	ExecBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+	ExecBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	ExecBtn.Image = "rbxassetid://119065240115720"
 	ExecBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
 	ExecBtn.Parent = Btn
@@ -2437,32 +2400,38 @@ local function CreateScriptButton(data, parent)
 		ExecBtnTooltip.Visible = true
 	end)
 	ExecBtn.MouseLeave:Connect(function()
-		ExecBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		ExecBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 		ExecBtnTooltip.Visible = false
 	end)
 	
 	ExecBtn.MouseButton1Click:Connect(function()
 		if data.code and data.code ~= "" then
-			Source.Text = data.code
-			Settings.LastScript = data.code
-			SwitchTab("Editor")
 			local success, err = pcall(function()
 				loadstring(data.code)()
 			end)
 			if not success then
 				ShowNotification("Execution Failed", tostring(err):sub(1, 100), "Error", 5)
+			else
+				game:GetService("StarterGui"):SetCore("SendNotification", {
+					Title = "[🔔] ZZINSWARE",
+					Text = "Thanks for Using ZZINS Script-Hub.",
+					Duration = 5
+				})
 			end
 		elseif data.slug ~= "" then
 			local details = GetScriptDetails(data.slug)
 			if details and details.script then
-				Source.Text = details.script
-				Settings.LastScript = details.script
-				SwitchTab("Editor")
 				local success, err = pcall(function()
 					loadstring(details.script)()
 				end)
 				if not success then
 					ShowNotification("Execution Failed", tostring(err):sub(1, 100), "Error", 5)
+				else
+					game:GetService("StarterGui"):SetCore("SendNotification", {
+						Title = "[🔔] ZZINSWARE",
+						Text = "Thanks for Using ZZINS Script-Hub.",
+						Duration = 5
+					})
 				end
 			else
 				ShowNotification("Error", "Failed to load script details", "Error", 3)
@@ -2476,7 +2445,7 @@ local function CreateScriptButton(data, parent)
 	CopyBtn.Name = "Copy"
 	CopyBtn.Size = UDim2.new(0, 30, 0, 30)
 	CopyBtn.Position = UDim2.new(1, -35, 0, 15)
-	CopyBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	CopyBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	CopyBtn.Image = "rbxassetid://127935026620905"
 	CopyBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
 	CopyBtn.Parent = Btn
@@ -2514,7 +2483,7 @@ local function CreateScriptButton(data, parent)
 		CopyBtnTooltip.Visible = true
 	end)
 	CopyBtn.MouseLeave:Connect(function()
-		CopyBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+		CopyBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 		CopyBtnTooltip.Visible = false
 	end)
 	
@@ -2539,7 +2508,7 @@ local function CreateScriptButton(data, parent)
 	ViewBtn.Name = "View"
 	ViewBtn.Size = UDim2.new(0, 30, 0, 30)
 	ViewBtn.Position = UDim2.new(1, -70, 0, 50)
-	ViewBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	ViewBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	ViewBtn.Image = "rbxassetid://11713325834"
 	ViewBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
 	ViewBtn.Parent = Btn
@@ -2577,7 +2546,7 @@ local function CreateScriptButton(data, parent)
 		ViewBtnTooltip.Visible = true
 	end)
 	ViewBtn.MouseLeave:Connect(function()
-		ViewBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+		ViewBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 		ViewBtnTooltip.Visible = false
 	end)
 	
@@ -2788,7 +2757,7 @@ local function CreateGameButton(data)
 	local ExecBtn = Instance.new("ImageButton")
 	ExecBtn.Size = UDim2.new(0, 35, 0, 35)
 	ExecBtn.Position = UDim2.new(1, -45, 0, 7)
-	ExecBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	ExecBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	ExecBtn.Image = "rbxassetid://119065240115720"
 	ExecBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
 	ExecBtn.Parent = Btn
@@ -2826,7 +2795,7 @@ local function CreateGameButton(data)
 		ExecBtnTooltip.Visible = true
 	end)
 	ExecBtn.MouseLeave:Connect(function()
-		ExecBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+		ExecBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 		ExecBtnTooltip.Visible = false
 	end)
 	
@@ -2836,6 +2805,11 @@ local function CreateGameButton(data)
 		end)
 		if success then
 			ShowNotification("Success", "Executed: " .. data.name, "Success", 2)
+			game:GetService("StarterGui"):SetCore("SendNotification", {
+				Title = "[🔔] ZZINSWARE",
+				Text = "Thanks for Using ZZINS Script-Hub.",
+				Duration = 5
+			})
 		else
 			ShowNotification("Execution Failed", tostring(err):sub(1, 100), "Error", 5)
 		end
@@ -2867,7 +2841,7 @@ local function CreateUniButton(data)
 	local ExecBtn = Instance.new("ImageButton")
 	ExecBtn.Size = UDim2.new(0, 35, 0, 35)
 	ExecBtn.Position = UDim2.new(1, -45, 0, 7)
-	ExecBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	ExecBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	ExecBtn.Image = "rbxassetid://119065240115720"
 	ExecBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
 	ExecBtn.Parent = Btn
@@ -2905,7 +2879,7 @@ local function CreateUniButton(data)
 		ExecBtnTooltip.Visible = true
 	end)
 	ExecBtn.MouseLeave:Connect(function()
-		ExecBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+		ExecBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 		ExecBtnTooltip.Visible = false
 	end)
 	
@@ -2915,6 +2889,11 @@ local function CreateUniButton(data)
 		end)
 		if success then
 			ShowNotification("Success", "Executed: " .. data.name, "Success", 2)
+			game:GetService("StarterGui"):SetCore("SendNotification", {
+				Title = "[🔔] ZZINSWARE",
+				Text = "Thanks for Using ZZINS Script-Hub.",
+				Duration = 5
+			})
 		else
 			ShowNotification("Execution Failed", tostring(err):sub(1, 100), "Error", 5)
 		end
