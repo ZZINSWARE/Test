@@ -1,3 +1,6 @@
+-- ZZINSWARE V4.5: Enhanced Script Hub with Advanced Customization
+-- Features: Discord Integration, Auto-Update Stats, Lua Highlighter, Version Badge, Credits, System Monitor, Error Notifications, Settings, Themes, Config System
+
 local highlighter = {}
 local keywords = {
 	lua = {
@@ -47,9 +50,11 @@ local operatorsSet = createKeywordSet(keywords.operators)
 
 local function getHighlight(tokens, index)
 	local token = tokens[index]
+
 	if colors[token .. "_color"] then
 		return colors[token .. "_color"]
 	end
+
 	if tonumber(token) then
 		return colors.numbers
 	elseif token == "nil" then
@@ -67,43 +72,56 @@ local function getHighlight(tokens, index)
 	elseif token == "true" or token == "false" then
 		return colors.boolean
 	end
+
 	if tokens[index + 1] == "(" then
 		if tokens[index - 1] == ":" then
 			return colors.self_call
 		end
+
 		return colors.call
 	end
+
 	if tokens[index - 1] == "." then
 		if tokens[index - 2] == "Enum" then
 			return colors.rbx
 		end
+
 		return colors.local_property
 	end
 end
 
+-- OPTIMIZED: Support for thousands of characters with chunking
 function highlighter.run(source)
 	local maxLength = 50000
 	local processSource = source
+	
 	if #source > maxLength then
 		processSource = source:sub(1, maxLength)
 	end
+	
 	local tokens = {}
 	local currentToken = ""
+	
 	local inString = false
 	local inComment = false
 	local commentPersist = false
+	
 	for i = 1, #processSource do
 		local character = processSource:sub(i, i)
+		
 		if inComment then
 			if character == "\n" and not commentPersist then
 				table.insert(tokens, currentToken)
 				table.insert(tokens, character)
 				currentToken = ""
+				
 				inComment = false
 			elseif processSource:sub(i - 1, i) == "]]" and commentPersist then
 				currentToken = currentToken .. "]"
+				
 				table.insert(tokens, currentToken)
 				currentToken = ""
+				
 				inComment = false
 				commentPersist = false
 			else
@@ -139,30 +157,43 @@ function highlighter.run(source)
 			end
 		end
 	end
+	
 	table.insert(tokens, currentToken)
+
 	local highlighted = {}
+	
 	for i, token in ipairs(tokens) do
 		local highlight = getHighlight(tokens, i)
+
 		if highlight then
 			local syntax = string.format("<font color = \"#%s\">%s</font>", highlight:ToHex(), token:gsub("<", "&lt;"):gsub(">", "&gt;"))
+			
 			table.insert(highlighted, syntax)
 		else
 			table.insert(highlighted, token)
 		end
 	end
+
 	return table.concat(highlighted)
 end
 
+-- ENHANCED SETTINGS SYSTEM
 local Settings = {
 	Font = "Code",
 	SyntaxHighlighting = true,
 	LastScript = "",
+	-- NEW: Theme Settings
+	Theme = "Dark",
 	Transparency = 0,
 	AnimationSpeed = 1.0,
 	RoundedCorners = 6,
+	-- NEW: Performance Settings
 	FPSCap = 60,
 	DisableAnimations = false,
 	DevMode = false,
+	-- NEW: UI Settings
+	WindowTransparency = 0.05,
+	BlurEnabled = true
 }
 
 local FontOptions = {
@@ -174,11 +205,204 @@ local FontOptions = {
 	["SourceSans"] = Enum.Font.SourceSans
 }
 
+-- NEW: Theme Definitions
+local Themes = {
+	Dark = {
+		Background = Color3.fromRGB(20, 20, 20),
+		Frame = Color3.fromRGB(30, 30, 30),
+		Accent = Color3.fromRGB(60, 60, 60),
+		Text = Color3.fromRGB(255, 255, 255),
+		SubText = Color3.fromRGB(180, 180, 180),
+		Highlight = Color3.fromRGB(80, 80, 80)
+	},
+	Light = {
+		Background = Color3.fromRGB(240, 240, 240),
+		Frame = Color3.fromRGB(220, 220, 220),
+		Accent = Color3.fromRGB(200, 200, 200),
+		Text = Color3.fromRGB(30, 30, 30),
+		SubText = Color3.fromRGB(80, 80, 80),
+		Highlight = Color3.fromRGB(180, 180, 180)
+	},
+	Midnight = {
+		Background = Color3.fromRGB(10, 10, 25),
+		Frame = Color3.fromRGB(20, 20, 40),
+		Accent = Color3.fromRGB(40, 40, 80),
+		Text = Color3.fromRGB(200, 200, 255),
+		SubText = Color3.fromRGB(150, 150, 200),
+		Highlight = Color3.fromRGB(60, 60, 120)
+	},
+	Red = {
+		Background = Color3.fromRGB(30, 10, 10),
+		Frame = Color3.fromRGB(45, 15, 15),
+		Accent = Color3.fromRGB(80, 30, 30),
+		Text = Color3.fromRGB(255, 200, 200),
+		SubText = Color3.fromRGB(200, 150, 150),
+		Highlight = Color3.fromRGB(120, 40, 40)
+	},
+	Green = {
+		Background = Color3.fromRGB(10, 25, 10),
+		Frame = Color3.fromRGB(15, 40, 15),
+		Accent = Color3.fromRGB(30, 80, 30),
+		Text = Color3.fromRGB(200, 255, 200),
+		SubText = Color3.fromRGB(150, 200, 150),
+		Highlight = Color3.fromRGB(40, 120, 40)
+	}
+}
+
+-- NEW: Configuration System
 local ConfigSystem = {
 	SavedConfigs = {},
 	CurrentConfig = "Default"
 }
 
+-- ENHANCED NOTIFICATION SYSTEM
+local function ShowNotification(title, message, notifType, duration)
+	if Settings.DisableAnimations then
+		duration = 0.1
+	end
+	
+	duration = duration or 3
+	local parent = Windows11UI
+	
+	local NotifFrame = Instance.new("Frame")
+	NotifFrame.Name = "Notification"
+	NotifFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+	NotifFrame.BorderSizePixel = 0
+	NotifFrame.Position = UDim2.new(0.5, -200, 0, -100)
+	NotifFrame.Size = UDim2.new(0, 400, 0, 70)
+	NotifFrame.ZIndex = 1000
+	NotifFrame.Parent = parent
+	
+	-- Apply transparency
+	NotifFrame.BackgroundTransparency = Settings.Transparency
+	
+	local NotifCorner = Instance.new("UICorner")
+	NotifCorner.CornerRadius = UDim.new(0, Settings.RoundedCorners)
+	NotifCorner.Parent = NotifFrame
+	
+	local NotifStroke = Instance.new("UIStroke")
+	NotifStroke.Color = notifType == "Error" and Color3.fromRGB(255, 50, 50) or Color3.fromRGB(50, 150, 255)
+	NotifStroke.Thickness = 2
+	NotifStroke.Parent = NotifFrame
+	
+	-- Gradient background
+	local NotifGradient = Instance.new("UIGradient")
+	NotifGradient.Color = ColorSequence.new({
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 30, 30)),
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 20, 20))
+	})
+	NotifGradient.Rotation = 90
+	NotifGradient.Parent = NotifFrame
+	
+	-- Icon
+	local NotifIcon = Instance.new("ImageLabel")
+	NotifIcon.Name = "Icon"
+	NotifIcon.Parent = NotifFrame
+	NotifIcon.BackgroundTransparency = 1
+	NotifIcon.Position = UDim2.new(0, 15, 0.5, -20)
+	NotifIcon.Size = UDim2.new(0, 40, 0, 40)
+	NotifIcon.Image = notifType == "Error" and "rbxassetid://137703776500811" or "rbxassetid://9405926389"
+	NotifIcon.ImageColor3 = notifType == "Error" and Color3.fromRGB(255, 100, 100) or Color3.fromRGB(100, 200, 255)
+	NotifIcon.ZIndex = 1001
+	
+	-- Title
+	local NotifTitle = Instance.new("TextLabel")
+	NotifTitle.Name = "Title"
+	NotifTitle.Parent = NotifFrame
+	NotifTitle.BackgroundTransparency = 1
+	NotifTitle.Position = UDim2.new(0, 65, 0, 8)
+	NotifTitle.Size = UDim2.new(1, -75, 0, 22)
+	NotifTitle.Font = Enum.Font.GothamBold
+	NotifTitle.Text = title
+	NotifTitle.TextColor3 = notifType == "Error" and Color3.fromRGB(255, 100, 100) or Color3.fromRGB(255, 255, 255)
+	NotifTitle.TextSize = 14
+	NotifTitle.TextXAlignment = Enum.TextXAlignment.Left
+	NotifTitle.ZIndex = 1001
+	
+	-- Message
+	local NotifMessage = Instance.new("TextLabel")
+	NotifMessage.Name = "Message"
+	NotifMessage.Parent = NotifFrame
+	NotifMessage.BackgroundTransparency = 1
+	NotifMessage.Position = UDim2.new(0, 65, 0, 32)
+	NotifMessage.Size = UDim2.new(1, -75, 0, 30)
+	NotifMessage.Font = Enum.Font.Gotham
+	NotifMessage.Text = message
+	NotifMessage.TextColor3 = Color3.fromRGB(180, 180, 180)
+	NotifMessage.TextSize = 12
+	NotifMessage.TextXAlignment = Enum.TextXAlignment.Left
+	NotifMessage.TextWrapped = true
+	NotifMessage.ZIndex = 1001
+	
+	-- Close button
+	local CloseBtn = Instance.new("TextButton")
+	CloseBtn.Name = "Close"
+	CloseBtn.Parent = NotifFrame
+	CloseBtn.BackgroundTransparency = 1
+	CloseBtn.Position = UDim2.new(1, -25, 0, 5)
+	CloseBtn.Size = UDim2.new(0, 20, 0, 20)
+	CloseBtn.Font = Enum.Font.GothamBold
+	CloseBtn.Text = "×"
+	CloseBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
+	CloseBtn.TextSize = 20
+	CloseBtn.ZIndex = 1001
+	
+	-- Animate in
+	local tweenService = game:GetService("TweenService")
+	local animSpeed = Settings.AnimationSpeed
+	
+	if not Settings.DisableAnimations then
+		local slideIn = tweenService:Create(NotifFrame, TweenInfo.new(0.4 * animSpeed, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+			Position = UDim2.new(0.5, -200, 0, 20)
+		})
+		slideIn:Play()
+		
+		-- Error shake effect
+		if notifType == "Error" then
+			local shake1 = tweenService:Create(NotifFrame, TweenInfo.new(0.05 * animSpeed), {Position = UDim2.new(0.5, -195, 0, 20)})
+			local shake2 = tweenService:Create(NotifFrame, TweenInfo.new(0.05 * animSpeed), {Position = UDim2.new(0.5, -200, 0, 20)})
+			local shake3 = tweenService:Create(NotifFrame, TweenInfo.new(0.05 * animSpeed), {Position = UDim2.new(0.5, -205, 0, 20)})
+			local shake4 = tweenService:Create(NotifFrame, TweenInfo.new(0.05 * animSpeed), {Position = UDim2.new(0.5, -200, 0, 20)})
+			
+			slideIn.Completed:Connect(function()
+				shake1:Play()
+				shake1.Completed:Connect(function()
+					shake2:Play()
+					shake2.Completed:Connect(function()
+						shake3:Play()
+						shake3.Completed:Connect(function()
+							shake4:Play()
+						end)
+					end)
+				end)
+			end)
+		end
+	else
+		NotifFrame.Position = UDim2.new(0.5, -200, 0, 20)
+	end
+	
+	-- Auto remove
+	local function removeNotif()
+		if not Settings.DisableAnimations then
+			local slideOut = tweenService:Create(NotifFrame, TweenInfo.new(0.3 * animSpeed, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {
+				Position = UDim2.new(0.5, -200, 0, -100)
+			})
+			slideOut:Play()
+			slideOut.Completed:Connect(function()
+				NotifFrame:Destroy()
+			end)
+		else
+			NotifFrame:Destroy()
+		end
+	end
+	
+	CloseBtn.MouseButton1Click:Connect(removeNotif)
+	delay(duration, removeNotif)
+	
+	return NotifFrame
+end
+
+-- MAIN UI CREATION
 local Windows11UI = Instance.new("ScreenGui")
 local Topbar = Instance.new("Frame")
 local UICorner = Instance.new("UICorner")
@@ -246,133 +470,13 @@ local ExecuteFileBtn = Instance.new("ImageButton")
 local CloseKeybind = Instance.new("TextLabel")
 local TextLabel = Instance.new("TextLabel")
 
-local function ShowNotification(title, message, notifType, duration)
-	if Settings.DisableAnimations then
-		duration = 0.1
-	end
-	duration = duration or 3
-	local parent = Windows11UI
-	local NotifFrame = Instance.new("Frame")
-	NotifFrame.Name = "Notification"
-	NotifFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-	NotifFrame.BorderSizePixel = 0
-	NotifFrame.Position = UDim2.new(0.5, -200, 0, -100)
-	NotifFrame.Size = UDim2.new(0, 400, 0, 70)
-	NotifFrame.ZIndex = 1000
-	NotifFrame.Parent = parent
-	NotifFrame.BackgroundTransparency = Settings.Transparency
-	local NotifCorner = Instance.new("UICorner")
-	NotifCorner.CornerRadius = UDim.new(0, Settings.RoundedCorners)
-	NotifCorner.Parent = NotifFrame
-	local NotifStroke = Instance.new("UIStroke")
-	NotifStroke.Color = notifType == "Error" and Color3.fromRGB(255, 50, 50) or Color3.fromRGB(50, 150, 255)
-	NotifStroke.Thickness = 2
-	NotifStroke.Parent = NotifFrame
-	local NotifGradient = Instance.new("UIGradient")
-	NotifGradient.Color = ColorSequence.new({
-		ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 30, 30)),
-		ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 20, 20))
-	})
-	NotifGradient.Rotation = 90
-	NotifGradient.Parent = NotifFrame
-	local NotifIcon = Instance.new("ImageLabel")
-	NotifIcon.Name = "Icon"
-	NotifIcon.Parent = NotifFrame
-	NotifIcon.BackgroundTransparency = 1
-	NotifIcon.Position = UDim2.new(0, 15, 0.5, -20)
-	NotifIcon.Size = UDim2.new(0, 40, 0, 40)
-	NotifIcon.Image = notifType == "Error" and "rbxassetid://137703776500811" or "rbxassetid://9405926389"
-	NotifIcon.ImageColor3 = notifType == "Error" and Color3.fromRGB(255, 100, 100) or Color3.fromRGB(100, 200, 255)
-	NotifIcon.ZIndex = 1001
-	local NotifTitle = Instance.new("TextLabel")
-	NotifTitle.Name = "Title"
-	NotifTitle.Parent = NotifFrame
-	NotifTitle.BackgroundTransparency = 1
-	NotifTitle.Position = UDim2.new(0, 65, 0, 8)
-	NotifTitle.Size = UDim2.new(1, -75, 0, 22)
-	NotifTitle.Font = Enum.Font.GothamBold
-	NotifTitle.Text = title
-	NotifTitle.TextColor3 = notifType == "Error" and Color3.fromRGB(255, 100, 100) or Color3.fromRGB(255, 255, 255)
-	NotifTitle.TextSize = 14
-	NotifTitle.TextXAlignment = Enum.TextXAlignment.Left
-	NotifTitle.ZIndex = 1001
-	local NotifMessage = Instance.new("TextLabel")
-	NotifMessage.Name = "Message"
-	NotifMessage.Parent = NotifFrame
-	NotifMessage.BackgroundTransparency = 1
-	NotifMessage.Position = UDim2.new(0, 65, 0, 32)
-	NotifMessage.Size = UDim2.new(1, -75, 0, 30)
-	NotifMessage.Font = Enum.Font.Gotham
-	NotifMessage.Text = message
-	NotifMessage.TextColor3 = Color3.fromRGB(180, 180, 180)
-	NotifMessage.TextSize = 12
-	NotifMessage.TextXAlignment = Enum.TextXAlignment.Left
-	NotifMessage.TextWrapped = true
-	NotifMessage.ZIndex = 1001
-	local CloseBtn = Instance.new("TextButton")
-	CloseBtn.Name = "Close"
-	CloseBtn.Parent = NotifFrame
-	CloseBtn.BackgroundTransparency = 1
-	CloseBtn.Position = UDim2.new(1, -25, 0, 5)
-	CloseBtn.Size = UDim2.new(0, 20, 0, 20)
-	CloseBtn.Font = Enum.Font.GothamBold
-	CloseBtn.Text = "×"
-	CloseBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
-	CloseBtn.TextSize = 20
-	CloseBtn.ZIndex = 1001
-	local tweenService = game:GetService("TweenService")
-	local animSpeed = Settings.AnimationSpeed
-	if not Settings.DisableAnimations then
-		local slideIn = tweenService:Create(NotifFrame, TweenInfo.new(0.4 * animSpeed, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-			Position = UDim2.new(0.5, -200, 0, 20)
-		})
-		slideIn:Play()
-		if notifType == "Error" then
-			local shake1 = tweenService:Create(NotifFrame, TweenInfo.new(0.05 * animSpeed), {Position = UDim2.new(0.5, -195, 0, 20)})
-			local shake2 = tweenService:Create(NotifFrame, TweenInfo.new(0.05 * animSpeed), {Position = UDim2.new(0.5, -200, 0, 20)})
-			local shake3 = tweenService:Create(NotifFrame, TweenInfo.new(0.05 * animSpeed), {Position = UDim2.new(0.5, -205, 0, 20)})
-			local shake4 = tweenService:Create(NotifFrame, TweenInfo.new(0.05 * animSpeed), {Position = UDim2.new(0.5, -200, 0, 20)})
-			slideIn.Completed:Connect(function()
-				shake1:Play()
-				shake1.Completed:Connect(function()
-					shake2:Play()
-					shake2.Completed:Connect(function()
-						shake3:Play()
-						shake3.Completed:Connect(function()
-							shake4:Play()
-						end)
-					end)
-				end)
-			end)
-		end
-	else
-		NotifFrame.Position = UDim2.new(0.5, -200, 0, 20)
-	end
-	local function removeNotif()
-		if not Settings.DisableAnimations then
-			local slideOut = tweenService:Create(NotifFrame, TweenInfo.new(0.3 * animSpeed, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {
-				Position = UDim2.new(0.5, -200, 0, -100)
-			})
-			slideOut:Play()
-			slideOut.Completed:Connect(function()
-				NotifFrame:Destroy()
-			end)
-		else
-			NotifFrame:Destroy()
-		end
-	end
-	CloseBtn.MouseButton1Click:Connect(removeNotif)
-	delay(duration, removeNotif)
-	return NotifFrame
-end
-
 Windows11UI.Name = "Windows11UI"
 Windows11UI.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 Windows11UI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 Topbar.Name = "Topbar"
 Topbar.Parent = Windows11UI
-Topbar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+Topbar.BackgroundColor3 = Themes[Settings.Theme].Background
 Topbar.BorderSizePixel = 0
 Topbar.Position = UDim2.new(0.279261738, 0, 0.19421488, 0)
 Topbar.Size = UDim2.new(0, 700, 0, 56)
@@ -381,6 +485,7 @@ Topbar.BackgroundTransparency = Settings.Transparency
 UICorner.Parent = Topbar
 UICorner.CornerRadius = UDim.new(0, Settings.RoundedCorners)
 
+-- ADDED: UI Gradient for Topbar
 local TopbarGradient = Instance.new("UIGradient")
 TopbarGradient.Parent = Topbar
 TopbarGradient.Color = ColorSequence.new({
@@ -391,7 +496,7 @@ TopbarGradient.Color = ColorSequence.new({
 TopbarGradient.Rotation = 45
 
 Frame.Parent = Topbar
-Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Frame.BackgroundColor3 = Themes[Settings.Theme].Frame
 Frame.BorderSizePixel = 0
 Frame.Position = UDim2.new(0, 0, 0.65956223, 0)
 Frame.Size = UDim2.new(0, 700, 0, 320)
@@ -400,6 +505,7 @@ Frame.BackgroundTransparency = Settings.Transparency
 UICorner_2.Parent = Frame
 UICorner_2.CornerRadius = UDim.new(0, Settings.RoundedCorners)
 
+-- ADDED: UI Gradient for Main Frame
 local FrameGradient = Instance.new("UIGradient")
 FrameGradient.Parent = Frame
 FrameGradient.Color = ColorSequence.new({
@@ -409,6 +515,7 @@ FrameGradient.Color = ColorSequence.new({
 })
 FrameGradient.Rotation = 90
 
+-- MODIFIED: Files Frame with darker blend
 FilesFrame.Name = "FilesFrame"
 FilesFrame.Parent = Frame
 FilesFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
@@ -478,6 +585,7 @@ FileNameBox.TextXAlignment = Enum.TextXAlignment.Left
 
 Instance.new("UICorner", FileNameBox).CornerRadius = UDim.new(0, math.min(4, Settings.RoundedCorners))
 
+-- MODIFIED: File buttons with darker colors
 SaveFileBtn.Name = "SaveFileBtn"
 SaveFileBtn.Parent = FilesFrame
 SaveFileBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
@@ -487,6 +595,7 @@ SaveFileBtn.Image = "rbxassetid://11768914234"
 
 Instance.new("UICorner", SaveFileBtn).CornerRadius = UDim.new(0, math.min(6, Settings.RoundedCorners))
 
+-- ENHANCED: PC-style tooltip for Save
 local SaveTooltip = Instance.new("Frame")
 SaveTooltip.Name = "SaveTooltip"
 SaveTooltip.Parent = SaveFileBtn
@@ -524,6 +633,7 @@ LoadFileBtn.Image = "rbxassetid://85502241059648"
 
 Instance.new("UICorner", LoadFileBtn).CornerRadius = UDim.new(0, math.min(6, Settings.RoundedCorners))
 
+-- ENHANCED: PC-style tooltip for Load
 local LoadTooltip = Instance.new("Frame")
 LoadTooltip.Name = "LoadTooltip"
 LoadTooltip.Parent = LoadFileBtn
@@ -561,6 +671,7 @@ RenameFileBtn.Image = "rbxassetid://88134306391339"
 
 Instance.new("UICorner", RenameFileBtn).CornerRadius = UDim.new(0, math.min(6, Settings.RoundedCorners))
 
+-- ENHANCED: PC-style tooltip for Rename
 local RenameTooltip = Instance.new("Frame")
 RenameTooltip.Name = "RenameTooltip"
 RenameTooltip.Parent = RenameFileBtn
@@ -598,6 +709,7 @@ DeleteFileBtn.Image = "rbxassetid://76624782632416"
 
 Instance.new("UICorner", DeleteFileBtn).CornerRadius = UDim.new(0, math.min(6, Settings.RoundedCorners))
 
+-- ENHANCED: PC-style tooltip for Delete
 local DeleteTooltip = Instance.new("Frame")
 DeleteTooltip.Name = "DeleteTooltip"
 DeleteTooltip.Parent = DeleteFileBtn
@@ -635,6 +747,7 @@ ExecuteFileBtn.Image = "rbxassetid://119065240115720"
 
 Instance.new("UICorner", ExecuteFileBtn).CornerRadius = UDim.new(0, math.min(6, Settings.RoundedCorners))
 
+-- ENHANCED: PC-style tooltip for Execute
 local ExecTooltip = Instance.new("Frame")
 ExecTooltip.Name = "ExecTooltip"
 ExecTooltip.Parent = ExecuteFileBtn
@@ -752,6 +865,7 @@ InfoBackground.ScaleType = Enum.ScaleType.Crop
 
 Instance.new("UICorner", InfoBackground).CornerRadius = UDim.new(0, math.min(6, Settings.RoundedCorners))
 
+-- ENHANCED INFO LAYOUT - Better organized with more details
 local InfoContainer = Instance.new("Frame")
 InfoContainer.Name = "InfoContainer"
 InfoContainer.Parent = InfoFrame
@@ -809,6 +923,7 @@ end
 local player = game.Players.LocalPlayer
 local gameInfo = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId)
 
+-- Top Row - Server & User (Side by Side)
 local serverId = game.JobId ~= "" and game.JobId:sub(1, 6) .. "..." or "Private"
 local serverText = "ID: " .. serverId .. "\nPlayers: " .. #game.Players:GetPlayers() .. "/" .. game.Players.MaxPlayers
 local serverLabel = CreateCompactInfoWithImage("Server Info", serverText, 0, 0, 0.48, 0.15, "18189876016")
@@ -816,16 +931,20 @@ local serverLabel = CreateCompactInfoWithImage("Server Info", serverText, 0, 0, 
 local userText = "Name: " .. player.Name .. "\nDisplay: " .. player.DisplayName .. "\nID: " .. player.UserId
 local userLabel = CreateCompactInfoWithImage("User Info", userText, 0.52, 0, 0.48, 0.15, "15164135517")
 
+-- Second Row - Game & Executor Info
 local gameText = gameInfo.Name:sub(1, 25) .. (gameInfo.Name:len() > 25 and "..." or "") .. "\nPlace ID: " .. game.PlaceId
 local gameLabel = CreateCompactInfoWithImage("Game", gameText, 0, 0.17, 0.48, 0.15, "92416323895079")
 
+-- NEW: Executor Info Section
 local executorName = identifyexecutor and identifyexecutor() or "Unknown"
 local executorText = "Name: " .. executorName .. "\nVersion: V4.5 Enhanced"
 local executorLabel = CreateCompactInfoWithImage("Executor", executorText, 0.52, 0.17, 0.48, 0.15, "102551636383591")
 
+-- Third Row - Time & Date
 local timeLabel = CreateCompactInfoWithImage("Time Zone", "Loading...", 0, 0.34, 0.48, 0.15, "100658411712215")
 local dateLabel = CreateCompactInfoWithImage("Date", "Loading...", 0.52, 0.34, 0.48, 0.15, "100658411712215")
 
+-- ADDED: System Stats Row (FPS, Ping, Memory, CPU, GPU)
 local function CreateSystemStat(name, posX, imageId)
     local section = Instance.new("Frame")
     section.Name = name .. "Stat"
@@ -871,12 +990,14 @@ local function CreateSystemStat(name, posX, imageId)
     return valueLabel
 end
 
+-- Create system stat boxes
 local fpsLabel = CreateSystemStat("FPS", 0, "80514302796622")
 local pingLabel = CreateSystemStat("Ping", 0.20, "73804197684672")
 local memoryLabel = CreateSystemStat("Memory", 0.40, "6934996829")
 local cpuLabel = CreateSystemStat("CPU", 0.60, "83732980750188")
 local gpuLabel = CreateSystemStat("GPU", 0.80, "120144751660153")
 
+-- NEW: Hardware Info Section
 local hardwareSection = Instance.new("Frame")
 hardwareSection.Name = "HardwareSection"
 hardwareSection.Parent = InfoContainer
@@ -919,13 +1040,19 @@ hardwareValue.TextSize = 10
 hardwareValue.TextXAlignment = Enum.TextXAlignment.Left
 hardwareValue.TextWrapped = true
 
+-- Auto Update Stats every frame
 local RunService = game:GetService("RunService")
 local Stats = game:GetService("Stats")
 
 local function updateStats()
+    -- Update Server Info
     local currentServerId = game.JobId ~= "" and game.JobId:sub(1, 6) .. "..." or "Private"
     serverLabel.Text = "ID: " .. currentServerId .. "\nPlayers: " .. #game.Players:GetPlayers() .. "/" .. game.Players.MaxPlayers
+    
+    -- Update User Info
     userLabel.Text = "Name: " .. player.Name .. "\nDisplay: " .. player.DisplayName .. "\nID: " .. player.UserId
+    
+    -- Update Game Info
     local success, currentGameInfo = pcall(function()
         return game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId)
     end)
@@ -933,19 +1060,31 @@ local function updateStats()
         local currentGameText = currentGameInfo.Name:sub(1, 25) .. (currentGameInfo.Name:len() > 25 and "..." or "") .. "\nPlace ID: " .. game.PlaceId
         gameLabel.Text = currentGameText
     end
+    
+    -- Update Executor Info
     local currentExecutor = identifyexecutor and identifyexecutor() or "Unknown"
     executorLabel.Text = "Name: " .. currentExecutor .. "\nVersion: V4.5 Enhanced"
+    
+    -- Update Time
     local timeZone = os.date("%Z") or "Unknown"
     local localTime = os.date("%I:%M:%S %p")
     timeLabel.Text = "Zone: " .. timeZone .. "\nTime: " .. localTime
+    
+    -- Update Date
     local dateStr = os.date("%Y-%m-%d") or "Unknown"
     local dayOfWeek = os.date("%A") or "Unknown"
     dateLabel.Text = dayOfWeek .. "\n" .. dateStr
+    
+    -- Update System Stats
     fpsLabel.Text = tostring(math.floor(Stats.Workspace.Heartbeat:GetValue()))
     pingLabel.Text = tostring(math.floor(Stats.Network.ServerStatsItem["Data Ping"]:GetValue())) .. " ms"
     memoryLabel.Text = tostring(math.floor(Stats:GetTotalMemoryUsageMb())) .. " MB"
+    
+    -- CPU (approximation)
     local cpuUsage = math.floor((Stats.Workspace.Heartbeat:GetValue() / 60) * 100)
     cpuLabel.Text = tostring(cpuUsage) .. "%"
+    
+    -- GPU (approximation)
     local gpuTime = Stats.Workspace.Heartbeat:GetValue()
     gpuLabel.Text = tostring(math.floor(gpuTime)) .. " ms"
 end
@@ -953,6 +1092,7 @@ end
 updateStats()
 RunService.Heartbeat:Connect(updateStats)
 
+-- Bottom - Discord (Full Width, Compact) with Thumbnail
 local DiscordSection = Instance.new("Frame")
 DiscordSection.Name = "DiscordSection"
 DiscordSection.Parent = InfoContainer
@@ -961,6 +1101,7 @@ DiscordSection.Position = UDim2.new(0, 0, 0.80, 0)
 DiscordSection.Size = UDim2.new(1, 0, 0.18, 0)
 Instance.new("UICorner", DiscordSection).CornerRadius = UDim.new(0, math.min(6, Settings.RoundedCorners))
 
+-- Discord Thumbnail (Left side)
 local DiscordThumbnail = Instance.new("ImageLabel")
 DiscordThumbnail.Name = "DiscordThumbnail"
 DiscordThumbnail.Parent = DiscordSection
@@ -1001,6 +1142,7 @@ DiscordLink.TextColor3 = Color3.fromRGB(180, 180, 180)
 DiscordLink.TextSize = 11
 DiscordLink.TextXAlignment = Enum.TextXAlignment.Left
 
+-- Compact Copy Button
 CopyDiscordBtn.Name = "CopyDiscordBtn"
 CopyDiscordBtn.Parent = DiscordSection
 CopyDiscordBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
@@ -1020,12 +1162,14 @@ CopyDiscordLabel.Text = "Copy"
 CopyDiscordLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 CopyDiscordLabel.TextSize = 11
 
+-- ENHANCED EDITOR FRAME
 EditorFrame.Name = "EditorFrame"
 EditorFrame.Parent = Frame
 EditorFrame.BackgroundTransparency = 1
 EditorFrame.Position = UDim2.new(0, 150, 0, 40)
 EditorFrame.Size = UDim2.new(0, 545, 0, 275)
 
+-- NEW: Editor Toolbar
 local EditorToolbar = Instance.new("Frame")
 EditorToolbar.Name = "EditorToolbar"
 EditorToolbar.Parent = EditorFrame
@@ -1048,6 +1192,7 @@ EditorTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
 EditorTitle.TextSize = 14
 EditorTitle.TextXAlignment = Enum.TextXAlignment.Left
 
+-- NEW: Line counter label
 local LineCountLabel = Instance.new("TextLabel")
 LineCountLabel.Name = "LineCount"
 LineCountLabel.Parent = EditorToolbar
@@ -1060,6 +1205,7 @@ LineCountLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
 LineCountLabel.TextSize = 12
 LineCountLabel.TextXAlignment = Enum.TextXAlignment.Right
 
+-- FIXED: Line Numbers ScrollFrame
 local LineNumberFrame = Instance.new("ScrollingFrame")
 LineNumberFrame.Name = "LineNumberFrame"
 LineNumberFrame.Parent = EditorFrame
@@ -1087,6 +1233,7 @@ LineNumbers.TextSize = 14
 LineNumbers.TextYAlignment = Enum.TextYAlignment.Top
 LineNumbers.TextXAlignment = Enum.TextXAlignment.Right
 
+-- MODIFIED: Editor ScrollFrame with BOTH horizontal and vertical scrolling
 local EditorScrollFrame = Instance.new("ScrollingFrame")
 EditorScrollFrame.Name = "EditorScrollFrame"
 EditorScrollFrame.Parent = EditorFrame
@@ -1102,6 +1249,7 @@ EditorScrollFrame.AutomaticCanvasSize = Enum.AutomaticSize.XY
 
 Instance.new("UICorner", EditorScrollFrame).CornerRadius = UDim.new(0, math.min(6, Settings.RoundedCorners))
 
+-- RichText Label for Syntax Highlighting (Visible)
 local SyntaxLabel = Instance.new("TextLabel")
 SyntaxLabel.Name = "SyntaxLabel"
 SyntaxLabel.Parent = EditorScrollFrame
@@ -1119,6 +1267,7 @@ SyntaxLabel.RichText = true
 SyntaxLabel.ClipsDescendants = true
 SyntaxLabel.AutomaticSize = Enum.AutomaticSize.X
 
+-- Source TextBox (Invisible but functional for input)
 Source.Name = "Source"
 Source.Parent = EditorScrollFrame
 Source.BackgroundTransparency = 1
@@ -1138,6 +1287,7 @@ Source.MultiLine = true
 Source.TextTransparency = 0.5
 Source.AutomaticSize = Enum.AutomaticSize.X
 
+-- FIXED: Proper line number generation and syncing with syntax highlighting
 local function updateLineNumbers()
     local text = Source.Text
     if text == "" then text = " " end
@@ -1145,19 +1295,28 @@ local function updateLineNumbers()
     for _ in text:gmatch("\n") do
         lines = lines + 1
     end
+    
+    -- Update line counter
     LineCountLabel.Text = "Lines: " .. lines
+    
     local lineText = ""
     for i = 1, lines do
         lineText = lineText .. i .. "\n"
     end
+    
     LineNumbers.Text = lineText:sub(1, -2)
+    
     local lineHeight = 20
     local totalHeight = math.max(lines * lineHeight, 450)
+    
     LineNumbers.Size = UDim2.new(1, -5, 0, totalHeight)
     Source.Size = UDim2.new(0, 2000, 0, totalHeight)
     SyntaxLabel.Size = UDim2.new(0, 2000, 0, totalHeight)
+    
     LineNumberFrame.CanvasSize = UDim2.new(0, 0, 0, totalHeight)
     EditorScrollFrame.CanvasSize = UDim2.new(0, 2000, 0, totalHeight)
+    
+    -- Update syntax highlighting if enabled
     if Settings.SyntaxHighlighting then
         local success, highlighted = pcall(function()
             return highlighter.run(Source.Text)
@@ -1174,12 +1333,15 @@ end
 
 Source:GetPropertyChangedSignal("Text"):Connect(updateLineNumbers)
 
+-- Sync scrolling
 EditorScrollFrame:GetPropertyChangedSignal("CanvasPosition"):Connect(function()
     LineNumberFrame.CanvasPosition = Vector2.new(0, EditorScrollFrame.CanvasPosition.Y)
 end)
 
+-- Initialize
 updateLineNumbers()
 
+-- ENHANCED: Editor Button Layout
 local EditorButtonContainer = Instance.new("Frame")
 EditorButtonContainer.Name = "ButtonContainer"
 EditorButtonContainer.Parent = EditorFrame
@@ -1197,6 +1359,7 @@ Execute.Image = "rbxassetid://119065240115720"
 
 Instance.new("UICorner", Execute).CornerRadius = UDim.new(0, math.min(6, Settings.RoundedCorners))
 
+-- Execute Text Label
 local ExecuteText = Instance.new("TextLabel")
 ExecuteText.Name = "ExecuteText"
 ExecuteText.Parent = Execute
@@ -1209,6 +1372,7 @@ ExecuteText.TextColor3 = Color3.fromRGB(255, 255, 255)
 ExecuteText.TextSize = 12
 ExecuteText.TextXAlignment = Enum.TextXAlignment.Left
 
+-- ENHANCED: PC-style tooltip for Execute
 local ExecuteTooltip = Instance.new("Frame")
 ExecuteTooltip.Name = "ExecuteTooltip"
 ExecuteTooltip.Parent = Execute
@@ -1259,6 +1423,7 @@ ClearText.TextColor3 = Color3.fromRGB(255, 255, 255)
 ClearText.TextSize = 12
 ClearText.TextXAlignment = Enum.TextXAlignment.Left
 
+-- ENHANCED: PC-style tooltip for Clear
 local ClearTooltip = Instance.new("Frame")
 ClearTooltip.Name = "ClearTooltip"
 ClearTooltip.Parent = Clear
@@ -1309,6 +1474,7 @@ PasteText.TextColor3 = Color3.fromRGB(255, 255, 255)
 PasteText.TextSize = 12
 PasteText.TextXAlignment = Enum.TextXAlignment.Left
 
+-- ENHANCED: PC-style tooltip for Paste
 local PasteTooltip = Instance.new("Frame")
 PasteTooltip.Name = "PasteTooltip"
 PasteTooltip.Parent = Paste
@@ -1359,6 +1525,7 @@ CopyText.TextColor3 = Color3.fromRGB(255, 255, 255)
 CopyText.TextSize = 12
 CopyText.TextXAlignment = Enum.TextXAlignment.Left
 
+-- ENHANCED: PC-style tooltip for Copy
 local CopyTooltip = Instance.new("Frame")
 CopyTooltip.Name = "CopyTooltip"
 CopyTooltip.Parent = Copy
@@ -1409,6 +1576,7 @@ ConsoleText.TextColor3 = Color3.fromRGB(255, 255, 255)
 ConsoleText.TextSize = 12
 ConsoleText.TextXAlignment = Enum.TextXAlignment.Left
 
+-- ENHANCED: PC-style tooltip for Console
 local ConsoleTooltip = Instance.new("Frame")
 ConsoleTooltip.Name = "ConsoleTooltip"
 ConsoleTooltip.Parent = OpenConsole
@@ -1459,6 +1627,7 @@ InjectText.TextColor3 = Color3.fromRGB(255, 255, 255)
 InjectText.TextSize = 12
 InjectText.TextXAlignment = Enum.TextXAlignment.Left
 
+-- ENHANCED: PC-style tooltip for Inject
 local InjectTooltip = Instance.new("Frame")
 InjectTooltip.Name = "InjectTooltip"
 InjectTooltip.Parent = Inject
@@ -1494,6 +1663,7 @@ SearcherFrame.Position = UDim2.new(0, 150, 0, 40)
 SearcherFrame.Size = UDim2.new(0, 545, 0, 275)
 SearcherFrame.Visible = false
 
+-- ENHANCED: Better Searcher Layout
 local SearcherHeader = Instance.new("Frame")
 SearcherHeader.Name = "SearcherHeader"
 SearcherHeader.Parent = SearcherFrame
@@ -1574,7 +1744,9 @@ local function CreateFilterButton(name, position, apiParam, color)
 	btn.TextColor3 = Color3.fromRGB(200, 200, 200)
 	btn.TextSize = 11
 	btn.AutoButtonColor = true
+	
 	Instance.new("UICorner", btn).CornerRadius = UDim.new(0, math.min(4, Settings.RoundedCorners))
+	
 	btn.MouseButton1Click:Connect(function()
 		for _, child in pairs(FilterFrame:GetChildren()) do
 			if child:IsA("TextButton") then
@@ -1588,6 +1760,7 @@ local function CreateFilterButton(name, position, apiParam, color)
 		CurrentPage = 1
 		PerformSearch()
 	end)
+	
 	return btn
 end
 
@@ -1680,6 +1853,7 @@ GameScriptsFrame.Position = UDim2.new(0, 150, 0, 40)
 GameScriptsFrame.Size = UDim2.new(0, 545, 0, 275)
 GameScriptsFrame.Visible = false
 
+-- ENHANCED: Game Scripts Header
 local GameScriptsHeader = Instance.new("Frame")
 GameScriptsHeader.Name = "GameScriptsHeader"
 GameScriptsHeader.Parent = GameScriptsFrame
@@ -1764,6 +1938,7 @@ UniversalScriptsFrame.Position = UDim2.new(0, 150, 0, 40)
 UniversalScriptsFrame.Size = UDim2.new(0, 545, 0, 275)
 UniversalScriptsFrame.Visible = false
 
+-- ENHANCED: Universal Scripts Header
 local UniScriptsHeader = Instance.new("Frame")
 UniScriptsHeader.Name = "UniScriptsHeader"
 UniScriptsHeader.Parent = UniversalScriptsFrame
@@ -1841,6 +2016,7 @@ UniListLayout.Parent = UniScriptsList
 UniListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 UniListLayout.Padding = UDim.new(0, 5)
 
+-- ENHANCED SETTINGS FRAME
 SettingsFrame.Name = "SettingsFrame"
 SettingsFrame.Parent = Frame
 SettingsFrame.BackgroundTransparency = 1
@@ -1862,6 +2038,7 @@ SettingsLayout.Parent = SettingsContainer
 SettingsLayout.SortOrder = Enum.SortOrder.LayoutOrder
 SettingsLayout.Padding = UDim.new(0, 10)
 
+-- Helper function to create setting sections
 local function CreateSettingSection(title)
 	local section = Instance.new("Frame")
 	section.Name = title .. "Section"
@@ -1869,7 +2046,9 @@ local function CreateSettingSection(title)
 	section.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
 	section.Size = UDim2.new(1, -10, 0, 0)
 	section.AutomaticSize = Enum.AutomaticSize.Y
+	
 	Instance.new("UICorner", section).CornerRadius = UDim.new(0, math.min(6, Settings.RoundedCorners))
+	
 	local sectionTitle = Instance.new("TextLabel")
 	sectionTitle.Name = "Title"
 	sectionTitle.Parent = section
@@ -1881,6 +2060,7 @@ local function CreateSettingSection(title)
 	sectionTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
 	sectionTitle.TextSize = 14
 	sectionTitle.TextXAlignment = Enum.TextXAlignment.Left
+	
 	local content = Instance.new("Frame")
 	content.Name = "Content"
 	content.Parent = section
@@ -1888,11 +2068,237 @@ local function CreateSettingSection(title)
 	content.Position = UDim2.new(0, 10, 0, 35)
 	content.Size = UDim2.new(1, -20, 0, 0)
 	content.AutomaticSize = Enum.AutomaticSize.Y
+	
 	return section, content
 end
 
+-- THEME SETTINGS
+local ThemeSection, ThemeContent = CreateSettingSection("Theme Settings")
+
+-- Theme Selection
+local ThemeLabel = Instance.new("TextLabel")
+ThemeLabel.Name = "ThemeLabel"
+ThemeLabel.Parent = ThemeContent
+ThemeLabel.BackgroundTransparency = 1
+ThemeLabel.Size = UDim2.new(0, 100, 0, 30)
+ThemeLabel.Font = Enum.Font.Gotham
+ThemeLabel.Text = "Theme:"
+ThemeLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+ThemeLabel.TextSize = 12
+ThemeLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local ThemeDropdown = Instance.new("TextButton")
+ThemeDropdown.Name = "ThemeDropdown"
+ThemeDropdown.Parent = ThemeContent
+ThemeDropdown.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+ThemeDropdown.Position = UDim2.new(0, 110, 0, 0)
+ThemeDropdown.Size = UDim2.new(0, 150, 0, 30)
+ThemeDropdown.Font = Enum.Font.Gotham
+ThemeDropdown.Text = "  " .. Settings.Theme
+ThemeDropdown.TextColor3 = Color3.fromRGB(255, 255, 255)
+ThemeDropdown.TextSize = 12
+ThemeDropdown.TextXAlignment = Enum.TextXAlignment.Left
+
+Instance.new("UICorner", ThemeDropdown).CornerRadius = UDim.new(0, math.min(4, Settings.RoundedCorners))
+
+local ThemeArrow = Instance.new("ImageLabel")
+ThemeArrow.Name = "Arrow"
+ThemeArrow.Parent = ThemeDropdown
+ThemeArrow.BackgroundTransparency = 1
+ThemeArrow.Position = UDim2.new(1, -25, 0.5, -8)
+ThemeArrow.Size = UDim2.new(0, 16, 0, 16)
+ThemeArrow.Image = "rbxassetid://117408302517589"
+ThemeArrow.ImageColor3 = Color3.fromRGB(200, 200, 200)
+ThemeArrow.Rotation = 90
+
+local ThemeOptionsFrame = Instance.new("Frame")
+ThemeOptionsFrame.Name = "ThemeOptions"
+ThemeOptionsFrame.Parent = ThemeDropdown
+ThemeOptionsFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+ThemeOptionsFrame.BorderColor3 = Color3.fromRGB(50, 50, 50)
+ThemeOptionsFrame.BorderSizePixel = 1
+ThemeOptionsFrame.Position = UDim2.new(0, 0, 1, 5)
+ThemeOptionsFrame.Size = UDim2.new(1, 0, 0, 150)
+ThemeOptionsFrame.Visible = false
+ThemeOptionsFrame.ZIndex = 100
+
+Instance.new("UICorner", ThemeOptionsFrame).CornerRadius = UDim.new(0, math.min(4, Settings.RoundedCorners))
+
+local ThemeOptionsLayout = Instance.new("UIListLayout")
+ThemeOptionsLayout.Parent = ThemeOptionsFrame
+ThemeOptionsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+local function CreateThemeOption(name)
+	local btn = Instance.new("TextButton")
+	btn.Name = name .. "Option"
+	btn.Parent = ThemeOptionsFrame
+	btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	btn.Size = UDim2.new(1, 0, 0, 30)
+	btn.Font = Enum.Font.Gotham
+	btn.Text = "  " .. name
+	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	btn.TextSize = 12
+	btn.TextXAlignment = Enum.TextXAlignment.Left
+	btn.ZIndex = 101
+	
+	btn.MouseButton1Click:Connect(function()
+		Settings.Theme = name
+		ThemeDropdown.Text = "  " .. name
+		ThemeOptionsFrame.Visible = false
+		ThemeArrow.Rotation = 90
+		ShowNotification("Settings", "Theme changed to " .. name, "Success", 2)
+		-- Apply theme immediately
+		ApplyTheme()
+	end)
+end
+
+for themeName, _ in pairs(Themes) do
+	CreateThemeOption(themeName)
+end
+
+ThemeDropdown.MouseButton1Click:Connect(function()
+	ThemeOptionsFrame.Visible = not ThemeOptionsFrame.Visible
+	ThemeArrow.Rotation = ThemeOptionsFrame.Visible and -90 or 90
+end)
+
+-- Transparency Slider
+local TransparencyLabel = Instance.new("TextLabel")
+TransparencyLabel.Name = "TransparencyLabel"
+TransparencyLabel.Parent = ThemeContent
+TransparencyLabel.BackgroundTransparency = 1
+TransparencyLabel.Position = UDim2.new(0, 0, 0, 40)
+TransparencyLabel.Size = UDim2.new(0, 100, 0, 30)
+TransparencyLabel.Font = Enum.Font.Gotham
+TransparencyLabel.Text = "Transparency:"
+TransparencyLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+TransparencyLabel.TextSize = 12
+TransparencyLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local TransparencyValue = Instance.new("TextLabel")
+TransparencyValue.Name = "TransparencyValue"
+TransparencyValue.Parent = ThemeContent
+TransparencyValue.BackgroundTransparency = 1
+TransparencyValue.Position = UDim2.new(0, 400, 0, 40)
+TransparencyValue.Size = UDim2.new(0, 50, 0, 30)
+TransparencyValue.Font = Enum.Font.GothamBold
+TransparencyValue.Text = tostring(Settings.Transparency)
+TransparencyValue.TextColor3 = Color3.fromRGB(255, 255, 255)
+TransparencyValue.TextSize = 12
+
+local TransparencySlider = Instance.new("TextButton")
+TransparencySlider.Name = "TransparencySlider"
+TransparencySlider.Parent = ThemeContent
+TransparencySlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+TransparencySlider.Position = UDim2.new(0, 110, 0, 45)
+TransparencySlider.Size = UDim2.new(0, 280, 0, 20)
+TransparencySlider.Text = ""
+
+Instance.new("UICorner", TransparencySlider).CornerRadius = UDim.new(0, 10)
+
+local TransparencyFill = Instance.new("Frame")
+TransparencyFill.Name = "Fill"
+TransparencyFill.Parent = TransparencySlider
+TransparencyFill.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+TransparencyFill.Size = UDim2.new(Settings.Transparency / 1, 0, 1, 0)
+TransparencyFill.BorderSizePixel = 0
+
+Instance.new("UICorner", TransparencyFill).CornerRadius = UDim.new(0, 10)
+
+local draggingTransparency = false
+
+TransparencySlider.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		draggingTransparency = true
+	end
+end)
+
+TransparencySlider.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		draggingTransparency = false
+	end
+end)
+
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+	if draggingTransparency and input.UserInputType == Enum.UserInputType.MouseMovement then
+		local pos = math.clamp((input.Position.X - TransparencySlider.AbsolutePosition.X) / TransparencySlider.AbsoluteSize.X, 0, 1)
+		Settings.Transparency = math.floor(pos * 10) / 10
+		TransparencyFill.Size = UDim2.new(pos, 0, 1, 0)
+		TransparencyValue.Text = tostring(Settings.Transparency)
+		ApplyTransparency()
+	end
+end)
+
+-- Rounded Corners Slider
+local CornersLabel = Instance.new("TextLabel")
+CornersLabel.Name = "CornersLabel"
+CornersLabel.Parent = ThemeContent
+CornersLabel.BackgroundTransparency = 1
+CornersLabel.Position = UDim2.new(0, 0, 0, 80)
+CornersLabel.Size = UDim2.new(0, 100, 0, 30)
+CornersLabel.Font = Enum.Font.Gotham
+CornersLabel.Text = "Corner Radius:"
+CornersLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+CornersLabel.TextSize = 12
+CornersLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local CornersValue = Instance.new("TextLabel")
+CornersValue.Name = "CornersValue"
+CornersValue.Parent = ThemeContent
+CornersValue.BackgroundTransparency = 1
+CornersValue.Position = UDim2.new(0, 400, 0, 80)
+CornersValue.Size = UDim2.new(0, 50, 0, 30)
+CornersValue.Font = Enum.Font.GothamBold
+CornersValue.Text = tostring(Settings.RoundedCorners)
+CornersValue.TextColor3 = Color3.fromRGB(255, 255, 255)
+CornersValue.TextSize = 12
+
+local CornersSlider = Instance.new("TextButton")
+CornersSlider.Name = "CornersSlider"
+CornersSlider.Parent = ThemeContent
+CornersSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+CornersSlider.Position = UDim2.new(0, 110, 0, 85)
+CornersSlider.Size = UDim2.new(0, 280, 0, 20)
+CornersSlider.Text = ""
+
+Instance.new("UICorner", CornersSlider).CornerRadius = UDim.new(0, 10)
+
+local CornersFill = Instance.new("Frame")
+CornersFill.Name = "Fill"
+CornersFill.Parent = CornersSlider
+CornersFill.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+CornersFill.Size = UDim2.new(Settings.RoundedCorners / 20, 0, 1, 0)
+CornersFill.BorderSizePixel = 0
+
+Instance.new("UICorner", CornersFill).CornerRadius = UDim.new(0, 10)
+
+local draggingCorners = false
+
+CornersSlider.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		draggingCorners = true
+	end
+end)
+
+CornersSlider.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		draggingCorners = false
+	end
+end)
+
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+	if draggingCorners and input.UserInputType == Enum.UserInputType.MouseMovement then
+		local pos = math.clamp((input.Position.X - CornersSlider.AbsolutePosition.X) / CornersSlider.AbsoluteSize.X, 0, 1)
+		Settings.RoundedCorners = math.floor(pos * 20)
+		CornersFill.Size = UDim2.new(pos, 0, 1, 0)
+		CornersValue.Text = tostring(Settings.RoundedCorners)
+		ApplyRoundedCorners()
+	end
+end)
+
+-- PERFORMANCE SETTINGS
 local PerfSection, PerfContent = CreateSettingSection("Performance Settings")
 
+-- FPS Cap
 local FPSLabel = Instance.new("TextLabel")
 FPSLabel.Name = "FPSLabel"
 FPSLabel.Parent = PerfContent
@@ -1958,6 +2364,7 @@ game:GetService("UserInputService").InputChanged:Connect(function(input)
 	end
 end)
 
+-- Disable Animations Toggle
 local AnimationsLabel = Instance.new("TextLabel")
 AnimationsLabel.Name = "AnimationsLabel"
 AnimationsLabel.Parent = PerfContent
@@ -1990,6 +2397,7 @@ AnimationsToggle.MouseButton1Click:Connect(function()
 	ShowNotification("Settings", "Animations " .. (Settings.DisableAnimations and "Disabled" or "Enabled"), "Success", 2)
 end)
 
+-- Animation Speed
 local AnimSpeedLabel = Instance.new("TextLabel")
 AnimSpeedLabel.Name = "AnimSpeedLabel"
 AnimSpeedLabel.Parent = PerfContent
@@ -2055,8 +2463,10 @@ game:GetService("UserInputService").InputChanged:Connect(function(input)
 	end
 end)
 
+-- DEV MODE SETTINGS
 local DevSection, DevContent = CreateSettingSection("Developer Settings")
 
+-- Dev Mode Toggle
 local DevModeLabel = Instance.new("TextLabel")
 DevModeLabel.Name = "DevModeLabel"
 DevModeLabel.Parent = DevContent
@@ -2086,11 +2496,14 @@ DevModeToggle.MouseButton1Click:Connect(function()
 	DevModeToggle.BackgroundColor3 = Settings.DevMode and Color3.fromRGB(50, 200, 100) or Color3.fromRGB(200, 50, 50)
 	DevModeToggle.Text = Settings.DevMode and "ON" or "OFF"
 	ShowNotification("Settings", "Developer Mode " .. (Settings.DevMode and "Enabled" or "Disabled"), "Success", 2)
+	
 	if Settings.DevMode then
+		-- Enable dev features
 		game:GetService("StarterGui"):SetCore("DevConsoleVisible", true)
 	end
 end)
 
+-- Re-Execute UI Button (Moved from Editor)
 local ReExecuteBtn = Instance.new("TextButton")
 ReExecuteBtn.Name = "ReExecuteBtn"
 ReExecuteBtn.Parent = DevContent
@@ -2107,13 +2520,16 @@ Instance.new("UICorner", ReExecuteBtn).CornerRadius = UDim.new(0, math.min(6, Se
 ReExecuteBtn.MouseButton1Click:Connect(function()
 	ShowNotification("Re-Executing", "Reloading UI...", "Success", 2)
 	delay(1, function()
+		-- Reload the script
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/ZZINSWARE/ZZINSWARE-V4/main/ZZINSWARE"))()
 		Windows11UI:Destroy()
 	end)
 end)
 
+-- CONFIGURATION SETTINGS
 local ConfigSection, ConfigContent = CreateSettingSection("Configuration")
 
+-- Config Name Input
 local ConfigNameBox = Instance.new("TextBox")
 ConfigNameBox.Name = "ConfigNameBox"
 ConfigNameBox.Parent = ConfigContent
@@ -2129,6 +2545,7 @@ ConfigNameBox.TextSize = 12
 
 Instance.new("UICorner", ConfigNameBox).CornerRadius = UDim.new(0, math.min(4, Settings.RoundedCorners))
 
+-- Save Config Button
 local SaveConfigBtn = Instance.new("TextButton")
 SaveConfigBtn.Name = "SaveConfigBtn"
 SaveConfigBtn.Parent = ConfigContent
@@ -2145,7 +2562,9 @@ Instance.new("UICorner", SaveConfigBtn).CornerRadius = UDim.new(0, math.min(4, S
 SaveConfigBtn.MouseButton1Click:Connect(function()
 	local name = ConfigNameBox.Text
 	if name == "" then name = "Config_" .. os.time() end
+	
 	ConfigSystem.SavedConfigs[name] = {
+		Theme = Settings.Theme,
 		Transparency = Settings.Transparency,
 		AnimationSpeed = Settings.AnimationSpeed,
 		RoundedCorners = Settings.RoundedCorners,
@@ -2155,10 +2574,12 @@ SaveConfigBtn.MouseButton1Click:Connect(function()
 		Font = Settings.Font,
 		SyntaxHighlighting = Settings.SyntaxHighlighting
 	}
+	
 	ShowNotification("Config", "Saved configuration: " .. name, "Success", 2)
 	RefreshConfigList()
 end)
 
+-- Load Config Button
 local LoadConfigBtn = Instance.new("TextButton")
 LoadConfigBtn.Name = "LoadConfigBtn"
 LoadConfigBtn.Parent = ConfigContent
@@ -2176,6 +2597,7 @@ LoadConfigBtn.MouseButton1Click:Connect(function()
 	local name = ConfigNameBox.Text
 	if ConfigSystem.SavedConfigs[name] then
 		local config = ConfigSystem.SavedConfigs[name]
+		Settings.Theme = config.Theme or "Dark"
 		Settings.Transparency = config.Transparency or 0
 		Settings.AnimationSpeed = config.AnimationSpeed or 1.0
 		Settings.RoundedCorners = config.RoundedCorners or 6
@@ -2184,15 +2606,20 @@ LoadConfigBtn.MouseButton1Click:Connect(function()
 		Settings.DevMode = config.DevMode or false
 		Settings.Font = config.Font or "Code"
 		Settings.SyntaxHighlighting = config.SyntaxHighlighting ~= false
+		
+		-- Apply settings
+		ApplyTheme()
 		ApplyTransparency()
 		ApplyRoundedCorners()
 		setfpscap(Settings.FPSCap)
+		
 		ShowNotification("Config", "Loaded configuration: " .. name, "Success", 2)
 	else
 		ShowNotification("Error", "Configuration not found", "Error", 3)
 	end
 end)
 
+-- Delete Config Button
 local DeleteConfigBtn = Instance.new("TextButton")
 DeleteConfigBtn.Name = "DeleteConfigBtn"
 DeleteConfigBtn.Parent = ConfigContent
@@ -2217,6 +2644,7 @@ DeleteConfigBtn.MouseButton1Click:Connect(function()
 	end
 end)
 
+-- Config List
 local ConfigList = Instance.new("ScrollingFrame")
 ConfigList.Name = "ConfigList"
 ConfigList.Parent = ConfigContent
@@ -2240,6 +2668,7 @@ local function RefreshConfigList()
 			child:Destroy()
 		end
 	end
+	
 	for name, _ in pairs(ConfigSystem.SavedConfigs) do
 		local btn = Instance.new("TextButton")
 		btn.Size = UDim2.new(1, -10, 0, 25)
@@ -2250,16 +2679,21 @@ local function RefreshConfigList()
 		btn.TextSize = 11
 		btn.Font = Enum.Font.Gotham
 		btn.Parent = ConfigList
+		
 		Instance.new("UICorner", btn).CornerRadius = UDim.new(0, math.min(4, Settings.RoundedCorners))
+		
 		btn.MouseButton1Click:Connect(function()
 			ConfigNameBox.Text = name
 		end)
 	end
+	
 	ConfigList.CanvasSize = UDim2.new(0, 0, 0, #ConfigList:GetChildren() * 29)
 end
 
+-- EDITOR SETTINGS
 local EditorSection, EditorContent = CreateSettingSection("Editor Settings")
 
+-- Font Selection
 local FontLabel = Instance.new("TextLabel")
 FontLabel.Name = "FontLabel"
 FontLabel.Parent = EditorContent
@@ -2324,6 +2758,7 @@ local function CreateFontOption(name)
 	btn.TextSize = 12
 	btn.TextXAlignment = Enum.TextXAlignment.Left
 	btn.ZIndex = 101
+	
 	btn.MouseButton1Click:Connect(function()
 		Settings.Font = name
 		FontDropdown.Text = "  " .. name
@@ -2345,6 +2780,7 @@ FontDropdown.MouseButton1Click:Connect(function()
 	FontArrow.Rotation = FontOptionsFrame.Visible and -90 or 90
 end)
 
+-- Syntax Highlighting Toggle
 local SyntaxLabel = Instance.new("TextLabel")
 SyntaxLabel.Name = "SyntaxLabel"
 SyntaxLabel.Parent = EditorContent
@@ -2378,6 +2814,7 @@ SyntaxToggle.MouseButton1Click:Connect(function()
 	ShowNotification("Settings", "Syntax Highlighting " .. (Settings.SyntaxHighlighting and "Enabled" or "Disabled"), "Success", 2)
 end)
 
+-- MODIFIED: F8 Label positioned at top right
 CloseKeybind.Name = "CloseKeybind"
 CloseKeybind.Parent = Topbar
 CloseKeybind.BackgroundTransparency = 1
@@ -2388,6 +2825,7 @@ CloseKeybind.Text = "[ F8 ]"
 CloseKeybind.TextColor3 = Color3.fromRGB(200, 200, 200)
 CloseKeybind.TextSize = 14
 
+-- Credits Section (Left of F8)
 local CreditsFrame = Instance.new("Frame")
 CreditsFrame.Name = "CreditsFrame"
 CreditsFrame.Parent = Topbar
@@ -2415,6 +2853,7 @@ CreditsText.TextColor3 = Color3.fromRGB(180, 180, 180)
 CreditsText.TextSize = 12
 CreditsText.TextXAlignment = Enum.TextXAlignment.Left
 
+-- MODIFIED: Title with Version 4 Badge (Black/Grey/White) - MORE VISIBLE
 TextLabel.Parent = Topbar
 TextLabel.BackgroundTransparency = 1
 TextLabel.Position = UDim2.new(0, 15, 0, 0)
@@ -2425,6 +2864,7 @@ TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel.TextSize = 18
 TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 
+-- Version 4 Badge (Black/Grey/White) - ENHANCED VISIBILITY
 local VersionBadge = Instance.new("TextLabel")
 VersionBadge.Name = "VersionBadge"
 VersionBadge.Parent = Topbar
@@ -2437,15 +2877,17 @@ VersionBadge.TextSize = 16
 VersionBadge.TextStrokeTransparency = 0.8
 VersionBadge.TextStrokeColor3 = Color3.fromRGB(255, 255, 255)
 
+-- Create gradient for Black/Grey/White effect
 local textGradient = Instance.new("UIGradient")
 textGradient.Parent = VersionBadge
 textGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(128, 128, 128)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),       -- Black
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(128, 128, 128)), -- Grey
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))    -- White
 })
 textGradient.Rotation = 45
 
+-- Add glow effect with multiple labels
 local glow1 = VersionBadge:Clone()
 glow1.Name = "Glow1"
 glow1.Parent = Topbar
@@ -2462,6 +2904,7 @@ glow2.TextColor3 = Color3.fromRGB(255, 255, 255)
 glow2.TextTransparency = 0.7
 glow2.ZIndex = 0
 
+-- Animate glow
 local tweenService = game:GetService("TweenService")
 local function animateGlow()
     while true do
@@ -2471,6 +2914,16 @@ local function animateGlow()
     end
 end
 coroutine.wrap(animateGlow)()
+
+-- Functions to apply settings
+function ApplyTheme()
+	local theme = Themes[Settings.Theme]
+	if theme then
+		Topbar.BackgroundColor3 = theme.Background
+		Frame.BackgroundColor3 = theme.Frame
+		-- Update other UI elements with theme colors
+	end
+end
 
 function ApplyTransparency()
 	Topbar.BackgroundTransparency = Settings.Transparency
@@ -2482,6 +2935,7 @@ function ApplyRoundedCorners()
 	local corners = math.min(Settings.RoundedCorners, 20)
 	UICorner.CornerRadius = UDim.new(0, corners)
 	UICorner_2.CornerRadius = UDim.new(0, corners)
+	-- Update all other corners
 end
 
 local UserInputService = game:GetService("UserInputService")
@@ -2540,12 +2994,14 @@ local function SwitchTab(tab)
 	UniversalScriptsTab.ImageColor3 = Color3.fromRGB(150, 150, 150)
 	SettingsTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 	SettingsTab.ImageColor3 = Color3.fromRGB(150, 150, 150)
+	
 	InfoFrame.Visible = false
 	EditorFrame.Visible = false
 	SearcherFrame.Visible = false
 	GameScriptsFrame.Visible = false
 	UniversalScriptsFrame.Visible = false
 	SettingsFrame.Visible = false
+	
 	if tab == "Info" then
 		InfoTab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 		InfoTab.ImageColor3 = Color3.fromRGB(255, 255, 255)
@@ -2654,6 +3110,7 @@ local function refreshFilesList()
 			child:Destroy()
 		end
 	end
+	
 	for name, _ in pairs(savedFiles) do
 		local fileBtn = Instance.new("TextButton")
 		fileBtn.Size = UDim2.new(1, 0, 0, 28)
@@ -2663,13 +3120,16 @@ local function refreshFilesList()
 		fileBtn.TextSize = 11
 		fileBtn.Font = Enum.Font.Gotham
 		fileBtn.Parent = FilesList
+		
 		Instance.new("UICorner", fileBtn).CornerRadius = UDim.new(0, math.min(4, Settings.RoundedCorners))
+		
 		fileBtn.MouseButton1Click:Connect(function()
 			selectedFile = name
 			FileNameBox.Text = name
 			refreshFilesList()
 		end)
 	end
+	
 	FilesList.CanvasSize = UDim2.new(0, 0, 0, #savedFiles * 32)
 end
 
@@ -2758,8 +3218,10 @@ local TotalPages = 1
 local function SearchScriptBlox(query, page)
 	CurrentQuery = query
 	CurrentPage = page or 1
+	
 	local results = {}
 	local apiUrl
+	
 	if CurrentFilter == "trending" then
 		apiUrl = "https://scriptblox.com/api/script/trending?page=" .. CurrentPage .. "&max=" .. ScriptsPerPage
 	elseif CurrentFilter ~= "" then
@@ -2767,9 +3229,11 @@ local function SearchScriptBlox(query, page)
 	else
 		apiUrl = "https://scriptblox.com/api/script/search?q=" .. HttpService:UrlEncode(query) .. "&page=" .. CurrentPage .. "&max=" .. ScriptsPerPage
 	end
+	
 	local success, response = pcall(function()
 		return game:HttpGet(apiUrl)
 	end)
+	
 	if success and response then
 		local data = HttpService:JSONDecode(response)
 		if data and data.result and data.result.scripts then
@@ -2787,6 +3251,7 @@ local function SearchScriptBlox(query, page)
 					slug = script.slug or ""
 				})
 			end
+			
 			if data.result.total then
 				TotalPages = math.ceil(data.result.total / ScriptsPerPage)
 				PageLabel.Text = CurrentPage .. "/" .. TotalPages
@@ -2796,6 +3261,7 @@ local function SearchScriptBlox(query, page)
 			end
 		end
 	end
+	
 	return results
 end
 
@@ -2803,6 +3269,7 @@ local function GetScriptDetails(slug)
 	local success, response = pcall(function()
 		return game:HttpGet("https://scriptblox.com/api/script/" .. slug .. "?legacy_tags=true")
 	end)
+	
 	if success and response then
 		local data = HttpService:JSONDecode(response)
 		if data and data.result then
@@ -2819,7 +3286,9 @@ local function CreateScriptButton(data, parent)
 	Btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 	Btn.BorderSizePixel = 0
 	Btn.Parent = parent
+	
 	Instance.new("UICorner", Btn).CornerRadius = UDim.new(0, math.min(6, Settings.RoundedCorners))
+	
 	local Thumbnail = Instance.new("ImageLabel")
 	Thumbnail.Name = "Thumbnail"
 	Thumbnail.Size = UDim2.new(0, 60, 0, 60)
@@ -2827,18 +3296,23 @@ local function CreateScriptButton(data, parent)
 	Thumbnail.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 	Thumbnail.ScaleType = Enum.ScaleType.Crop
 	Thumbnail.Parent = Btn
+	
 	Instance.new("UICorner", Thumbnail).CornerRadius = UDim.new(0, math.min(4, Settings.RoundedCorners))
+	
 	if data.image and data.image ~= "" then
 		Thumbnail.Image = data.image
 	else
 		Thumbnail.Image = "rbxassetid://9405926389"
 	end
+	
 	local BadgeFrame = Instance.new("Frame")
 	BadgeFrame.Size = UDim2.new(0, 200, 0, 16)
 	BadgeFrame.Position = UDim2.new(0, 75, 0, 8)
 	BadgeFrame.BackgroundTransparency = 1
 	BadgeFrame.Parent = Btn
+	
 	local badgeOffset = 0
+	
 	if data.verified then
 		local Verified = Instance.new("ImageLabel")
 		Verified.Size = UDim2.new(0, 16, 0, 16)
@@ -2849,11 +3323,12 @@ local function CreateScriptButton(data, parent)
 		Verified.Parent = BadgeFrame
 		badgeOffset = badgeOffset + 20
 	end
+	
 	if data.isUniversal then
 		local UniBadge = Instance.new("TextLabel")
 		UniBadge.Size = UDim2.new(0, 50, 0, 16)
 		UniBadge.Position = UDim2.new(0, badgeOffset, 0, 0)
-		UniBadge.BackgroundColor3 = Color3.fromRGB(100, 100,100)
+		UniBadge.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
 		UniBadge.Text = "UNIVERSAL"
 		UniBadge.TextColor3 = Color3.fromRGB(255, 255, 255)
 		UniBadge.TextSize = 7
@@ -2862,6 +3337,7 @@ local function CreateScriptButton(data, parent)
 		Instance.new("UICorner", UniBadge).CornerRadius = UDim.new(0, 3)
 		badgeOffset = badgeOffset + 55
 	end
+	
 	if data.key then
 		local KeyBadge = Instance.new("TextLabel")
 		KeyBadge.Size = UDim2.new(0, 30, 0, 16)
@@ -2875,6 +3351,7 @@ local function CreateScriptButton(data, parent)
 		Instance.new("UICorner", KeyBadge).CornerRadius = UDim.new(0, 3)
 		badgeOffset = badgeOffset + 35
 	end
+	
 	if data.isPatched then
 		local PatchedBadge = Instance.new("TextLabel")
 		PatchedBadge.Size = UDim2.new(0, 50, 0, 16)
@@ -2888,6 +3365,7 @@ local function CreateScriptButton(data, parent)
 		Instance.new("UICorner", PatchedBadge).CornerRadius = UDim.new(0, 3)
 		badgeOffset = badgeOffset + 55
 	end
+	
 	if data.scriptType == "paid" then
 		local PaidBadge = Instance.new("TextLabel")
 		PaidBadge.Size = UDim2.new(0, 30, 0, 16)
@@ -2900,6 +3378,7 @@ local function CreateScriptButton(data, parent)
 		PaidBadge.Parent = BadgeFrame
 		Instance.new("UICorner", PaidBadge).CornerRadius = UDim.new(0, 3)
 	end
+	
 	local Title = Instance.new("TextLabel")
 	Title.Size = UDim2.new(1, -150, 0, 18)
 	Title.Position = UDim2.new(0, 75, 0, 28)
@@ -2911,6 +3390,7 @@ local function CreateScriptButton(data, parent)
 	Title.TextXAlignment = Enum.TextXAlignment.Left
 	Title.TextTruncate = Enum.TextTruncate.AtEnd
 	Title.Parent = Btn
+	
 	local Desc = Instance.new("TextLabel")
 	Desc.Size = UDim2.new(1, -150, 0, 25)
 	Desc.Position = UDim2.new(0, 75, 0, 48)
@@ -2923,6 +3403,7 @@ local function CreateScriptButton(data, parent)
 	Desc.TextYAlignment = Enum.TextYAlignment.Top
 	Desc.TextWrapped = true
 	Desc.Parent = Btn
+	
 	local ExecBtn = Instance.new("ImageButton")
 	ExecBtn.Name = "Execute"
 	ExecBtn.Size = UDim2.new(0, 30, 0, 30)
@@ -2931,7 +3412,10 @@ local function CreateScriptButton(data, parent)
 	ExecBtn.Image = "rbxassetid://119065240115720"
 	ExecBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
 	ExecBtn.Parent = Btn
+	
 	Instance.new("UICorner", ExecBtn).CornerRadius = UDim.new(0, math.min(4, Settings.RoundedCorners))
+	
+	-- ENHANCED: PC-style tooltip for Execute
 	local ExecBtnTooltip = Instance.new("Frame")
 	ExecBtnTooltip.Name = "ExecBtnTooltip"
 	ExecBtnTooltip.Parent = ExecBtn
@@ -2942,9 +3426,11 @@ local function CreateScriptButton(data, parent)
 	ExecBtnTooltip.Size = UDim2.new(0, 60, 0, 22)
 	ExecBtnTooltip.Visible = false
 	ExecBtnTooltip.ZIndex = 10
+
 	local ExecBtnTooltipCorner = Instance.new("UICorner")
 	ExecBtnTooltipCorner.CornerRadius = UDim.new(0, math.min(4, Settings.RoundedCorners))
 	ExecBtnTooltipCorner.Parent = ExecBtnTooltip
+
 	local ExecBtnTooltipText = Instance.new("TextLabel")
 	ExecBtnTooltipText.Parent = ExecBtnTooltip
 	ExecBtnTooltipText.BackgroundTransparency = 1
@@ -2954,6 +3440,7 @@ local function CreateScriptButton(data, parent)
 	ExecBtnTooltipText.TextColor3 = Color3.fromRGB(200, 200, 200)
 	ExecBtnTooltipText.TextSize = 11
 	ExecBtnTooltipText.ZIndex = 11
+
 	ExecBtn.MouseEnter:Connect(function()
 		ExecBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
 		ExecBtnTooltip.Visible = true
@@ -2962,6 +3449,7 @@ local function CreateScriptButton(data, parent)
 		ExecBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 		ExecBtnTooltip.Visible = false
 	end)
+	
 	ExecBtn.MouseButton1Click:Connect(function()
 		if data.code and data.code ~= "" then
 			Source.Text = data.code
@@ -2992,6 +3480,7 @@ local function CreateScriptButton(data, parent)
 			ShowNotification("Error", "No script code available", "Error", 3)
 		end
 	end)
+	
 	local CopyBtn = Instance.new("ImageButton")
 	CopyBtn.Name = "Copy"
 	CopyBtn.Size = UDim2.new(0, 30, 0, 30)
@@ -3000,7 +3489,10 @@ local function CreateScriptButton(data, parent)
 	CopyBtn.Image = "rbxassetid://127935026620905"
 	CopyBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
 	CopyBtn.Parent = Btn
+	
 	Instance.new("UICorner", CopyBtn).CornerRadius = UDim.new(0, math.min(4, Settings.RoundedCorners))
+	
+	-- ENHANCED: PC-style tooltip for Copy
 	local CopyBtnTooltip = Instance.new("Frame")
 	CopyBtnTooltip.Name = "CopyBtnTooltip"
 	CopyBtnTooltip.Parent = CopyBtn
@@ -3011,9 +3503,11 @@ local function CreateScriptButton(data, parent)
 	CopyBtnTooltip.Size = UDim2.new(0, 60, 0, 22)
 	CopyBtnTooltip.Visible = false
 	CopyBtnTooltip.ZIndex = 10
+
 	local CopyBtnTooltipCorner = Instance.new("UICorner")
 	CopyBtnTooltipCorner.CornerRadius = UDim.new(0, math.min(4, Settings.RoundedCorners))
 	CopyBtnTooltipCorner.Parent = CopyBtnTooltip
+
 	local CopyBtnTooltipText = Instance.new("TextLabel")
 	CopyBtnTooltipText.Parent = CopyBtnTooltip
 	CopyBtnTooltipText.BackgroundTransparency = 1
@@ -3023,6 +3517,7 @@ local function CreateScriptButton(data, parent)
 	CopyBtnTooltipText.TextColor3 = Color3.fromRGB(200, 200, 200)
 	CopyBtnTooltipText.TextSize = 11
 	CopyBtnTooltipText.ZIndex = 11
+
 	CopyBtn.MouseEnter:Connect(function()
 		CopyBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 		CopyBtnTooltip.Visible = true
@@ -3031,6 +3526,7 @@ local function CreateScriptButton(data, parent)
 		CopyBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 		CopyBtnTooltip.Visible = false
 	end)
+	
 	CopyBtn.MouseButton1Click:Connect(function()
 		if data.code and data.code ~= "" then
 			Source.Text = data.code
@@ -3047,6 +3543,7 @@ local function CreateScriptButton(data, parent)
 			ShowNotification("Error", "No script code available", "Error", 3)
 		end
 	end)
+	
 	local ViewBtn = Instance.new("ImageButton")
 	ViewBtn.Name = "View"
 	ViewBtn.Size = UDim2.new(0, 30, 0, 30)
@@ -3055,7 +3552,10 @@ local function CreateScriptButton(data, parent)
 	ViewBtn.Image = "rbxassetid://11713325834"
 	ViewBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
 	ViewBtn.Parent = Btn
+	
 	Instance.new("UICorner", ViewBtn).CornerRadius = UDim.new(0, math.min(4, Settings.RoundedCorners))
+	
+	-- ENHANCED: PC-style tooltip for View
 	local ViewBtnTooltip = Instance.new("Frame")
 	ViewBtnTooltip.Name = "ViewBtnTooltip"
 	ViewBtnTooltip.Parent = ViewBtn
@@ -3066,9 +3566,11 @@ local function CreateScriptButton(data, parent)
 	ViewBtnTooltip.Size = UDim2.new(0, 60, 0, 22)
 	ViewBtnTooltip.Visible = false
 	ViewBtnTooltip.ZIndex = 10
+
 	local ViewBtnTooltipCorner = Instance.new("UICorner")
 	ViewBtnTooltipCorner.CornerRadius = UDim.new(0, math.min(4, Settings.RoundedCorners))
 	ViewBtnTooltipCorner.Parent = ViewBtnTooltip
+
 	local ViewBtnTooltipText = Instance.new("TextLabel")
 	ViewBtnTooltipText.Parent = ViewBtnTooltip
 	ViewBtnTooltipText.BackgroundTransparency = 1
@@ -3078,6 +3580,7 @@ local function CreateScriptButton(data, parent)
 	ViewBtnTooltipText.TextColor3 = Color3.fromRGB(200, 200, 200)
 	ViewBtnTooltipText.TextSize = 11
 	ViewBtnTooltipText.ZIndex = 11
+
 	ViewBtn.MouseEnter:Connect(function()
 		ViewBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 		ViewBtnTooltip.Visible = true
@@ -3086,6 +3589,7 @@ local function CreateScriptButton(data, parent)
 		ViewBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 		ViewBtnTooltip.Visible = false
 	end)
+	
 	ViewBtn.MouseButton1Click:Connect(function()
 		if data.slug ~= "" then
 			local details = GetScriptDetails(data.slug)
@@ -3097,6 +3601,7 @@ local function CreateScriptButton(data, parent)
 				infoText = infoText .. "Key Required: " .. tostring(details.key or false) .. "\n"
 				infoText = infoText .. "Patched: " .. tostring(details.isPatched or false) .. "\n"
 				infoText = infoText .. "Created: " .. (details.createdAt or "Unknown")
+				
 				Source.Text = "-- Script Info:\n-- " .. infoText:gsub("\n", "\n-- ") .. "\n\n" .. (details.script or "-- No script code available")
 				SwitchTab("Editor")
 			else
@@ -3122,7 +3627,9 @@ local function PerformSearch()
 		ShowNotification("Error", "Enter search query or select filter", "Error", 3)
 		return 
 	end
+	
 	ClearList(ScriptList)
+	
 	local Loading = Instance.new("TextLabel")
 	Loading.Size = UDim2.new(1, 0, 0, 50)
 	Loading.Position = UDim2.new(0, 0, 0, 80)
@@ -3131,8 +3638,10 @@ local function PerformSearch()
 	Loading.TextColor3 = Color3.fromRGB(255, 255, 255)
 	Loading.TextSize = 14
 	Loading.Parent = ScriptList
+	
 	local results = SearchScriptBlox(query, CurrentPage)
 	Loading:Destroy()
+	
 	if #results == 0 then
 		local NoResults = Instance.new("TextLabel")
 		NoResults.Size = UDim2.new(1, 0, 0, 50)
@@ -3147,6 +3656,7 @@ local function PerformSearch()
 			CreateScriptButton(script, ScriptList)
 		end
 	end
+	
 	ScriptList.CanvasSize = UDim2.new(0, 0, 0, ListLayout.AbsoluteContentSize.Y + 10)
 end
 
@@ -3269,7 +3779,9 @@ local function CreateGameButton(data)
 	Btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 	Btn.BorderSizePixel = 0
 	Btn.Parent = GameScriptsList
+	
 	Instance.new("UICorner", Btn).CornerRadius = UDim.new(0, math.min(6, Settings.RoundedCorners))
+	
 	local Title = Instance.new("TextLabel")
 	Title.Size = UDim2.new(1, -100, 0, 50)
 	Title.Position = UDim2.new(0, 15, 0, 0)
@@ -3281,6 +3793,7 @@ local function CreateGameButton(data)
 	Title.TextXAlignment = Enum.TextXAlignment.Left
 	Title.TextTruncate = Enum.TextTruncate.AtEnd
 	Title.Parent = Btn
+	
 	local ExecBtn = Instance.new("ImageButton")
 	ExecBtn.Size = UDim2.new(0, 35, 0, 35)
 	ExecBtn.Position = UDim2.new(1, -45, 0, 7)
@@ -3288,7 +3801,10 @@ local function CreateGameButton(data)
 	ExecBtn.Image = "rbxassetid://119065240115720"
 	ExecBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
 	ExecBtn.Parent = Btn
+	
 	Instance.new("UICorner", ExecBtn).CornerRadius = UDim.new(0, math.min(6, Settings.RoundedCorners))
+	
+	-- ENHANCED: PC-style tooltip for Execute
 	local ExecBtnTooltip = Instance.new("Frame")
 	ExecBtnTooltip.Name = "ExecBtnTooltip"
 	ExecBtnTooltip.Parent = ExecBtn
@@ -3299,9 +3815,11 @@ local function CreateGameButton(data)
 	ExecBtnTooltip.Size = UDim2.new(0, 60, 0, 22)
 	ExecBtnTooltip.Visible = false
 	ExecBtnTooltip.ZIndex = 10
+
 	local ExecBtnTooltipCorner = Instance.new("UICorner")
 	ExecBtnTooltipCorner.CornerRadius = UDim.new(0, math.min(4, Settings.RoundedCorners))
 	ExecBtnTooltipCorner.Parent = ExecBtnTooltip
+
 	local ExecBtnTooltipText = Instance.new("TextLabel")
 	ExecBtnTooltipText.Parent = ExecBtnTooltip
 	ExecBtnTooltipText.BackgroundTransparency = 1
@@ -3311,6 +3829,7 @@ local function CreateGameButton(data)
 	ExecBtnTooltipText.TextColor3 = Color3.fromRGB(200, 200, 200)
 	ExecBtnTooltipText.TextSize = 11
 	ExecBtnTooltipText.ZIndex = 11
+
 	ExecBtn.MouseEnter:Connect(function()
 		ExecBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 		ExecBtnTooltip.Visible = true
@@ -3319,6 +3838,7 @@ local function CreateGameButton(data)
 		ExecBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 		ExecBtnTooltip.Visible = false
 	end)
+	
 	ExecBtn.MouseButton1Click:Connect(function()
 		local success, err = pcall(function()
 			loadstring(game:HttpGet(data.url))()
@@ -3338,7 +3858,9 @@ local function CreateUniButton(data)
 	Btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 	Btn.BorderSizePixel = 0
 	Btn.Parent = UniScriptsList
+	
 	Instance.new("UICorner", Btn).CornerRadius = UDim.new(0, math.min(6, Settings.RoundedCorners))
+	
 	local Title = Instance.new("TextLabel")
 	Title.Size = UDim2.new(1, -100, 0, 50)
 	Title.Position = UDim2.new(0, 15, 0, 0)
@@ -3350,6 +3872,7 @@ local function CreateUniButton(data)
 	Title.TextXAlignment = Enum.TextXAlignment.Left
 	Title.TextTruncate = Enum.TextTruncate.AtEnd
 	Title.Parent = Btn
+	
 	local ExecBtn = Instance.new("ImageButton")
 	ExecBtn.Size = UDim2.new(0, 35, 0, 35)
 	ExecBtn.Position = UDim2.new(1, -45, 0, 7)
@@ -3357,7 +3880,10 @@ local function CreateUniButton(data)
 	ExecBtn.Image = "rbxassetid://119065240115720"
 	ExecBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
 	ExecBtn.Parent = Btn
+	
 	Instance.new("UICorner", ExecBtn).CornerRadius = UDim.new(0, math.min(6, Settings.RoundedCorners))
+	
+	-- ENHANCED: PC-style tooltip for Execute
 	local ExecBtnTooltip = Instance.new("Frame")
 	ExecBtnTooltip.Name = "ExecBtnTooltip"
 	ExecBtnTooltip.Parent = ExecBtn
@@ -3368,9 +3894,11 @@ local function CreateUniButton(data)
 	ExecBtnTooltip.Size = UDim2.new(0, 60, 0, 22)
 	ExecBtnTooltip.Visible = false
 	ExecBtnTooltip.ZIndex = 10
+
 	local ExecBtnTooltipCorner = Instance.new("UICorner")
 	ExecBtnTooltipCorner.CornerRadius = UDim.new(0, math.min(4, Settings.RoundedCorners))
 	ExecBtnTooltipCorner.Parent = ExecBtnTooltip
+
 	local ExecBtnTooltipText = Instance.new("TextLabel")
 	ExecBtnTooltipText.Parent = ExecBtnTooltip
 	ExecBtnTooltipText.BackgroundTransparency = 1
@@ -3380,6 +3908,7 @@ local function CreateUniButton(data)
 	ExecBtnTooltipText.TextColor3 = Color3.fromRGB(200, 200, 200)
 	ExecBtnTooltipText.TextSize = 11
 	ExecBtnTooltipText.ZIndex = 11
+
 	ExecBtn.MouseEnter:Connect(function()
 		ExecBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 		ExecBtnTooltip.Visible = true
@@ -3388,6 +3917,7 @@ local function CreateUniButton(data)
 		ExecBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 		ExecBtnTooltip.Visible = false
 	end)
+	
 	ExecBtn.MouseButton1Click:Connect(function()
 		local success, err = pcall(function()
 			loadstring(game:HttpGet(data.url))()
@@ -3444,6 +3974,7 @@ LoadGameScripts()
 LoadUniScripts()
 RefreshConfigList()
 
+-- Set initial FPS cap
 pcall(function()
 	setfpscap(Settings.FPSCap)
 end)
