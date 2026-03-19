@@ -2720,6 +2720,7 @@ local gameScripts = {
    {name = "Chat With Signs", url = "https://raw.githubusercontent.com/ZZINSWARE/Chat-With-Signs/refs/heads/main/ZZINSWARE"},
    {name = "Pistol Arena", url = "https://raw.githubusercontent.com/ZZINSWARE/Pistol-Arena/refs/heads/main/ZZINSWARE"}
    {name = "The Chosen one", url = "https://raw.githubusercontent.com/ZZINSWARE/The-Chosen-one/refs/heads/main/The%20Chosen%20one"}
+
 }
 
 local universalScripts = {
